@@ -7,7 +7,7 @@ import {
 } from "react-native";
 import { signInUser } from "../../firebase/auth";
 import { SafeAreaView } from "react-native-safe-area-context";
-import colors from "../../constants/colors";
+import colors from "../../constants/Colors";
 import CustomText from "../Reusables/CustomText";
 import { Keyboard } from 'react-native';
 

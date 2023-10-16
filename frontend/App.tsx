@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from "react-native";
 import { User, onAuthStateChanged } from "firebase/auth";
 import { auth } from "./firebase/firebaseConfig";
-import { Auth } from "./components/Auth/Auth";
+import { Auth } from "./screens/Auth/Auth";
 import { useState } from "react";
 
 import * as React from "react";
@@ -9,7 +9,7 @@ import { DocumentData } from "firebase/firestore";
 import { fetchUserData } from "./firebase/firestore";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import {Nav} from "./components/Nav";
+import {Nav} from "./screens/Nav";
 export type tabParamsList = {
   Home: undefined;
   Profile: { user: User };

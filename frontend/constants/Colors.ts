@@ -19,6 +19,7 @@ const colors = {
      paleOrange: '#FFCC99',
  
      // Neutral Colors
+     subtleWhite: 'rgba(255, 255, 255, 0.1)',
      white: '#FFFFFF',
      black: '#000000',
      gray: '#808080',

@@ -1,15 +1,10 @@
 import React, { useState } from "react";
-import {
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 import { signInUser } from "../../firebase/auth";
 import { SafeAreaView } from "react-native-safe-area-context";
 import colors from "../../constants/colors";
 import CustomText from "../Reusables/CustomText";
-import { Keyboard } from 'react-native';
+import { Keyboard } from "react-native";
 
 type SignInProps = {
   setHasAccount: React.Dispatch<React.SetStateAction<boolean>>;

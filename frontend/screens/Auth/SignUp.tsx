@@ -1,10 +1,5 @@
 import React, { useState } from "react";
-import {
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 import { signUpUser } from "../../firebase/auth";
 import { SafeAreaView } from "react-native-safe-area-context";
 import DropDownPicker from "react-native-dropdown-picker";
@@ -96,7 +91,7 @@ const SignUp = (props: SignUpProps) => {
         <CustomText style={styles.signUpButtonText}>Sign Up</CustomText>
       </TouchableOpacity>
       <View style={styles.container}>
-        <CustomText style={{color: "white"}}> Have an account? </CustomText>
+        <CustomText style={{ color: "white" }}> Have an account? </CustomText>
         <CustomText
           style={styles.changeText}
           onPress={() => props.setHasAccount(true)}

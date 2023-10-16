@@ -5,13 +5,18 @@ import { User } from "firebase/auth";
 import React from "react";
 
 import { Dashboard } from "./Dashboard";
+import { Friends } from "./Friends";
+import { Gym } from "./Gym";
 import { Calender } from "./Calender";
 import { Profile } from "./Profile";
 
 export type tabParamsList = {
     Dashboard: { userId: string; userEmail: string };
+    Friends: { userId: string; userEmail: string };
+    Gym: { userId: string; userEmail: string };
     Calender: { userId: string; userEmail: string };
     Profile: { userId: string; userEmail: string };
+
   };
 
 export type NavProps = {
@@ -43,13 +48,39 @@ export const Nav = (props: NavProps) => {
             initialParams={{ userId: user.uid, userEmail: user.email ?? '' }}
           />
           <Tab.Screen
+            name="Friends"
+            component={Friends}
+            options={{
+              headerShown: false,
+              tabBarShowLabel: false,
+              tabBarIcon: ({ color, size }) => (
+                <MaterialCommunityIcons name="laptop" color={color} size={size} />
+              ),
+              tabBarHideOnKeyboard: true,
+            }}
+            initialParams={{ userId: user.uid, userEmail: user.email ?? '' }}
+          />
+          <Tab.Screen
+            name="Gym"
+            component={Gym}
+            options={{
+              headerShown: false,
+              tabBarShowLabel: false,
+              tabBarIcon: ({ color, size }) => (
+                <MaterialCommunityIcons name="mail" color={color} size={size} />
+              ),
+              tabBarHideOnKeyboard: true,
+            }}
+            initialParams={{ userId: user.uid, userEmail: user.email ?? '' }}
+          />
+          <Tab.Screen
             name="Calender"
             component={Calender}
             options={{
               headerShown: false,
               tabBarShowLabel: false,
               tabBarIcon: ({ color, size }) => (
-                <MaterialCommunityIcons name="laptop" color={color} size={size} />
+                <MaterialCommunityIcons name="mail" color={color} size={size} />
               ),
               tabBarHideOnKeyboard: true,
             }}

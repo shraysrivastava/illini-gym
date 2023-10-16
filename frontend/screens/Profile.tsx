@@ -5,7 +5,7 @@ import { tabParamsList } from "./Nav";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { signOutUser } from "../firebase/auth";
 import CustomText from "./Reusables/CustomText";
-import colors from "../constants/Colors";
+import Colors from "../constants/Colors";
 type ProfileProps = {
   route: RouteProp<tabParamsList, "Profile">;
 };
@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: colors.midnightBlue,
+    backgroundColor: Colors.midnightBlue,
   },
   text: {
     fontSize: 24,
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   signoutButton: {
-    backgroundColor: colors.uiucOrange,
+    backgroundColor: Colors.uiucOrange,
     padding: 10,
     borderRadius: 5,
     marginTop: 10,

@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { RouteProp } from "@react-navigation/native";
 import { tabParamsList } from "./Nav"; // Ensure this is the correct path to your Nav.tsx
-import colors from "../constants/Colors";
+import Colors from "../constants/Colors";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CustomText from "./Reusables/CustomText";
 
@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: colors.midnightBlue,
+    backgroundColor: Colors.midnightBlue,
   },
   text: {
     fontSize: 24,

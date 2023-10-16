@@ -3,7 +3,6 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { User } from "firebase/auth";
 import React from "react";
-
 import { Dashboard } from "./Dashboard";
 import { Friends } from "./Friends";
 import { Gym } from "./Gym";

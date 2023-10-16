@@ -3,8 +3,8 @@ import { StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 import { signUpUser } from "../../firebase/auth";
 import { SafeAreaView } from "react-native-safe-area-context";
 import DropDownPicker from "react-native-dropdown-picker";
-import colors from "../../constants/Colors";
 import CustomText from "../Reusables/CustomText";
+import Colors from "../../constants/Colors";
 
 type SignUpProps = {
   setHasAccount: React.Dispatch<React.SetStateAction<boolean>>;
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     width: "100%",
-    backgroundColor: colors.midnightBlue,
+    backgroundColor: Colors.midnightBlue,
   },
   signUpText: {
     marginTop: 20,
@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   changeText: {
-    color: colors.uiucOrange,
+    color: Colors.uiucOrange,
   },
   inputField: {
     width: 250,
@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     padding: 10,
     alignItems: "center",
-    backgroundColor: colors.uiucOrange,
+    backgroundColor: Colors.uiucOrange,
     borderRadius: 10,
   },
   signUpButtonText: {

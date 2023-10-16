@@ -17,7 +17,7 @@ import {
   arrayRemove,
   arrayUnion,
 } from "firebase/firestore";
-import colors from "../constants/Colors";
+import Colors from "../constants/Colors";
 import CustomText from "./Reusables/CustomText";
 import { tabParamsList } from "./Nav";
 
@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: colors.midnightBlue,
+    backgroundColor: Colors.midnightBlue,
     width: 400,
   },
   scrollView: {
@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
     width: "90%",
     margin: 10,
     padding: 10,
-    backgroundColor: colors.subtleWhite,
+    backgroundColor: Colors.subtleWhite,
     borderRadius: 8,
     alignItems: "center",
     borderWidth: 2,

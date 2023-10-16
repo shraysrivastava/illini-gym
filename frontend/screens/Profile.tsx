@@ -5,7 +5,7 @@ import { tabParamsList } from "./Nav";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { signOutUser } from "../firebase/auth";
 import CustomText from "./Reusables/CustomText";
-import colors from "../constants/colors";
+import colors from "../constants/Colors";
 type ProfileProps = {
   route: RouteProp<tabParamsList, "Profile">;
 };

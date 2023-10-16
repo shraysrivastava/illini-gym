@@ -17,7 +17,7 @@ import {
   arrayRemove,
   arrayUnion,
 } from "firebase/firestore";
-import colors from "../constants/colors";
+import colors from "../constants/Colors";
 import CustomText from "./Reusables/CustomText";
 import { tabParamsList } from "./Nav";
 

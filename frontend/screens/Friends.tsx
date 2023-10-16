@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { RouteProp } from "@react-navigation/native";
 import { tabParamsList } from "./Nav";
-import colors from "../constants/colors";
+import colors from "../constants/Colors";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CustomText from "./Reusables/CustomText";
 

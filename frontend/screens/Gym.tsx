@@ -1,23 +1,25 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { RouteProp } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { db } from "../firebase/firebaseConfig"; // Adjust this import based on your project structure
+import { ScrollView, StyleSheet, View, RefreshControl } from "react-native";
+import * as Progress from "react-native-progress";
+import { MaterialIcons } from "@expo/vector-icons";
+import { db, auth } from "../firebase/firebaseConfig";
 import {
-  collection,
   getDocs,
   query,
-  where,
   FirestoreError,
   DocumentData,
   QuerySnapshot,
+  collection,
+  doc,
+  updateDoc,
+  arrayRemove,
+  arrayUnion,
 } from "firebase/firestore";
-import { StyleSheet } from "react-native";
 import colors from "../constants/colors";
 import CustomText from "./Reusables/CustomText";
 import { tabParamsList } from "./Nav";
-import { View } from "react-native";
-import * as Progress from "react-native-progress";
-import { MaterialIcons } from "@expo/vector-icons";
 
 type GymProps = {
   route: RouteProp<tabParamsList, "Gym">;
@@ -25,55 +27,60 @@ type GymProps = {
 
 export const Gym = ({ route }: GymProps) => {
   const [arcData, setArcData] = useState<DocumentData[]>([]);
-  const [error, setError] = useState("");
-  const [refreshing, setRefreshing] = useState(false);
+  const [error, setError] = useState<string>("");
+  const [refreshing, setRefreshing] = useState<boolean>(false);
   const [pressedGyms, setPressedGyms] = useState<Record<string, boolean>>({});
+  const currentUserId = auth.currentUser?.uid;
+  const openGyms = arcData.filter((gym) => gym.isOpen);
+  const closedGyms = arcData.filter((gym) => !gym.isOpen);
 
-  const handleButtonPress = (gymName: string) => {
-    setPressedGyms((prev) => ({
-      ...prev,
-      [gymName]: !prev[gymName], // Toggle the pressed status
-    }));
-  };
-  const setTemporaryError = (message: string) => {
-    setError(message);
-    setTimeout(() => {
-      setError("");
-    }, 3000);
-  };
-
-  const fetchArcData = () => {
-    const q = query(collection(db, "arc"));
-
-    getDocs(q)
+  const fetchArcData = useCallback(() => {
+    const gymQuery = query(collection(db, "arc"));
+    getDocs(gymQuery)
       .then((arcList: QuerySnapshot<DocumentData>) => {
         const fetchedData = arcList.docs.map((doc) => ({
           ...doc.data(),
           key: doc.id,
         }));
-
         setArcData(fetchedData);
       })
       .catch((err: FirestoreError) => {
         console.error("Error fetching arc data: ", err.message);
       });
-  };
+  }, []);
 
   useEffect(() => {
     fetchArcData();
-  }, []);
+  }, [fetchArcData]);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     fetchArcData();
     setTimeout(() => {
       setRefreshing(false);
-    }, 2000);
-  }, []);
+    }, 400);
+  }, [fetchArcData]);
 
-  return (
-    <SafeAreaView style={styles.container}>
-      {arcData.map((gym, index) => (
+  const handleFavoritePress = useCallback(
+    (gymDocID: string) => {
+      const userDocRef = doc(collection(db, "users"), currentUserId);
+      if (pressedGyms[gymDocID]) {
+        updateDoc(userDocRef, { favorites: arrayRemove(gymDocID) });
+      } else {
+        updateDoc(userDocRef, { favorites: arrayUnion(gymDocID) });
+      }
+      setPressedGyms((prev) => ({
+        ...prev,
+        [gymDocID]: !prev[gymDocID],
+      }));
+    },
+    [pressedGyms, currentUserId]
+  );
+
+  const renderGymSection = (gyms: DocumentData[], sectionTitle: string) => (
+    <View style={styles.sectionContainer}>
+      <CustomText style={styles.sectionTitle}>{sectionTitle}</CustomText>
+      {gyms.map((gym, index) => (
         <View
           key={index}
           style={[
@@ -84,11 +91,11 @@ export const Gym = ({ route }: GymProps) => {
           <View style={styles.headerContainer}>
             <CustomText style={styles.gymName}>{gym.name}</CustomText>
             <MaterialIcons
-              name={pressedGyms[gym.name] ? "check-circle" : "add-circle"}
+              name={pressedGyms[gym.key] ? "check-circle" : "add-circle"}
               size={24}
-              color={pressedGyms[gym.name] ? "green" : "gray"}
+              color={pressedGyms[gym.key] ? "green" : "gray"}
               style={styles.iconButton}
-              onPress={() => handleButtonPress(gym.name)}
+              onPress={() => handleFavoritePress(gym.key)}
             />
           </View>
           <View style={styles.progressBarContainer}>
@@ -96,9 +103,11 @@ export const Gym = ({ route }: GymProps) => {
               progress={gym.count / gym.capacity}
               width={250 - 60}
               color={
-                gym.count / gym.capacity <= 0.5 ? "#FF6B6B"
-                : gym.count / gym.capacity < 0.8 ? "#FFE66D"
-                : "#4CAF50"
+                gym.count / gym.capacity <= 0.5
+                  ? "#4CAF50"
+                  : gym.count / gym.capacity < 0.8
+                  ? "#FFE66D"
+                  : "#FF6B6B"
               }
               unfilledColor="grey"
               style={{ marginRight: 10 }}
@@ -110,6 +119,20 @@ export const Gym = ({ route }: GymProps) => {
           </View>
         </View>
       ))}
+    </View>
+  );
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <ScrollView
+        style={styles.scrollView}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
+        {renderGymSection(openGyms, "Open Gyms")}
+        {renderGymSection(closedGyms, "Closed Gyms")}
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -120,6 +143,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: colors.midnightBlue,
+    width: 400,
+  },
+  scrollView: {
+    flex: 1,
+    width: '100%',
   },
   gymContainer: {
     width: "90%",
@@ -159,7 +187,14 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
   },
-  iconButton: {
-    // No changes here
+  iconButton: {},
+  sectionContainer: {
+    width: "100%",
+    paddingBottom: 15,
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    padding: 10,
   },
 });

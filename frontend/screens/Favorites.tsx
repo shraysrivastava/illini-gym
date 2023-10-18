@@ -6,16 +6,16 @@ import Colors from "../constants/Colors";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CustomText from "./Reusables/CustomText";
 
-type DashboardProps = {
-  route: RouteProp<tabParamsList, "Dashboard">;
+type FavoritesProps = {
+  route: RouteProp<tabParamsList, "Favorites">;
 };
 
-export const Dashboard = ({ route }: DashboardProps) => {
+export const Favorites = ({ route }: FavoritesProps) => {
   const { userId, userEmail } = route.params;
 
   return (
     <SafeAreaView style={styles.container}>
-      <CustomText style={styles.text}>Dashboard</CustomText>
+      <CustomText style={styles.text}>Favorites</CustomText>
       {/* Just for demonstration, display the userId and userEmail */}
       <CustomText style={styles.infoText}>User ID: {userId}</CustomText>
       <CustomText style={styles.infoText}>User Email: {userEmail}</CustomText>

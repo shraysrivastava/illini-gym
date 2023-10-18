@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { User } from "firebase/auth";
 import React from "react";
-import { Dashboard } from "./Dashboard";
+import { Favorites } from "./Favorites";
 import { Friends } from "./Friends";
 import { Gym } from "./Gym";
 import { Calender } from "./Calender";
@@ -11,7 +11,7 @@ import { Profile } from "./Profile";
 import Colors from "../constants/Colors";
 
 export type tabParamsList = {
-    Dashboard: { userId: string; userEmail: string };
+  Favorites: { userId: string; userEmail: string };
     Friends: { userId: string; userEmail: string };
     Gym: { userId: string; userEmail: string };
     Calender: { userId: string; userEmail: string };
@@ -35,8 +35,8 @@ export const Nav = (props: NavProps) => {
       <NavigationContainer>
         <Tab.Navigator>
           <Tab.Screen
-            name="Dashboard"
-            component={Dashboard}
+            name="Favorites"
+            component={Favorites}
             options={{
               headerShown: false,
               tabBarShowLabel: false,

@@ -8,6 +8,7 @@ import { Friends } from "./Friends";
 import { Gym } from "./Gym";
 import { Calender } from "./Calender";
 import { Profile } from "./Profile";
+import Colors from "../constants/Colors";
 
 export type tabParamsList = {
     Dashboard: { userId: string; userEmail: string };
@@ -40,8 +41,9 @@ export const Nav = (props: NavProps) => {
               headerShown: false,
               tabBarShowLabel: false,
               tabBarIcon: ({ color, size }) => (
-                <MaterialCommunityIcons name="home" color={color} size={size} />
+                <MaterialCommunityIcons name="view-dashboard" color={color} size={size} />
               ),
+              tabBarActiveTintColor: Colors.uiucOrange,
               tabBarHideOnKeyboard: true,
             }}
             initialParams={{ userId: user.uid, userEmail: user.email ?? '' }}
@@ -53,8 +55,9 @@ export const Nav = (props: NavProps) => {
               headerShown: false,
               tabBarShowLabel: false,
               tabBarIcon: ({ color, size }) => (
-                <MaterialCommunityIcons name="laptop" color={color} size={size} />
+                <MaterialCommunityIcons name="account-group" color={color} size={size} />
               ),
+              tabBarActiveTintColor: Colors.uiucOrange,
               tabBarHideOnKeyboard: true,
             }}
             initialParams={{ userId: user.uid, userEmail: user.email ?? '' }}
@@ -66,8 +69,9 @@ export const Nav = (props: NavProps) => {
               headerShown: false,
               tabBarShowLabel: false,
               tabBarIcon: ({ color, size }) => (
-                <MaterialCommunityIcons name="mail" color={color} size={size} />
+                <MaterialCommunityIcons name="dumbbell" color={color} size={size} />
               ),
+              tabBarActiveTintColor: Colors.uiucOrange,
               tabBarHideOnKeyboard: true,
             }}
             initialParams={{ userId: user.uid, userEmail: user.email ?? '' }}
@@ -79,8 +83,9 @@ export const Nav = (props: NavProps) => {
               headerShown: false,
               tabBarShowLabel: false,
               tabBarIcon: ({ color, size }) => (
-                <MaterialCommunityIcons name="mail" color={color} size={size} />
+                <MaterialCommunityIcons name="calendar" color={color} size={size} />
               ),
+              tabBarActiveTintColor: Colors.uiucOrange,
               tabBarHideOnKeyboard: true,
             }}
             initialParams={{ userId: user.uid, userEmail: user.email ?? '' }}
@@ -92,8 +97,9 @@ export const Nav = (props: NavProps) => {
               headerShown: false,
               tabBarShowLabel: false,
               tabBarIcon: ({ color, size }) => (
-                <MaterialCommunityIcons name="mail" color={color} size={size} />
+                <MaterialCommunityIcons name="account" color={color} size={size} />
               ),
+              tabBarActiveTintColor: Colors.uiucOrange,
               tabBarHideOnKeyboard: true,
             }}
             initialParams={{ userId: user.uid, userEmail: user.email ?? '' }}

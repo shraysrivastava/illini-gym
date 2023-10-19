@@ -1,18 +1,14 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { RouteProp } from "@react-navigation/native";
-import { tabParamsList } from "./Nav";
-import Colors from "../constants/Colors";
+import Colors from "../../constants/Colors";
 import { SafeAreaView } from "react-native-safe-area-context";
-import CustomText from "./Reusables/CustomText";
+import CustomText from "../Reusables/CustomText";
+import { auth } from "../../firebase/firebaseConfig";
 
-type FriendsProps = {
-  route: RouteProp<tabParamsList, "Friends">;
-};
-
-export const Friends = ({ route }: FriendsProps) => {
-  const { userId, userEmail } = route.params;
-
+export const Friends = () => {
+  const userId = auth.currentUser?.uid;
+  const userEmail = auth.currentUser?.email;
   return (
     <SafeAreaView style={styles.container}>
       <CustomText style={styles.text}>Friends</CustomText>

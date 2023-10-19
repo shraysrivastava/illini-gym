@@ -1,17 +1,16 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { RouteProp } from "@react-navigation/native";
-import { tabParamsList } from "./Nav"; // Ensure this is the correct path to your Nav.tsx
-import Colors from "../constants/Colors";
+import Colors from "../../constants/Colors";
 import { SafeAreaView } from "react-native-safe-area-context";
-import CustomText from "./Reusables/CustomText";
+import CustomText from "../Reusables/CustomText";
+import { auth } from "../../firebase/firebaseConfig";
 
-type CalenderProps = {
-  route: RouteProp<tabParamsList, "Calender">;
-};
 
-export const Calender = ({ route }: CalenderProps) => {
-  const { userId, userEmail } = route.params;
+
+export const Calendar = () => {
+  const userId = auth.currentUser?.uid;
+  const userEmail = auth.currentUser?.email;
 
   return (
     <SafeAreaView style={styles.container}>

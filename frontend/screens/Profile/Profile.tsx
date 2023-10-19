@@ -1,17 +1,16 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { RouteProp } from "@react-navigation/native";
-import { tabParamsList } from "./Nav";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { signOutUser } from "../firebase/auth";
-import CustomText from "./Reusables/CustomText";
-import Colors from "../constants/Colors";
-type ProfileProps = {
-  route: RouteProp<tabParamsList, "Profile">;
-};
+import { signOutUser } from "../../firebase/auth";
+import CustomText from "../Reusables/CustomText";
+import Colors from "../../constants/Colors";
+import { auth } from "../../firebase/firebaseConfig";
 
-export const Profile = ({ route }: ProfileProps) => {
-  const { userId, userEmail } = route.params;
+
+export const Profile = () => {
+  const userId = auth.currentUser?.uid;
+  const userEmail = auth.currentUser?.email;
   const [error, setError] = useState("");
   return (
     <SafeAreaView style={styles.container}>

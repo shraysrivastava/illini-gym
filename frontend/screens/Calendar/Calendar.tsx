@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { StyleSheet } from "react-native";
 import { RouteProp } from "@react-navigation/native";
-import { tabParamsList } from "./Nav"; // Ensure this is the correct path to your Nav.tsx
 import Colors from "../../constants/Colors";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Agenda } from "react-native-calendars";
@@ -11,11 +10,8 @@ const timeToString = (time: string | number | Date) => {
   return date.toISOString().split('T')[0];
 };
 
-type CalenderProps = {
-  route: RouteProp<tabParamsList, "Calender">;
-};
 
-export const Calendar = ({ route }: CalendarProps) => {
+export const Calendar = () => {
   const [items, setItems] = useState({});
 
   const loadItems = (day: { timestamp: number; }) => {

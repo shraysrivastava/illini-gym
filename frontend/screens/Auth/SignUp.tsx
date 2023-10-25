@@ -3,10 +3,6 @@ import { StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 import { signUpUser } from "../../firebase/auth";
 import { SafeAreaView } from "react-native-safe-area-context";
 import DropDownPicker from "react-native-dropdown-picker";
-<<<<<<< HEAD:frontend/components/Auth/SignUp.tsx
-import colors from "../../constants/Colors";
-=======
->>>>>>> 71af7e4f0ccbbc69b42fabe34f8043f93bee928a:frontend/screens/Auth/SignUp.tsx
 import CustomText from "../Reusables/CustomText";
 import Colors from "../../constants/Colors";
 

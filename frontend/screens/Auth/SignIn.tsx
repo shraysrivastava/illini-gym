@@ -2,11 +2,7 @@ import React, { useState } from "react";
 import { StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 import { signInUser } from "../../firebase/auth";
 import { SafeAreaView } from "react-native-safe-area-context";
-<<<<<<< HEAD:frontend/components/Auth/SignIn.tsx
-import colors from "../../constants/Colors";
-=======
 import Colors from "../../constants/Colors";
->>>>>>> 71af7e4f0ccbbc69b42fabe34f8043f93bee928a:frontend/screens/Auth/SignIn.tsx
 import CustomText from "../Reusables/CustomText";
 import { Keyboard } from "react-native";
 

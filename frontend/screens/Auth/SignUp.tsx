@@ -1,15 +1,14 @@
 import React, { useState } from "react";
-import {
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 import { signUpUser } from "../../firebase/auth";
 import { SafeAreaView } from "react-native-safe-area-context";
 import DropDownPicker from "react-native-dropdown-picker";
+<<<<<<< HEAD:frontend/components/Auth/SignUp.tsx
 import colors from "../../constants/Colors";
+=======
+>>>>>>> 71af7e4f0ccbbc69b42fabe34f8043f93bee928a:frontend/screens/Auth/SignUp.tsx
 import CustomText from "../Reusables/CustomText";
+import Colors from "../../constants/Colors";
 
 type SignUpProps = {
   setHasAccount: React.Dispatch<React.SetStateAction<boolean>>;
@@ -96,7 +95,7 @@ const SignUp = (props: SignUpProps) => {
         <CustomText style={styles.signUpButtonText}>Sign Up</CustomText>
       </TouchableOpacity>
       <View style={styles.container}>
-        <CustomText style={{color: "white"}}> Have an account? </CustomText>
+        <CustomText style={{ color: "white" }}> Have an account? </CustomText>
         <CustomText
           style={styles.changeText}
           onPress={() => props.setHasAccount(true)}
@@ -125,7 +124,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     width: "100%",
-    backgroundColor: colors.midnightBlue,
+    backgroundColor: Colors.midnightBlue,
   },
   signUpText: {
     marginTop: 20,
@@ -135,7 +134,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   changeText: {
-    color: colors.uiucOrange,
+    color: Colors.uiucOrange,
   },
   inputField: {
     width: 250,
@@ -153,7 +152,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     padding: 10,
     alignItems: "center",
-    backgroundColor: colors.uiucOrange,
+    backgroundColor: Colors.uiucOrange,
     borderRadius: 10,
   },
   signUpButtonText: {

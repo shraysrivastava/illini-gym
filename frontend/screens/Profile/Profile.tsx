@@ -1,17 +1,25 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { RouteProp } from "@react-navigation/native";
-import { tabParamsList } from "./Nav";
 import { SafeAreaView } from "react-native-safe-area-context";
+<<<<<<< HEAD:frontend/components/Profile.tsx
 import { signOutUser } from "../firebase/auth";
 import CustomText from "./Reusables/CustomText";
 import colors from "../constants/Colors";
 type ProfileProps = {
   route: RouteProp<tabParamsList, "Profile">;
 };
+=======
+import { signOutUser } from "../../firebase/auth";
+import CustomText from "../Reusables/CustomText";
+import Colors from "../../constants/Colors";
+import { auth } from "../../firebase/firebaseConfig";
 
-export const Profile = ({ route }: ProfileProps) => {
-  const { userId, userEmail } = route.params;
+>>>>>>> 71af7e4f0ccbbc69b42fabe34f8043f93bee928a:frontend/screens/Profile/Profile.tsx
+
+export const Profile = () => {
+  const userId = auth.currentUser?.uid;
+  const userEmail = auth.currentUser?.email;
   const [error, setError] = useState("");
   return (
     <SafeAreaView style={styles.container}>
@@ -38,7 +46,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: colors.midnightBlue,
+    backgroundColor: Colors.midnightBlue,
   },
   text: {
     fontSize: 24,
@@ -49,9 +57,9 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   signoutButton: {
-    backgroundColor: colors.uiucOrange,
+    backgroundColor: Colors.uiucOrange,
     padding: 10,
     borderRadius: 5,
-    marginTop: 10
-  }
+    marginTop: 10,
+  },
 });

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { StyleSheet } from "react-native";
+import { RouteProp } from "@react-navigation/native";
 import Colors from "../../constants/Colors";
 import { SafeAreaView, withSafeAreaInsets } from "react-native-safe-area-context";
 import { Agenda, CalendarProps } from "react-native-calendars";

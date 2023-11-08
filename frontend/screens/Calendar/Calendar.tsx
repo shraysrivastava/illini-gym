@@ -2,22 +2,24 @@ import React, { useState } from "react";
 import { StyleSheet } from "react-native";
 import { RouteProp } from "@react-navigation/native";
 import Colors from "../../constants/Colors";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { Agenda } from "react-native-calendars";
+import { SafeAreaView, withSafeAreaInsets } from "react-native-safe-area-context";
+import { Agenda, CalendarProps } from "react-native-calendars";
 
 const timeToString = (time: string | number | Date) => {
   const date = new Date(time);
   return date.toISOString().split('T')[0];
 };
 
+type ItemsType = { [key: string]: { name: string; height: number }[] };
 
-export const Calendar = () => {
+export const Calendar = ({ }: CalendarProps) => {
   const [items, setItems] = useState({});
 
   const loadItems = (day: { timestamp: number; }) => {
     setTimeout(() => {
       setItems((currentItems) => {
-        const updatedItems = { ...currentItems };
+        const updatedItems: ItemsType = { ...currentItems };
+
 
         for (let i = -15; i < 85; i++) {
           const time = day.timestamp + i * 24 * 60 * 60 * 1000;
@@ -50,7 +52,10 @@ export const Calendar = () => {
         items={items}
         loadItemsForMonth={loadItems}
         selected={currentDay} // This ensures the calendar opens to the current date
-        // ... other props and configurations
+        
+        theme = {{
+          //can add theme to the calender here 
+        }}
       />
     </SafeAreaView>
   );
@@ -61,7 +66,10 @@ export const Calendar = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.midnightBlue, // Use your color theme here
+    backgroundColor: Colors.white,
+    paddingBottom: 0,
+    // Use your color theme here
+    
   },
 });
 

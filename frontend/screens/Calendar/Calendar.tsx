@@ -3,8 +3,8 @@ import { StyleSheet } from "react-native";
 import { RouteProp } from "@react-navigation/native";
 import { tabParamsList } from "./Nav"; // Ensure this is the correct path to your Nav.tsx
 import Colors from "../../constants/Colors";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { Agenda } from "react-native-calendars";
+import { SafeAreaView, withSafeAreaInsets } from "react-native-safe-area-context";
+import { Agenda, CalendarProps } from "react-native-calendars";
 
 const timeToString = (time: string | number | Date) => {
   const date = new Date(time);
@@ -14,14 +14,16 @@ const timeToString = (time: string | number | Date) => {
 type CalenderProps = {
   route: RouteProp<tabParamsList, "Calender">;
 };
+type ItemsType = { [key: string]: { name: string; height: number }[] };
 
-export const Calendar = ({ route }: CalendarProps) => {
+export const Calendar = ({ }: CalendarProps) => {
   const [items, setItems] = useState({});
 
   const loadItems = (day: { timestamp: number; }) => {
     setTimeout(() => {
       setItems((currentItems) => {
-        const updatedItems = { ...currentItems };
+        const updatedItems: ItemsType = { ...currentItems };
+
 
         for (let i = -15; i < 85; i++) {
           const time = day.timestamp + i * 24 * 60 * 60 * 1000;
@@ -54,7 +56,10 @@ export const Calendar = ({ route }: CalendarProps) => {
         items={items}
         loadItemsForMonth={loadItems}
         selected={currentDay} // This ensures the calendar opens to the current date
-        // ... other props and configurations
+        
+        theme = {{
+          //can add theme to the calender here 
+        }}
       />
     </SafeAreaView>
   );
@@ -65,7 +70,10 @@ export const Calendar = ({ route }: CalendarProps) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.midnightBlue, // Use your color theme here
+    backgroundColor: Colors.white,
+    paddingBottom: 0,
+    // Use your color theme here
+    
   },
 });
 

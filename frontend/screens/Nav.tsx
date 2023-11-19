@@ -1,15 +1,16 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { MaterialIcons } from "@expo/vector-icons";
 import { User } from "firebase/auth";
 import React from "react";
 import { Favorites } from "./Favorites/Favorites";
 import { Friends } from "./Friends/Friends";
 import { Calendar} from "./Calendar/Calendar";
-import { Profile } from "./Profile/Profile";
+import {  Settings } from "./Settings/Settings";
 import Colors from "../constants/Colors";
 import { GymMain } from "./Gym/GymMain";
 import { View, TouchableOpacity } from 'react-native';
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export type NavProps = {
   user: User;
@@ -19,27 +20,18 @@ export type NavProps = {
 };
 
 type CustomHeaderProps = {
-  onProfilePress: () => void;
+  onSettingsPress: () => void;
   onNotificationsPress: () => void;
 };
 
-const CustomHeader: React.FC<CustomHeaderProps> = ({ onProfilePress, onNotificationsPress }) => {
-  const circleStyle = {
-    width: 40,  // Or whatever size you desire
-    height: 40,
-    borderRadius: 20,  // This should be half of the width/height to make it a circle
-    backgroundColor: 'white',  // Or any other background color you prefer
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: 10
-  };
+const CustomHeader: React.FC<CustomHeaderProps> = ({ onSettingsPress, onNotificationsPress }) => {
   return (
     <View style={{ flexDirection: 'row', justifyContent: 'flex-end', paddingRight: 10 }}>
       <TouchableOpacity style={{ marginRight: 15 }} onPress={onNotificationsPress} >
-        <MaterialCommunityIcons name="bell" size={28} color={Colors.uiucOrange} />
+        <MaterialIcons name="notifications" size={28} color={Colors.uiucOrange} />
       </TouchableOpacity>
-      <TouchableOpacity style={{marginRight: 10}} onPress={onProfilePress}>
-        <MaterialCommunityIcons name="account" size={28} color={Colors.uiucOrange} />
+      <TouchableOpacity style={{marginRight: 10}} onPress={onSettingsPress}>
+        <MaterialIcons name="settings" size={28} color={Colors.uiucOrange} />
       </TouchableOpacity>
     </View>
   );
@@ -57,8 +49,8 @@ const getCommonHeaderOptions = (navigation: any) => ({
   },
   headerRight: () => (
     <CustomHeader
-      onProfilePress={() => {
-        navigation.navigate("Profile");
+    onSettingsPress={() => {
+        navigation.navigate("Settings");
       }}
       onNotificationsPress={() => {
         // This is where notification page goes
@@ -79,9 +71,8 @@ export const Nav = (props: NavProps) => {
           component={Favorites}
           options={({ navigation }) => ({
             ...getCommonHeaderOptions(navigation),
-            tabBarShowLabel: false,
             tabBarIcon: ({ color, size }) => (
-              <MaterialCommunityIcons name="view-dashboard" color={color} size={size} />
+              <MaterialIcons name="star" color={color} size={size} />
             ),
             tabBarActiveTintColor: Colors.uiucOrange,
             tabBarHideOnKeyboard: true,
@@ -92,22 +83,20 @@ export const Nav = (props: NavProps) => {
           component={Friends}
           options={({ navigation }) => ({
             ...getCommonHeaderOptions(navigation),
-            tabBarShowLabel: false,
             tabBarIcon: ({ color, size }) => (
-              <MaterialCommunityIcons name="account-group" color={color} size={size} />
+              <MaterialIcons name="group" color={color} size={size} />
             ),
             tabBarActiveTintColor: Colors.uiucOrange,
             tabBarHideOnKeyboard: true,
           })}
         />
         <Tab.Screen
-          name="GymHome"
+          name="Gym"
           component={GymMain}
           options={({ navigation }) => ({
             ...getCommonHeaderOptions(navigation),
-            tabBarShowLabel: false,
             tabBarIcon: ({ color, size }) => (
-              <MaterialCommunityIcons name="dumbbell" color={color} size={size} />
+              <MaterialIcons name="fitness-center" color={color} size={size} />
             ),
             tabBarActiveTintColor: Colors.uiucOrange,
             tabBarHideOnKeyboard: true,
@@ -118,23 +107,19 @@ export const Nav = (props: NavProps) => {
           component={Calendar}
           options={({ navigation }) => ({
             ...getCommonHeaderOptions(navigation),
-            tabBarShowLabel: false,
             tabBarIcon: ({ color, size }) => (
-              <MaterialCommunityIcons name="calendar" color={color} size={size} />
+              <MaterialIcons name="event" color={color} size={size} />
             ),
             tabBarActiveTintColor: Colors.uiucOrange,
             tabBarHideOnKeyboard: true,
           })}
         />
         <Tab.Screen
-          name="Profile"
-          component={Profile}
+          name="Settings"
+          component={Settings}
           options={({ navigation }) => ({
             ...getCommonHeaderOptions(navigation),
-            tabBarShowLabel: false,
-            tabBarIcon: ({ color, size }) => (
-              <MaterialCommunityIcons name="account" color={color} size={size} />
-            ),
+            tabBarButton: () => null,
             tabBarActiveTintColor: Colors.uiucOrange,
             tabBarHideOnKeyboard: true,
           })}

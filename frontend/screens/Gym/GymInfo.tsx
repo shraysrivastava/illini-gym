@@ -61,16 +61,16 @@ const styles = StyleSheet.create({
     },
     header: {
       position: "absolute",
-      top: 50,
-      left: 0, 
+      top: 0,
+      left: 0, // Ensure it starts from the very left
       flexDirection: "row",
       alignItems: "center",
-      width: "100%", 
-      padding: 0, 
-      margin: 0, 
-      zIndex: 10,
-      paddingBottom: 15, 
-      borderBottomWidth: 1, 
+      width: "100%",
+      padding: 0, // Ensure no padding
+      margin: 0, // Ensure no margin
+      zIndex: 10, // Keep the header above all
+      paddingBottom: 15,
+      borderBottomWidth: 1,
       borderBottomColor: "#ddd",
       backgroundColor: Colors.midnightBlue,
     },

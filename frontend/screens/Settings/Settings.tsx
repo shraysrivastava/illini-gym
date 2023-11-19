@@ -8,13 +8,13 @@ import Colors from "../../constants/Colors";
 import { auth } from "../../firebase/firebaseConfig";
 
 
-export const Profile = () => {
+export const Settings = () => {
   const userId = auth.currentUser?.uid;
   const userEmail = auth.currentUser?.email;
   const [error, setError] = useState("");
   return (
     <SafeAreaView style={styles.container}>
-      <CustomText style={styles.text}>Profile</CustomText>
+      <CustomText style={styles.text}>Settings</CustomText>
       {/* Just for demonstration, display the userId and userEmail */}
       <CustomText style={styles.infoText}>User ID: {userId}</CustomText>
       <CustomText style={styles.infoText}>User Email: {userEmail}</CustomText>

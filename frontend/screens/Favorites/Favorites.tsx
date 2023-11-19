@@ -1,5 +1,13 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { ScrollView, RefreshControl, View } from "react-native";
+import {
+  ScrollView,
+  RefreshControl,
+  View,
+  Button,
+  Touchable,
+  Alert,
+  Modal,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as Progress from "react-native-progress";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -7,87 +15,125 @@ import { db, auth } from "../../firebase/firebaseConfig";
 import {
   getDoc,
   doc,
-  DocumentData,
   collection,
-  getDocs,
-  query,
-  where,
-  QuerySnapshot,
+  updateDoc,
+  arrayRemove,
+  arrayUnion,
 } from "firebase/firestore";
 import Colors from "../../constants/Colors";
 import CustomText from "../Reusables/CustomText";
-import { styles } from "../Gym/GymData"; // Reuse the styles from GymData
+import {styles} from "../Reusables/ModalStyles";
+
+interface SectionDetails {
+  isOpen: boolean;
+  name: string;
+  lastUpdated: string;
+  count: number;
+  capacity: number;
+  key: string;
+}
 
 export const Favorites: React.FC = () => {
   const [favorites, setFavorites] = useState<string[]>([]);
-  const [favoriteSections, setFavoriteSections] = useState<DocumentData[]>([]);
+  const [favoriteSections, setFavoriteSections] = useState<{ gym: string; section: SectionDetails }[]>([]);
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const currentUserId = auth.currentUser?.uid;
 
-  const openSections = favoriteSections.filter((section) => section.isOpen);
-  const closedSections = favoriteSections.filter((section) => !section.isOpen);
-
-  const fetchFavorites = async () => {
+  const fetchAndUpdateFavorites = useCallback(async () => {
     if (!currentUserId) return;
 
-    const userDoc = await getDoc(doc(db, "users", currentUserId));
+    try {
+      const userDoc = await getDoc(doc(db, "users", currentUserId));
+      if (!userDoc.exists()) return;
 
-    if (userDoc.exists()) {
       const userFavorites: string[] = userDoc.data().favorites || [];
       setFavorites(userFavorites);
-      const sectionsQuery = query(
-        collection(db, "arc"),
-        where("id", "in", userFavorites)
-      );
-      getDocs(sectionsQuery)
-        .then((sectionList: QuerySnapshot<DocumentData>) => {
-          const fetchedData = sectionList.docs.map((doc) => ({
-            ...doc.data(),
-            key: doc.id,
-          }));
-          setFavoriteSections(fetchedData);
-        })
-        .catch((error) => {
-          console.error("Error fetching documents:", error);
-        });
+
+      const newPressedSections: Record<string, boolean> = {};
+      const promises = userFavorites.map(async (fav) => {
+        const [gym, sectionId] = fav.split("/");
+        const sectionDoc = await getDoc(doc(db, gym, sectionId));
+        newPressedSections[sectionId] = true; // Update pressedSections
+        return sectionDoc.exists() ? { gym, section: { key: sectionId, ...sectionDoc.data() } } : null;
+      });
+
+      const fetchedData = (await Promise.all(promises)).filter(Boolean);
+      setFavoriteSections(fetchedData as { gym: string; section: SectionDetails }[]);
+    } catch (error) {
+      console.error("Error fetching documents:", error);
     }
-  };
+  }, [currentUserId]);
 
   useEffect(() => {
-    fetchFavorites();
-  }, [currentUserId]);
+    fetchAndUpdateFavorites();
+  }, [fetchAndUpdateFavorites]);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
-    // Re-fetch the favorites
-    fetchFavorites().then(() => {
-      setRefreshing(false);
-    });
-  }, []);
+    fetchAndUpdateFavorites().then(() => setRefreshing(false));
+  }, [fetchAndUpdateFavorites]);
 
-  const renderGymSection = (sections: DocumentData[], sectionTitle: string) => (
+  const handleRemoveFavorite = (gym: string, sectionKey: string) => {
+    Alert.alert(
+      "Remove Favorite",
+      "Are you sure you want to remove this section from your favorites?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel"
+        },
+        { 
+          text: "OK", 
+          onPress: () => removeFromFavorites(gym, sectionKey) 
+        }
+      ]
+    );
+  };
+
+  const removeFromFavorites = useCallback(
+    (gym: string, sectionDocID: string) => {
+      const userDocRef = doc(collection(db, "users"), currentUserId);
+      const favoriteKey = gym + "/" + sectionDocID;
+  
+      updateDoc(userDocRef, { favorites: arrayRemove(favoriteKey) }).then(() => {
+        // Update local state to reflect the removal
+        setFavorites(favs => favs.filter(fav => fav !== favoriteKey));
+  
+        // Optionally, you can also update favoriteSections state to immediately reflect the change
+        setFavoriteSections(sections =>
+          sections.filter(section => section.gym + "/" + section.section.key !== favoriteKey)
+        );
+      });
+    },
+    [currentUserId]
+  );
+
+  const SectionModal = ({sections}: {sections: { gym: string; section: SectionDetails }[]}) => (
     <View style={styles.sectionContainer}>
-      <CustomText style={styles.sectionTitle}>{sectionTitle}</CustomText>
-      {sections.map((section, index) => (
-        <View
-          key={index}
-          style={[
-            styles.gymContainer,
-            section.isOpen ? styles.openBorder : styles.closedBorder,
-          ]}
-        >
+      {sections.map(({ gym, section }, index) => (
+        <View key={index} style={styles.gymContainer}>
           <View style={styles.headerContainer}>
-            <CustomText style={styles.gymName}>{section.name}</CustomText>
+            <View style={styles.sectionHeader}>
+              {section.isOpen ? (
+                <MaterialIcons name="visibility" size={24} color="green" />
+              ) : (
+                <MaterialIcons name="visibility-off" size={24} color="red" />
+              )}
+              <CustomText style={styles.gymName}>{gym} {section.name}</CustomText>
+            </View>
             <MaterialIcons
-              name="remove-circle"
+              name={
+                "cancel"
+              }
               size={24}
-              color="gray"
+              color={"gray"}
               style={styles.iconButton}
-              onPress={() => {
-                // Logic to remove from favorites
-              }}
+              onPress={() => handleRemoveFavorite(gym, section.key)}
             />
           </View>
+          <CustomText style={styles.lastUpdated}>
+            Last Updated: {section.lastUpdated}
+          </CustomText>
           {section.isOpen ? (
             <View style={styles.progressBarContainer}>
               <Progress.Bar
@@ -103,12 +149,14 @@ export const Favorites: React.FC = () => {
                 unfilledColor="grey"
                 style={{ marginRight: 10 }}
               />
-              <CustomText>
-                {section.count}/{section.capacity}
+              <CustomText style={styles.countCapacityText}>
+                {section.count}/{section.capacity} People
               </CustomText>
             </View>
           ) : (
-            <CustomText style={styles.closedText}>Closed</CustomText>
+            <CustomText style={styles.unavailableText}>
+              Section Data Unavailable
+            </CustomText>
           )}
         </View>
       ))}
@@ -119,12 +167,9 @@ export const Favorites: React.FC = () => {
     <SafeAreaView style={styles.container}>
       <ScrollView
         style={styles.scrollView}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
       >
-        {renderGymSection(openSections, "Favorited Open Sections")}
-        {renderGymSection(closedSections, "Favorited Closed Sections")}
+        <SectionModal sections={favoriteSections} />
       </ScrollView>
     </SafeAreaView>
   );

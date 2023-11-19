@@ -3,7 +3,6 @@ import { RouteProp, useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
   ScrollView,
-  StyleSheet,
   View,
   RefreshControl,
   TouchableOpacity,
@@ -22,8 +21,10 @@ import {
   updateDoc,
   arrayRemove,
   arrayUnion,
+  getDoc,
 } from "firebase/firestore";
 import Colors from "../../constants/Colors";
+import {styles} from "../Reusables/ModalStyles";
 import CustomText from "../Reusables/CustomText";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { GymStackParamList } from "./GymMain";
@@ -39,11 +40,8 @@ export const GymData: React.FC<GymDataProps> = ({ route }) => {
     useNavigation<StackNavigationProp<GymStackParamList, "GymData">>();
   const { gym } = route.params;
   const [gymData, setGymData] = useState<DocumentData[]>([]);
-  const [error, setError] = useState<string>("");
   const [refreshing, setRefreshing] = useState<boolean>(false);
-  const [pressedSections, setPressedSections] = useState<
-    Record<string, boolean>
-  >({});
+  const [pressedSections, setPressedSections] = useState<Record<string, boolean>>({});
   const currentUserId = auth.currentUser?.uid;
   const openSections = gymData.filter((section) => section.isOpen);
   const closedSections = gymData.filter((section) => !section.isOpen);
@@ -54,8 +52,8 @@ export const GymData: React.FC<GymDataProps> = ({ route }) => {
       crce: "CRCE",
     }[gym] || gym.toUpperCase();
 
-  const fetchGymData = useCallback(() => {
-    const gymQuery = query(collection(db, gym));
+  const fetchGymData = useCallback(async () => {
+    const gymQuery = query(collection(db, gym + "-test"));
     getDocs(gymQuery)
       .then((sectionList: QuerySnapshot<DocumentData>) => {
         const fetchedData = sectionList.docs.map((doc) => ({
@@ -68,26 +66,55 @@ export const GymData: React.FC<GymDataProps> = ({ route }) => {
         console.error("Error fetching {gym} data: ", err.message);
       });
   }, [gym]);
+  
+  const loadFavorites = useCallback(async () => {
+    const userDocRef = doc(collection(db, "users"), currentUserId);
+    try {
+      const docSnap = await getDoc(userDocRef);
+      if (docSnap.exists()) {
+        const userData = docSnap.data();
+        const favorites = userData.favorites || [];
+        console.log(favorites)
+        // Filter favorites for the current gym and update pressedSections
+        const updatedPressedSections: { [key: string]: boolean } = {};
+        favorites.forEach((favoriteKey: string) => {
+          const [favoriteGym, sectionDocID] = favoriteKey.split('/');
+          if (favoriteGym === gym+"-test") {
+            updatedPressedSections[sectionDocID] = true;
+          }
+        });
+        setPressedSections(updatedPressedSections);
+      } else {
+        console.log("No such document!");
+      }
+    } catch (error) {
+      console.error("Error fetching user data: ", error);
+    }
+  }, [db, currentUserId, gym]);
 
   useEffect(() => {
-    fetchGymData();
-  }, [fetchGymData]);
+    const loadData = async () => {
+      await fetchGymData();
+      await loadFavorites();
+    };
+    loadData();
+  }, [fetchGymData, loadFavorites]);
 
-  const onRefresh = useCallback(() => {
+  const onRefresh = useCallback(async() => {
     setRefreshing(true);
-    fetchGymData();
-    setTimeout(() => {
-      setRefreshing(false);
-    }, 500);
-  }, [fetchGymData]);
+    await fetchGymData();
+    await loadFavorites();
+    setRefreshing(false);
+  }, [fetchGymData, loadFavorites]);
 
   const handleFavoritePress = useCallback(
     (sectionDocID: string) => {
       const userDocRef = doc(collection(db, "users"), currentUserId);
+      const favoriteKey = gym + "-test/" + sectionDocID;
       if (pressedSections[sectionDocID]) {
-        updateDoc(userDocRef, { favorites: arrayRemove(sectionDocID) });
+        updateDoc(userDocRef, { favorites: arrayRemove(favoriteKey) });
       } else {
-        updateDoc(userDocRef, { favorites: arrayUnion(sectionDocID) });
+        updateDoc(userDocRef, { favorites: arrayUnion(favoriteKey) });
       }
       setPressedSections((prev) => ({
         ...prev,
@@ -97,31 +124,30 @@ export const GymData: React.FC<GymDataProps> = ({ route }) => {
     [pressedSections, currentUserId]
   );
 
-  const renderGymSection = (sections: DocumentData[], sectionTitle: string) => (
+  const SectionModal = (sections: DocumentData[]) => (
     <View style={styles.sectionContainer}>
-      <CustomText style={styles.sectionTitle}>
-        {formattedGymName}'s {sectionTitle}
-      </CustomText>
       {sections.map((section, index) => (
-        <View
-          key={index}
-          style={[
-            styles.gymContainer,
-            section.isOpen ? styles.openBorder : styles.closedBorder,
-          ]}
-        >
+        <View key={index} style={styles.gymContainer}>
           <View style={styles.headerContainer}>
-            <CustomText style={styles.gymName}>{section.name}</CustomText>
+            <View style={styles.sectionHeader}>
+              {section.isOpen ? (
+                <MaterialIcons name="visibility" size={24} color="green" />
+              ) : (
+                <MaterialIcons name="visibility-off" size={24} color="red" />
+              )}
+              <CustomText style={styles.gymName}>{section.name}</CustomText>
+            </View>
             <MaterialIcons
-              name={
-                pressedSections[section.key] ? "check-circle" : "add-circle"
-              }
+              name={ pressedSections[section.key] ? "star" : "star-outline"}
               size={24}
               color={pressedSections[section.key] ? "green" : "gray"}
               style={styles.iconButton}
               onPress={() => handleFavoritePress(section.key)}
             />
           </View>
+          <CustomText style={styles.lastUpdated}>
+            Last Updated: {section.lastUpdated}
+          </CustomText>
           {section.isOpen ? (
             <View style={styles.progressBarContainer}>
               <Progress.Bar
@@ -138,12 +164,16 @@ export const GymData: React.FC<GymDataProps> = ({ route }) => {
                 style={{ marginRight: 10 }}
               />
 
-              <CustomText>
-                {section.count}/{section.capacity}
+              <CustomText style={styles.countCapacityText}>
+                {section.count}/{section.capacity} People
               </CustomText>
             </View>
           ) : (
-            <CustomText>Closed</CustomText>
+            
+              <CustomText style={styles.unavailableText}>
+                Section Closed
+              </CustomText>
+            
           )}
         </View>
       ))}
@@ -161,110 +191,20 @@ export const GymData: React.FC<GymDataProps> = ({ route }) => {
             color="white"
           />
         </TouchableOpacity>
-        <CustomText style={styles.headerText}>See {formattedGymName} Info</CustomText>
+        <CustomText style={styles.headerText}>
+          See {formattedGymName} Info
+        </CustomText>
       </View>
       <ScrollView
         style={styles.scrollView}
+        contentContainerStyle={styles.contentContainer}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       >
-        {renderGymSection(openSections, "Open Sections")}
-        {renderGymSection(closedSections, "Closed Sections")}
+        {SectionModal(openSections)}
+        {SectionModal(closedSections)}
       </ScrollView>
     </SafeAreaView>
   );
 };
-
-export const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: Colors.midnightBlue,
-  },
-  scrollView: {
-    marginTop: 40,
-    flex: 1,
-    width: "100%",
-  },
-  header: {
-    position: "absolute",
-    top: 50,
-    left: 0, // Ensure it starts from the very left
-    flexDirection: "row",
-    alignItems: "center",
-    width: "100%",
-    padding: 0, // Ensure no padding
-    margin: 0, // Ensure no margin
-    zIndex: 10, // Keep the header above all
-    paddingBottom: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: "#ddd",
-    backgroundColor: Colors.midnightBlue,
-  },
-
-  headerText: {
-    fontSize: 20,
-    fontWeight: "bold",
-    marginLeft: 10,
-  },
-  gymContainer: {
-    width: "90%",
-    margin: 10,
-    padding: 10,
-    backgroundColor: Colors.subtleWhite,
-    borderRadius: 8,
-    alignItems: "center",
-    borderWidth: 2,
-  },
-  openBorder: {
-    borderColor: "green",
-    borderWidth: 2,
-  },
-  closedBorder: {
-    borderColor: "red",
-    borderWidth: 2,
-  },
-  progressBarContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    alignSelf: "flex-start",
-  },
-  addButton: {
-    position: "absolute",
-    top: 10,
-    right: 10,
-  },
-  headerContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    width: "100%",
-  },
-  gymName: {
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-  iconButton: {},
-  sectionContainer: {
-    width: "100%",
-    paddingBottom: 15,
-  },
-  sectionTitle: {
-    fontSize: 20,
-    fontWeight: "bold",
-    padding: 10,
-  },
-  closedText: {
-  color: "#FF6B6B",  // Red color for closed status
-  fontSize: 18,
-  fontWeight: "bold",
-  paddingVertical: 10,
-  paddingHorizontal: 15,
-  borderRadius: 5,
-  backgroundColor: "#f0f0f0", // Light grey background
-}
-
-});

@@ -9,99 +9,78 @@ options = webdriver.ChromeOptions()
 # Uncomment below if you want to run Chrome in headless mode
 # options.add_argument('headless')
 
-browser = webdriver.Chrome(options=options)  # Add path like this if needed: webdriver.Chrome('path_to_chromedriver', options=options)
+browser = webdriver.Chrome(options=options)
 browser.get(url)
 
-# List of XPaths you want to extract text from
 xpaths = [
     '/html/body/div/div/div[2]/div[1]/div/div[2]',
-    '/html/body/div/div/div[2]/div[2]',
-    '/html/body/div/div/div[2]/div[3]',
-    '/html/body/div/div/div[2]/div[4]',
-    '/html/body/div/div/div[2]/div[5]',
-    '/html/body/div/div/div[2]/div[6]',
-    '/html/body/div/div/div[2]/div[7]',
-    '/html/body/div/div/div[2]/div[8]',
-    '/html/body/div/div/div[2]/div[9]',
-    '/html/body/div/div/div[2]/div[10]',
-    '/html/body/div/div/div[2]/div[11]',
-    '/html/body/div/div/div[2]/div[12]',
-    '/html/body/div/div/div[2]/div[13]',
-    '/html/body/div/div/div[2]/div[14]',
-    '/html/body/div/div/div[2]/div[15]',
-    '/html/body/div/div/div[2]/div[16]',
-    '/html/body/div/div/div[2]/div[17]',
-    '/html/body/div/div/div[2]/div[18]',
-    '/html/body/div/div/div[2]/div[19]',
-  
-
+    '/html/body/div/div/div[2]/div[2]/div/div[2]',
+    '/html/body/div/div/div[2]/div[3]/div/div[2]',
+    '/html/body/div/div/div[2]/div[4]/div/div[2]',
+    '/html/body/div/div/div[2]/div[5]/div/div[2]',
+    '/html/body/div/div/div[2]/div[6]/div/div[2]',
+    '/html/body/div/div/div[2]/div[7]/div/div[2]',
+    '/html/body/div/div/div[2]/div[8]/div/div[2]',
+    '/html/body/div/div/div[2]/div[9]/div/div[2]',
+    '/html/body/div/div/div[2]/div[10]/div/div[2]',
+    '/html/body/div/div/div[2]/div[11]/div/div[2]',
+    '/html/body/div/div/div[2]/div[12]/div/div[2]',
+    '/html/body/div/div/div[2]/div[13]/div/div[2]',
+    '/html/body/div/div/div[2]/div[14]/div/div[2]',
+    '/html/body/div/div/div[2]/div[15]/div/div[2]',
+    '/html/body/div/div/div[2]/div[16]/div/div[2]',
+    '/html/body/div/div/div[2]/div[17]/div/div[2]',
+    '/html/body/div/div/div[2]/div[18]/div/div[2]',
+    '/html/body/div/div/div[2]/div[19]/div/div[2]',
 ]
+
+data_ = {}
 
 for path in xpaths:
     try:
-        # Wait up to 10 seconds for each element to be present
         element = WebDriverWait(browser, 10).until(
             EC.presence_of_element_located((By.XPATH, path))
         )
-        print(element.text)
-    except:
-        print(f"Couldn't find element with XPath: {path}")
+        text = element.text.split('\n')
+
+        # Basic checks to ensure we're not going out of index
+        room_name = text[0] if len(text) > 0 else None
+        status = text[1].strip("()") if len(text) > 1 else None
+        last_count = text[2].split(': ')[1] if len(text) > 2 else None
+        date_time = text[3] if len(text) > 3 else None
+        
+        if room_name:
+            data_[room_name] = {
+                "Status": status,
+                "Last Count": last_count,
+                "Date and Time": date_time
+            }
+            print(data_[room_name])
+
+    except Exception as e:
+        print(f"Error with XPath: {path}. Error details: {e}")
 
 browser.quit()
 
+for room_name in data_ :
+    print(room_name)
 
-#driver = webdriver.Chrome()
-#driver.get('https://apps2.campusrec.illinois.edu/checkins/live')
 
-#rooms = driver.find_elements("xpath",'//*[@id="app"]/div/div[2]/div[9]/div/div[2]')
+import firebase_admin
+from firebase_admin import credentials
+from firebase_admin import firestore
+import datetime 
+from datetime import datetime
+import pytz
 
-#for room in rooms:
- #   title = room.find_element("xpath",'.//*[@id="app"]/div/div[2]/div[9]/div/div[2]/b').text
- #   count = room.find_element("xpath",'.//*[@id="app"]/div/div[2]/div[9]/div/div[2]/br[2]').text
-  #  updated = room.find_element("xpath",'.//*[@id="app"]/div/div[2]/div[9]/div/div[2]/br[3]').text
-  #  print(title, count, updated)
+tz = pytz.timezone("America/Chicago")
+time = datetime.now(tz).strftime('%Y-%m-%d %H:%M:%S')
+cred = credentials.Certificate("/Users/taiguewoods/Desktop/CS 222/group-project-team70/backend/illini-gym-firebase-adminsdk-8p8no-a3ec2d6860.json")
+firebase_admin.initialize_app(cred)
+db = firestore.client()
 
-#driver.quit()
-#def get_data(url):
- #   browser_options = ChromeOptions()
- #   browser_options.headless = True
 
- #   driver = Chrome(options=browser_options)
-  #  driver.get(url)
-
-  #  elements = driver.find_elements(By.NAME("room-description"))
+def save(collection_id, document_id, data_):
+    db.collection(collection_id).document(document_id).set(data_)
     
-    # Collect the data from the found elements
-  #  data = [element.text("<b data-v-ac6ff1de") for element in elements]
-
-  #  driver.quit()
-
-  #  return data
-
-#def main(): 
- #   data = get_data("https://apps2.campusrec.illinois.edu/checkins/live")
-  #  print(data)
-
-#if __name__ == "__main__":
- #   main()
-
-
-
-
-
-
-#driver = webdriver.Chrome()
-#driver.get("https://apps2.campusrec.illinois.edu/checkins/live")
-#driver.implicity_wait(10)
-#page_source = driver.page_source
-#driver.quit()
-#soup = BeautifulSoup(page_source, "hmtl.parser")
-
-
-#req = requests.get("https://apps2.campusrec.illinois.edu/checkins/live")
-
-#soup = BeautifulSoup(req.content, "html.parser")
-#x = soup.find('div', class_= "room-description")
-#x = soup.find_all('div')
-#print(soup.prettify())
-#print(x)
+save(collection_id="Gym Counts", document_id=f"{time}", data_=data_)

@@ -1,23 +1,24 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { GymStackParamList } from "./GymMain";
+import { GymStackParamList } from "./GymNav";
 import { StackNavigationProp } from "@react-navigation/stack";
 import Colors from "../../constants/Colors";
 
 export const GymSelection = () => {
-    const navigation = useNavigation<StackNavigationProp<GymStackParamList, 'GymInfo'>>();
+  const navigation =
+    useNavigation<StackNavigationProp<GymStackParamList, "GymInfo">>();
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity 
-        style={styles.button} 
+      <TouchableOpacity
+        style={styles.button}
         onPress={() => navigation.navigate("GymInfo", { gym: "arc" })}
       >
         <Text style={styles.buttonText}>ARC</Text>
       </TouchableOpacity>
-      <TouchableOpacity 
-        style={styles.button} 
+      <TouchableOpacity
+        style={styles.button}
         onPress={() => navigation.navigate("GymInfo", { gym: "crce" })}
       >
         <Text style={styles.buttonText}>CRCE</Text>
@@ -39,7 +40,7 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     borderRadius: 5,
     marginVertical: 10,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOpacity: 0.2,
     shadowOffset: {
       width: 0,
@@ -51,6 +52,6 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "#fff",
     fontSize: 20,
-    fontWeight: "bold"
-  }
+    fontWeight: "bold",
+  },
 });

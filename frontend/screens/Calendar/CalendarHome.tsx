@@ -12,7 +12,7 @@ const timeToString = (time: string | number | Date) => {
 
 type ItemsType = { [key: string]: { name: string; height: number }[] };
 
-export const Calendar = ({ }: CalendarProps) => {
+export const CalendarHome = ({ }: CalendarProps) => {
   const [items, setItems] = useState({});
 
   const loadItems = (day: { timestamp: number; }) => {

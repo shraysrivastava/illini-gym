@@ -1,12 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { RouteProp, useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import {
-  ScrollView,
-  View,
-  RefreshControl,
-  TouchableOpacity,
-} from "react-native";
+import { ScrollView, View, RefreshControl } from "react-native";
 import * as Progress from "react-native-progress";
 import { MaterialIcons } from "@expo/vector-icons";
 import { db, auth } from "../../firebase/firebaseConfig";
@@ -24,12 +19,12 @@ import {
   getDoc,
 } from "firebase/firestore";
 import Colors from "../../constants/Colors";
-import {styles} from "../Reusables/ModalStyles";
+import { styles } from "../Reusables/ModalStyles";
 import CustomText from "../Reusables/CustomText";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { GymStackParamList } from "./GymMain";
+import { GymStackParamList } from "./GymNav";
 
-type GymDataProps = {
+export type GymDataProps = {
   route: RouteProp<Record<string, object>, "GymData"> & {
     params: { gym: "arc" | "crce" };
   };
@@ -41,7 +36,9 @@ export const GymData: React.FC<GymDataProps> = ({ route }) => {
   const { gym } = route.params;
   const [gymData, setGymData] = useState<DocumentData[]>([]);
   const [refreshing, setRefreshing] = useState<boolean>(false);
-  const [pressedSections, setPressedSections] = useState<Record<string, boolean>>({});
+  const [pressedSections, setPressedSections] = useState<
+    Record<string, boolean>
+  >({});
   const currentUserId = auth.currentUser?.uid;
   const openSections = gymData.filter((section) => section.isOpen);
   const closedSections = gymData.filter((section) => !section.isOpen);
@@ -66,7 +63,7 @@ export const GymData: React.FC<GymDataProps> = ({ route }) => {
         console.error("Error fetching {gym} data: ", err.message);
       });
   }, [gym]);
-  
+
   const loadFavorites = useCallback(async () => {
     const userDocRef = doc(collection(db, "users"), currentUserId);
     try {
@@ -74,12 +71,12 @@ export const GymData: React.FC<GymDataProps> = ({ route }) => {
       if (docSnap.exists()) {
         const userData = docSnap.data();
         const favorites = userData.favorites || [];
-        console.log(favorites)
+        console.log(favorites);
         // Filter favorites for the current gym and update pressedSections
         const updatedPressedSections: { [key: string]: boolean } = {};
         favorites.forEach((favoriteKey: string) => {
-          const [favoriteGym, sectionDocID] = favoriteKey.split('/');
-          if (favoriteGym === gym+"-test") {
+          const [favoriteGym, sectionDocID] = favoriteKey.split("/");
+          if (favoriteGym === gym + "-test") {
             updatedPressedSections[sectionDocID] = true;
           }
         });
@@ -100,7 +97,7 @@ export const GymData: React.FC<GymDataProps> = ({ route }) => {
     loadData();
   }, [fetchGymData, loadFavorites]);
 
-  const onRefresh = useCallback(async() => {
+  const onRefresh = useCallback(async () => {
     setRefreshing(true);
     await fetchGymData();
     await loadFavorites();
@@ -138,7 +135,7 @@ export const GymData: React.FC<GymDataProps> = ({ route }) => {
               <CustomText style={styles.gymName}>{section.name}</CustomText>
             </View>
             <MaterialIcons
-              name={ pressedSections[section.key] ? "star" : "star-outline"}
+              name={pressedSections[section.key] ? "star" : "star-outline"}
               size={24}
               color={pressedSections[section.key] ? "green" : "gray"}
               style={styles.iconButton}
@@ -169,11 +166,9 @@ export const GymData: React.FC<GymDataProps> = ({ route }) => {
               </CustomText>
             </View>
           ) : (
-            
-              <CustomText style={styles.unavailableText}>
-                Section Closed
-              </CustomText>
-            
+            <CustomText style={styles.unavailableText}>
+              Section Closed
+            </CustomText>
           )}
         </View>
       ))}
@@ -182,19 +177,6 @@ export const GymData: React.FC<GymDataProps> = ({ route }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <MaterialIcons
-            name="arrow-back"
-            size={30}
-            style={{ marginLeft: 10 }}
-            color="white"
-          />
-        </TouchableOpacity>
-        <CustomText style={styles.headerText}>
-          See {formattedGymName} Info
-        </CustomText>
-      </View>
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.contentContainer}

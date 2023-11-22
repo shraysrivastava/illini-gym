@@ -9,7 +9,7 @@ import { DocumentData } from "firebase/firestore";
 import { fetchUserData } from "./firebase/firestore";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import {Nav} from "./screens/Nav";
+import {BottomNav} from "./screens/BottomNav";
 export type tabParamsList = {
   Home: undefined;
   Profile: { user: User };
@@ -36,7 +36,7 @@ export default function App() {
     );
   } else {
     return (
-      <Nav
+      <BottomNav
         user={user}
         userData={userData}
         fetchUserData={fetchUserData}

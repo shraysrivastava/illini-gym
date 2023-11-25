@@ -183,7 +183,7 @@ export const FavoritesHome: React.FC = () => {
   );
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <ScrollView
         style={styles.scrollView}
         refreshControl={
@@ -204,6 +204,6 @@ export const FavoritesHome: React.FC = () => {
           <CustomText>You have no favorites yet!</CustomText>
         )}
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };

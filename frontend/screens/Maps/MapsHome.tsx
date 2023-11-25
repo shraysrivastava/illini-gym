@@ -8,6 +8,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation } from '@react-navigation/native';
 import { MapsStackParamList } from './MapsNav';
+import Colors from '../../constants/Colors';
 
 interface LocationCoords {
   latitude: number;
@@ -30,7 +31,7 @@ export const MapsHome: React.FC = () => {
   const handleMarkerPress = (gymKey: string) => {
     // Determine the gym based on the marker's key or other relevant data
     const gym = gymKey === '1' ? 'arc' : 'crce'; // Modify this logic as needed for your gym identifiers
-    navigation.navigate('GymInfo', { gym: gym });
+    navigation.navigate('GymData', { gym: gym, gymName: gym.toUpperCase() });
   };
 
   useEffect(() => {
@@ -70,12 +71,14 @@ export const MapsHome: React.FC = () => {
             }}
             onPress={() => handleMarkerPress(marker.key)}
           >
+            
+            <Text style={styles.markerTitle}>{marker.title}</Text>
+            
             <TouchableOpacity onPress={() => handleMarkerPress(marker.key)}>
-              <MaterialIcons name="place" size={32} color="red" />
+              <MaterialIcons name="place" size={32} color={Colors.uiucOrange} />
             </TouchableOpacity>
           </Marker>
         ))}
-        
 
         {currentLocation && (
           <Circle
@@ -99,43 +102,18 @@ const styles = StyleSheet.create({
   map: {
     ...StyleSheet.absoluteFillObject,
   },
-  modalBackdrop: {
-    flex: 1,
-    justifyContent: 'flex-end',
-  },
-  modalView: {
-    backgroundColor: 'white',
-    padding: 20,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-  },
-  modalTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  modalText: {
-    fontSize: 16,
-    marginBottom: 20,
-  },
-  modalButton: {
-    backgroundColor: '#007bff',
-    padding: 10,
+  markerTitleContainer: {
+    backgroundColor: 'rgba(255, 255, 255, 0.9)', // Semi-transparent white background
+    padding: 5,
     borderRadius: 5,
-    alignItems: 'center',
-    marginBottom: 10,
+    marginBottom: 5, // Spacing between title and icon
+    alignItems: 'center', // Center align the text
   },
-  buttonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
+  markerTitle: {
+    color: Colors.black, // Text color
+    fontWeight: 'bold', // Bold text
+    // You can add other styling like fontSize, etc.
   },
-  closeButton: {
-    backgroundColor: 'grey',
-    padding: 10,
-    borderRadius: 5,
-    alignItems: 'center',
-  },
-  
   
 });
 

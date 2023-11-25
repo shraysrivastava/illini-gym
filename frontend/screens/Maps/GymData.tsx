@@ -170,7 +170,7 @@ export const GymData: React.FC<GymDataProps> = ({ route }) => {
   );
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.contentContainer}
@@ -181,6 +181,6 @@ export const GymData: React.FC<GymDataProps> = ({ route }) => {
         {SectionModal(openSections)}
         {SectionModal(closedSections)}
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };

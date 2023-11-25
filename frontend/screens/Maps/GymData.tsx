@@ -22,7 +22,7 @@ import Colors from "../../constants/Colors";
 import { styles } from "../Reusables/ModalStyles";
 import CustomText from "../Reusables/CustomText";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { GymStackParamList } from "./GymNav";
+import { MapsStackParamList } from "./MapsNav";
 
 export type GymDataProps = {
   route: RouteProp<Record<string, object>, "GymData"> & {
@@ -32,7 +32,7 @@ export type GymDataProps = {
 
 export const GymData: React.FC<GymDataProps> = ({ route }) => {
   const navigation =
-    useNavigation<StackNavigationProp<GymStackParamList, "GymData">>();
+    useNavigation<StackNavigationProp<MapsStackParamList, "GymData">>();
   const { gym } = route.params;
   const [gymData, setGymData] = useState<DocumentData[]>([]);
   const [refreshing, setRefreshing] = useState<boolean>(false);
@@ -42,12 +42,6 @@ export const GymData: React.FC<GymDataProps> = ({ route }) => {
   const currentUserId = auth.currentUser?.uid;
   const openSections = gymData.filter((section) => section.isOpen);
   const closedSections = gymData.filter((section) => !section.isOpen);
-
-  const formattedGymName =
-    {
-      arc: "ARC",
-      crce: "CRCE",
-    }[gym] || gym.toUpperCase();
 
   const fetchGymData = useCallback(async () => {
     const gymQuery = query(collection(db, gym + "-test"));

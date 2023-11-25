@@ -1,24 +1,25 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
-import { GymData } from "./GymData";
-import { GymSelection } from "./GymSelection";
-import { GymInfo } from "./GymInfo";
+
 import Colors from "../../constants/Colors";
-import { GymSettings } from "../Settings/GymSettings";
+import { FavoriteSettings } from "../Settings/FavoriteSettings";
 import { getCommonHeaderOptions } from "../CustomHeader";
-export type GymStackParamList = {
-  GymSelection: undefined;
+import { MapsHome } from "./MapsHome";
+import { GymInfo } from "./GymInfo";
+import { GymData } from "./GymData";
+export type MapsStackParamList = {
+  MapsHome: undefined;
+  MapsSettings: undefined;
   GymInfo: { gym: string };
   GymData: { gym: string };
-  GymSettings: undefined;
 };
 
-const GymStack = createStackNavigator<GymStackParamList>();
+const MapsStack = createStackNavigator<MapsStackParamList>();
 
-export const GymNav = () => {
+export const MapsNav = () => {
   return (
-    <GymStack.Navigator
-      initialRouteName="GymSelection"
+    <MapsStack.Navigator
+      initialRouteName="MapsHome"
       screenOptions={{
         gestureEnabled: true,
         gestureDirection: "horizontal",
@@ -30,34 +31,37 @@ export const GymNav = () => {
         },
       }}
     >
-      <GymStack.Screen
-        name="GymSelection"
-        component={GymSelection}
+      <MapsStack.Screen
+        name="MapsHome"
+        component={MapsHome}
         options={({ navigation }) =>
-          getCommonHeaderOptions(navigation, "Gym", "Select a Gym")
+          getCommonHeaderOptions(navigation, "Maps", "Maps")
         }
       />
-      <GymStack.Screen
+      <MapsStack.Screen
         name="GymInfo"
         component={GymInfo}
         options={({ navigation }) =>
-          getCommonHeaderOptions(navigation, "Gym", "Gym Info")
+          getCommonHeaderOptions(navigation, "Maps", "Gym Info")
         }
       />
-      <GymStack.Screen
+      <MapsStack.Screen
         name="GymData"
         component={GymData}
         options={({ navigation }) =>
-          getCommonHeaderOptions(navigation, "Gym", "Gym Data")
+          getCommonHeaderOptions(navigation, "Maps", "Gym Data")
         }
       />
-      <GymStack.Screen
-        name="GymSettings"
-        component={GymSettings}
+      <MapsStack.Screen
+        name="MapsSettings"
+        component={FavoriteSettings}
         options={({ navigation }) =>
-          getCommonHeaderOptions(navigation, "Gym", "Settings")
+          getCommonHeaderOptions(navigation, "Maps", "Settings")
         }
       />
-    </GymStack.Navigator>
+      
+
+
+    </MapsStack.Navigator>
   );
 };

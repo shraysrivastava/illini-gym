@@ -4,9 +4,10 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { User } from "firebase/auth";
 import React from "react";
 import Colors from "../constants/Colors";
-import { GymNav } from "./Gym/GymNav";
+// import { GymNav } from "./Gym/GymNav";
 import { FavoritesNav } from "./Favorites/FavoritesNav";
 import { CalendarNav } from "./Calendar/CalendarNav";
+import { MapsNav } from "./Maps/MapsNav";
 
 export type NavProps = {
   user: User;
@@ -43,7 +44,7 @@ export const BottomNav = (props: NavProps) => {
             tabBarHideOnKeyboard: true,
           })}
         />
-        <Tab.Screen
+        {/* <Tab.Screen
           name="Gym"
           component={GymNav}
           options={({ navigation }) => ({
@@ -54,6 +55,19 @@ export const BottomNav = (props: NavProps) => {
             tabBarActiveTintColor: Colors.uiucOrange,
             tabBarHideOnKeyboard: true,
             headerShown: false,
+          })}
+        /> */}
+        
+        <Tab.Screen
+          name="Maps"
+          component={MapsNav}
+          options={({ navigation }) => ({
+            // ...getCommonHeaderOptions(navigation, "Calendar"),
+            tabBarIcon: ({ color, size }) => (
+              <MaterialIcons name="map" color={color} size={size} />
+            ),
+            tabBarActiveTintColor: Colors.uiucOrange,
+            tabBarHideOnKeyboard: true,
           })}
         />
         <Tab.Screen

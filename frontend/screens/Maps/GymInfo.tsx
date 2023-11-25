@@ -1,13 +1,15 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { RouteProp, useNavigation } from "@react-navigation/native";
-import { GymStackParamList } from "./GymNav";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { MaterialIcons } from "@expo/vector-icons"; // Ensure you've installed @expo/vector-icons
 import Colors from "../../constants/Colors";
 import CustomText from "../Reusables/CustomText";
 import { SafeAreaView } from "react-native-safe-area-context";
-type GymInfoTypeRouteProp = RouteProp<GymStackParamList, "GymInfo">;
+import { MapsStackParamList } from "./MapsNav";
+import { Arc } from "./Arc";
+import { Crce } from "./Crce";
+type GymInfoTypeRouteProp = RouteProp<MapsStackParamList, "GymInfo">;
 
 interface GymInfoTypeProps {
   route: GymInfoTypeRouteProp;
@@ -15,30 +17,17 @@ interface GymInfoTypeProps {
 
 export const GymInfo: React.FC<GymInfoTypeProps> = ({ route }) => {
   const navigation =
-    useNavigation<StackNavigationProp<GymStackParamList, "GymInfo">>();
+    useNavigation<StackNavigationProp<MapsStackParamList, "GymInfo">>();
 
   const { gym } = route.params;
 
   // Utility to convert gym identifier to display-friendly name
-  const formattedGymName =
-    {
-      arc: "ARC",
-      crce: "CRCE",
-    }[gym] || gym.toUpperCase();
-
+ 
   return (
     <SafeAreaView style={styles.container}>
       {/* Displaying the selected gym's name */}
-      <CustomText style={styles.gymName}>{formattedGymName}</CustomText>
+      {gym == 'arc' ? <Arc/> : <Crce/>}
 
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => {
-          /* Navigate or show basic info */
-        }}
-      >
-        <Text style={styles.buttonText}>Basic Info</Text>
-      </TouchableOpacity>
       <TouchableOpacity
         style={styles.button}
         onPress={() => navigation.navigate("GymData", { gym: gym })}

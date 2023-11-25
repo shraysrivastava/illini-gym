@@ -5,6 +5,9 @@ import * as Location from 'expo-location';
 import { gymMarkers } from './GymMarkers';
 import { MaterialIcons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { useNavigation } from '@react-navigation/native';
+import { MapsStackParamList } from './MapsNav';
 
 interface LocationCoords {
   latitude: number;
@@ -20,13 +23,21 @@ interface MarkerData {
 }
 
 export const MapsHome: React.FC = () => {
-  const [currentLocation, setCurrentLocation] = useState<LocationCoords | null>(null);
-  
+  const navigation = useNavigation<StackNavigationProp<MapsStackParamList, "GymInfo">>();
+  const [currentLocation, setCurrentLocation] = useState<LocationCoords | null>(
+    null
+  );
+  const handleMarkerPress = (gymKey: string) => {
+    // Determine the gym based on the marker's key or other relevant data
+    const gym = gymKey === '1' ? 'arc' : 'crce'; // Modify this logic as needed for your gym identifiers
+    navigation.navigate('GymInfo', { gym: gym });
+  };
+
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        console.error('Permission to access location was denied');
+      if (status !== "granted") {
+        console.error("Permission to access location was denied");
         return;
       }
 
@@ -37,10 +48,6 @@ export const MapsHome: React.FC = () => {
       });
     })();
   }, []);
-
-  
-  
-  
 
   return (
     <SafeAreaView style={styles.container}>
@@ -61,12 +68,15 @@ export const MapsHome: React.FC = () => {
               latitude: marker.latitude,
               longitude: marker.longitude,
             }}
-            title={marker.title}
-            description={marker.address}
-           
-          />
+            onPress={() => handleMarkerPress(marker.key)}
+          >
+            <TouchableOpacity onPress={() => handleMarkerPress(marker.key)}>
+              <MaterialIcons name="place" size={32} color="red" />
+            </TouchableOpacity>
+          </Marker>
         ))}
-       
+        
+
         {currentLocation && (
           <Circle
             center={currentLocation}
@@ -89,7 +99,42 @@ const styles = StyleSheet.create({
   map: {
     ...StyleSheet.absoluteFillObject,
   },
-  
+  modalBackdrop: {
+    flex: 1,
+    justifyContent: 'flex-end',
+  },
+  modalView: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  modalText: {
+    fontSize: 16,
+    marginBottom: 20,
+  },
+  modalButton: {
+    backgroundColor: '#007bff',
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  closeButton: {
+    backgroundColor: 'grey',
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+  },
   
   
 });

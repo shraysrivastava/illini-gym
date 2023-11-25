@@ -55,6 +55,8 @@ export const getCommonHeaderOptions = (navigation: any, stackName: string, title
           navigation.navigate("GymSettings");
         } else if (stackName === "Calendar") {
           navigation.navigate("CalendarSettings");
+        } else if (stackName === "Maps") {
+          navigation.navigate("MapsSettings");
         } else {
           console.log("Settings icon pressed.");
         }

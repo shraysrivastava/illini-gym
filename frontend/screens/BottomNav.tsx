@@ -7,6 +7,7 @@ import Colors from "../constants/Colors";
 import { GymNav } from "./Gym/GymNav";
 import { FavoritesNav } from "./Favorites/FavoritesNav";
 import { CalendarNav } from "./Calendar/CalendarNav";
+import { MapsNav } from "./Maps/MapsNav";
 
 export type NavProps = {
   user: User;
@@ -63,6 +64,18 @@ export const BottomNav = (props: NavProps) => {
             // ...getCommonHeaderOptions(navigation, "Calendar"),
             tabBarIcon: ({ color, size }) => (
               <MaterialIcons name="event" color={color} size={size} />
+            ),
+            tabBarActiveTintColor: Colors.uiucOrange,
+            tabBarHideOnKeyboard: true,
+          })}
+        />
+        <Tab.Screen
+          name="MapsNav"
+          component={MapsNav}
+          options={({ navigation }) => ({
+            // ...getCommonHeaderOptions(navigation, "Calendar"),
+            tabBarIcon: ({ color, size }) => (
+              <MaterialIcons name="map" color={color} size={size} />
             ),
             tabBarActiveTintColor: Colors.uiucOrange,
             tabBarHideOnKeyboard: true,

@@ -43,27 +43,39 @@ for path in xpaths:
         )
         text = element.text.split('\n')
 
-        # Basic checks to ensure we're not going out of index
-        room_name = text[0] if len(text) > 0 else None
+        # Extract the relevant data from the text list
+        room_name = text[0].strip().lower().replace(" ", "-") if len(text) > 0 else None
         status = text[1].strip("()") if len(text) > 1 else None
-        last_count = text[2].split(': ')[1] if len(text) > 2 else None
-        date_time = text[3] if len(text) > 3 else None
+        last_count_data = text[2].split(' ') if len(text) > 2 else None
+        last_count = last_count_data[2] if last_count_data and len(last_count_data) > 2 else None
+        capacity = last_count_data[4] if last_count_data and len(last_count_data) > 4 else None  # Extracting capacity
+        last_updated = text[3].strip() if len(text) > 3 else None
         
+        # Normalize the status to a boolean value
+        is_open = True if status.lower() == "open" else False
+
         if room_name:
             data_[room_name] = {
-                "Status": status,
-                "Last Count": last_count,
-                "Date and Time": date_time
+                "name": room_name.replace("-", " ").title(),  # Convert back to title case for the name field
+                "count": int(last_count),
+                "capacity": int(capacity),  # Added capacity
+                "isOpen": is_open,
+                "lastUpdated": last_updated  # This should now hold the correct date and time
             }
-            print(data_[room_name])
 
     except Exception as e:
         print(f"Error with XPath: {path}. Error details: {e}")
 
 browser.quit()
 
-for room_name in data_ :
-    print(room_name)
+# Print the parsed data
+for room_name, room_data in data_.items():
+    print(f"Room Name: {room_name}")
+    print(f"Status: {room_data['isOpen']}")
+    print(f"Count: {room_data['count']}")
+    print(f"Capacity: {room_data['capacity']}")
+    print(f"Last Updated: {room_data['lastUpdated']}\n")
+
 
 
 import firebase_admin
@@ -73,14 +85,32 @@ import datetime
 from datetime import datetime
 import pytz
 
-tz = pytz.timezone("America/Chicago")
-time = datetime.now(tz).strftime('%Y-%m-%d %H:%M:%S')
-cred = credentials.Certificate("/Users/taiguewoods/Desktop/CS 222/group-project-team70/backend/illini-gym-firebase-adminsdk-8p8no-a3ec2d6860.json")
+cred = credentials.Certificate("/Users/taiguewoods/Desktop/CS 222/group-project-team70/backend/illini-gymv2-firebase-adminsdk-q06e1-e91944c6ea.json")
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 
 
-def save(collection_id, document_id, data_):
-    db.collection(collection_id).document(document_id).set(data_)
+#def save(collection_id, document_id, data_):
+    #db.collection(collection_id).document(document_id).set(data_)
     
-save(collection_id="Gym Counts", document_id=f"{time}", data_=data_)
+#save(collection_id="Gym Counts", document_id=f"{time}", data_=data_) #change
+def update_rooms_data(collection_id, data):
+    for room_name, room_data in data.items():
+        # Create a reference to the document we want to update
+        room_ref = db.collection(collection_id).document(room_name)
+        
+        # Prepare the data for update (assuming data_ structure is correct)
+        update_data = {
+            'capacity': room_data.get('capacity'),  # assuming 'capacity' is in the data
+            'count': room_data.get('count'),
+            'isOpen': room_data.get('isOpen'),
+            'lastUpdated': room_data.get('lastUpdated'),
+            'name': room_data.get('name')  # assuming 'name' is in the data
+        }
+        
+        # Update the document, remove None values from update_data
+        room_ref.update({k: v for k, v in update_data.items() if v is not None})
+
+collection_id = "arc-test"
+update_rooms_data(collection_id, data_)
+

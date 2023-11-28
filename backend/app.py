@@ -15,9 +15,12 @@ def update_firestore():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+def run_flask():
+    app.run(debug=True, use_reloader=False)  # Disable the reloader
+
 if __name__ == '__main__':
     # Start the Flask server in a separate thread
-    flask_thread = threading.Thread(target=app.run, kwargs={'debug': True})
+    flask_thread = threading.Thread(target=run_flask)
     flask_thread.start()
 
     # Add the periodic update loop
@@ -28,5 +31,6 @@ if __name__ == '__main__':
             time.sleep(3600)  # Sleep for 1 hour (adjust as needed)
         except Exception as e:
             print(f"Error updating Firestore: {str(e)}")
+
 
 

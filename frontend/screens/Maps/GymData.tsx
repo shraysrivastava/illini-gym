@@ -44,7 +44,7 @@ export const GymData: React.FC<GymDataProps> = ({ route }) => {
   const closedSections = gymData.filter((section) => !section.isOpen);
 
   const fetchGymData = useCallback(async () => {
-    const gymQuery = query(collection(db, gym + "-test"));
+    const gymQuery = query(collection(db, gym));
     getDocs(gymQuery)
       .then((sectionList: QuerySnapshot<DocumentData>) => {
         const fetchedData = sectionList.docs.map((doc) => ({
@@ -70,7 +70,7 @@ export const GymData: React.FC<GymDataProps> = ({ route }) => {
         const updatedPressedSections: { [key: string]: boolean } = {};
         favorites.forEach((favoriteKey: string) => {
           const [favoriteGym, sectionDocID] = favoriteKey.split("/");
-          if (favoriteGym === gym + "-test") {
+          if (favoriteGym === gym) {
             updatedPressedSections[sectionDocID] = true;
           }
         });
@@ -101,7 +101,7 @@ export const GymData: React.FC<GymDataProps> = ({ route }) => {
   const handleFavoritePress = useCallback(
     (sectionDocID: string) => {
       const userDocRef = doc(collection(db, "users"), currentUserId);
-      const favoriteKey = gym + "-test/" + sectionDocID;
+      const favoriteKey = gym + "/" + sectionDocID;
       if (pressedSections[sectionDocID]) {
         updateDoc(userDocRef, { favorites: arrayRemove(favoriteKey) });
       } else {

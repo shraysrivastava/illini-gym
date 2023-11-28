@@ -30,6 +30,11 @@ export const BottomNav = (props: NavProps) => {
           headerStyle: {
             backgroundColor: Colors.midnightBlue,
           },
+          // tabBarStyle: {
+          //   backgroundColor: Colors.midnightBlue,
+          //   borderTopColor: Colors.uiucOrange,
+          //   borderTopWidth: 2,
+          // },
         }}
       >
         <Tab.Screen

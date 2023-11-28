@@ -6,12 +6,12 @@ import Colors from "../constants/Colors";
 import { View, TouchableOpacity } from "react-native";
 type CustomHeaderProps = {
   onSettingsPress: () => void;
-  onNotificationsPress: () => void;
+  onInformationsPress: () => void;
 };
 
 export const CustomHeader: React.FC<CustomHeaderProps> = ({
   onSettingsPress,
-  onNotificationsPress,
+  onInformationsPress,
 }) => {
   return (
     <View
@@ -19,14 +19,15 @@ export const CustomHeader: React.FC<CustomHeaderProps> = ({
         flexDirection: "row",
         justifyContent: "flex-end",
         paddingRight: 10,
+        
       }}
     >
       <TouchableOpacity
         style={{ marginRight: 15 }}
-        onPress={onNotificationsPress}
+        onPress={onInformationsPress}
       >
         <MaterialIcons
-          name="notifications"
+          name="info-outline"
           size={28}
           color={Colors.uiucOrange}
         />
@@ -61,9 +62,9 @@ export const getCommonHeaderOptions = (navigation: any, stackName: string, title
           console.log("Settings icon pressed.");
         }
       }}
-      onNotificationsPress={() => {
+      onInformationsPress={() => {
         // This is where notification page goes
-        console.log("Notifications icon pressed.");
+        console.log("Information icon pressed.");
       }}
     />
   ),

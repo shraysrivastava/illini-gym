@@ -2,6 +2,7 @@
 
 from flask import Flask, jsonify
 from scraper import scrape_and_update
+from scraper import scrape_and_update_cerce
 import threading
 import time
 
@@ -27,6 +28,7 @@ if __name__ == '__main__':
     while True:
         try:
             scrape_and_update()  # Call the function to scrape and update Firebase
+            scrape_and_update_cerce()
             print("Firestore updated. Waiting for the next update...")
             time.sleep(3600)  # Sleep for 1 hour (adjust as needed)
         except Exception as e:

@@ -8,7 +8,9 @@ from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support import expected_conditions as EC
 import firebase_admin
 from firebase_admin import credentials, firestore
-
+from faker import Faker
+import random
+import datetime
 
 # Initialize Firebase Admin
 cred = credentials.Certificate("/Users/taiguewoods/Desktop/CS 222/group-project-team70/backend/illini-gymv2-firebase-adminsdk-q06e1-e91944c6ea.json")
@@ -89,9 +91,37 @@ def scrape_and_update():
     browser.quit()
 
     # Update Firestore
-    collection_id = "arc"
+    collection_id_one = "arc"
     for room_name, room_data in data_.items():
-        doc_ref = db.collection(collection_id).document(room_name)
+        doc_ref = db.collection(collection_id_one).document(room_name)
         doc_ref.set(room_data, merge=True)  # Use set with merge=True to create or update
+    
+#scrape_and_update() only used to test output of this
+def generate_fake_data_cerce(faker, num_entries=10):
+    fake_data = {}
+    gym_room_names = ["Cardio Zone", "Strength Training", "Yoga Studio", "Cycling Room", "Aquatics Center", "Functional Fitness", "Dance Hall", "Pilates Studio", "Crossfit Area", "Free Weights Zone"]
+    for name in gym_room_names:
+        room_name = name.title()  # Generates a random word as the room name
+        fake_entry = {
+            "name": room_name.replace("-", " ").title(),  # Convert back to title case for the name field
+            "count": faker.random_int(min=0, max=100),  # Random count between 0 and 100
+            "capacity": faker.random_int(min=100, max=200),  # Random capacity between 100 and 200
+            "isOpen": faker.boolean(),  # Randomly True or False
+            "lastUpdated": faker.date_time_this_year().strftime('%Y-%m-%d %H:%M:%S')  # Random datetime from this year
+        }
+        fake_data[room_name] = fake_entry  # This line should be inside the loop
+        print(f"Room Name: {room_name}")
 
-#scrape_and_update() only used to test output of 
+    return fake_data
+
+def scrape_and_update_cerce():
+
+    faker = Faker()
+    fake_data = generate_fake_data_cerce(faker, num_entries=20)  # Generates 20 fake entries
+
+    # Update Firestore with fake data
+    fake_collection_id = "cerce"
+    for room_name, room_data in fake_data.items():
+        doc_ref = db.collection(fake_collection_id).document(room_name)
+        doc_ref.set(room_data, merge=True)  # Create or update document
+

@@ -139,7 +139,7 @@ export const FavoritesHome: React.FC = () => {
                 <MaterialIcons name="visibility-off" size={24} color="red" />
               )}
               <CustomText style={styles.gymName}>
-                {gym} {section.name}
+                {gym.toUpperCase()} {section.name}
               </CustomText>
             </View>
             <MaterialIcons
@@ -203,6 +203,8 @@ export const FavoritesHome: React.FC = () => {
         ) : (
           <CustomText>You have no favorites yet!</CustomText>
         )}
+
+        
       </ScrollView>
     </View>
   );

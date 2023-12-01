@@ -16,32 +16,20 @@ const SignUp = (props: SignUpProps) => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
-  const [isStatusDropdownOpen, setIsStatusDropdownOpen] = useState(false);
-  const [selectedUserStatus, setSelectedUserStatus] = useState("");
-  const [userStatusOptions, setUserStatusOptions] = useState([
-    { label: "Freshman", value: "Freshman" },
-    { label: "Sophomore", value: "Sophomore" },
-    { label: "Junior", value: "Junior" },
-    { label: "Senior", value: "Senior" },
-    { label: "Graduate", value: "Graduate" },
-    { label: "Faculty", value: "Faculty" },
-  ]);
+  
 
   const handleUserRegistration = () => {
     if (name === "") {
       setError("name cannot be empty");
     } else if (password !== confirmPassword) {
       setError("passwords do not match");
-    } else if (selectedUserStatus === "") {
-      setError("Please select Year");
     } else {
-      signUpUser(name, email, password, selectedUserStatus, setError);
+      signUpUser(name, email, password, setError);
     }
   };
 
   return (
     <SafeAreaView style={styles.parentContainer}>
-      <CustomText>Welcome!</CustomText>
       <TextInput
         style={styles.inputField}
         value={name}
@@ -70,20 +58,6 @@ const SignUp = (props: SignUpProps) => {
         secureTextEntry={true}
         onChangeText={setConfirmPassword}
       />
-
-      <View style={styles.dropdownContainer}>
-        <DropDownPicker
-          open={isStatusDropdownOpen}
-          value={selectedUserStatus}
-          items={userStatusOptions}
-          style={styles.statusDropdownStyle}
-          setOpen={setIsStatusDropdownOpen}
-          setValue={setSelectedUserStatus}
-          setItems={setUserStatusOptions}
-          placeholder="Select Illini Status"
-          activityIndicatorColor="#5188E3"
-        />
-      </View>
       <TouchableOpacity
         style={styles.signUpButton}
         onPress={handleUserRegistration}

@@ -17,7 +17,6 @@ const SignIn = (props: SignInProps) => {
 
   return (
     <SafeAreaView style={styles.parentContainer}>
-      <CustomText style={styles.signInText}>Welcome!</CustomText>
       <TextInput
         style={styles.TextInput}
         placeholder="Email"

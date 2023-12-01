@@ -3,7 +3,7 @@ import { auth } from "./firebaseConfig";
 import { FirebaseError } from "firebase/app";
 import { getFirestore, setDoc, doc } from "firebase/firestore";
 
-export const signUpUser = (name: string, email: string, password: string, status:string,  setError: React.Dispatch<React.SetStateAction<string>>) => {
+export const signUpUser = (name: string, email: string, password: string,  setError: React.Dispatch<React.SetStateAction<string>>) => {
     createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
             const user = userCredential.user;
@@ -17,9 +17,7 @@ export const signUpUser = (name: string, email: string, password: string, status
             setDoc(doc(db, "users", userCredential.user.uid), {
                 name: name,
                 email: email,
-                status: status,
-                favorites: [],
-                friends: []
+                favorites: []
               }).catch((error: FirebaseError) => authError(error, setError));
         })
         .catch((error: FirebaseError) => authError(error, setError));

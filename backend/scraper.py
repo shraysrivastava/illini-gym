@@ -10,7 +10,7 @@ import firebase_admin
 from firebase_admin import credentials, firestore
 from faker import Faker
 import random
-import datetime
+from datetime import datetime
 
 # Initialize Firebase Admin
 cred = credentials.Certificate("/Users/taiguewoods/Desktop/CS 222/group-project-team70/backend/illini-gymv2-firebase-adminsdk-q06e1-e91944c6ea.json")
@@ -107,7 +107,7 @@ def generate_fake_data_cerce(faker, num_entries=10):
             "count": faker.random_int(min=0, max=100),  # Random count between 0 and 100
             "capacity": faker.random_int(min=100, max=200),  # Random capacity between 100 and 200
             "isOpen": faker.boolean(),  # Randomly True or False
-            "lastUpdated": faker.date_time_this_year().strftime('%Y-%m-%d %H:%M:%S')  # Random datetime from this year
+            "lastUpdated": datetime.now().strftime('%Y-%m-%d %H:%M:%S')  # Current date and time
         }
         fake_data[room_name] = fake_entry  # This line should be inside the loop
         print(f"Room Name: {room_name}")

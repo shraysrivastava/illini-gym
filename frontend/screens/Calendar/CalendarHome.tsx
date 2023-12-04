@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { RouteProp } from "@react-navigation/native";
 import Colors from "../../constants/Colors";
 import { SafeAreaView, withSafeAreaInsets } from "react-native-safe-area-context";
@@ -12,7 +12,7 @@ const timeToString = (time: string | number | Date) => {
 
 type ItemsType = { [key: string]: { name: string; height: number }[] };
 
-export const Calendar = ({ }: CalendarProps) => {
+export const CalendarHome = ({ }: CalendarProps) => {
   const [items, setItems] = useState({});
 
   const loadItems = (day: { timestamp: number; }) => {
@@ -47,7 +47,7 @@ export const Calendar = ({ }: CalendarProps) => {
   const currentDay = timeToString(today);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <Agenda
         items={items}
         loadItemsForMonth={loadItems}
@@ -57,7 +57,7 @@ export const Calendar = ({ }: CalendarProps) => {
           //can add theme to the calender here 
         }}
       />
-    </SafeAreaView>
+    </View>
   );
 };
 

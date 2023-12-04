@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
+import { StyleSheet, TextInput, TouchableOpacity, View, Image } from "react-native";
 import { signUpUser } from "../../firebase/auth";
 import { SafeAreaView } from "react-native-safe-area-context";
 import DropDownPicker from "react-native-dropdown-picker";
@@ -30,6 +30,10 @@ const SignUp = (props: SignUpProps) => {
 
   return (
     <SafeAreaView style={styles.parentContainer}>
+      <Image
+      source={require('../../Images/Illini.png')}
+      style={styles.logoImage}
+    />
       <TextInput
         style={styles.inputField}
         value={name}
@@ -141,6 +145,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "lightgray",
     zIndex: 0,
+  },
+  logoImage: {
+    width: 200, 
+    height: 300, 
+    marginBottom: 20,
   },
 });
 

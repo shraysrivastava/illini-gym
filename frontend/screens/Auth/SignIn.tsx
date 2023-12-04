@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
+import { StyleSheet, TextInput, TouchableOpacity, View, Image } from "react-native";
 import { signInUser } from "../../firebase/auth";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Colors from "../../constants/Colors";
@@ -17,6 +17,10 @@ const SignIn = (props: SignInProps) => {
 
   return (
     <SafeAreaView style={styles.parentContainer}>
+      <Image
+      source={require('../../Images/Illini.png')}
+      style={styles.logoImage}
+    />
       <TextInput
         style={styles.TextInput}
         placeholder="Email"
@@ -108,6 +112,12 @@ const styles = StyleSheet.create({
     height: 150,
     marginBottom: 20,
     marginLeft: 30,
+  },
+  logoImage: {
+    width: 200, // Adjust as per your logo's dimensions
+    height: 300, // Adjust as per your logo's dimensions
+    marginBottom: 20,
+    // Add other styling as needed
   },
 });
 

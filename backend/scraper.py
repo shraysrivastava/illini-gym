@@ -101,9 +101,9 @@ def generate_fake_data_cerce(faker, num_entries=10):
     fake_data = {}
     gym_room_names = ["Cardio Zone", "Strength Training", "Yoga Studio", "Cycling Room", "Aquatics Center", "Functional Fitness", "Dance Hall", "Pilates Studio", "Crossfit Area", "Free Weights Zone"]
     for name in gym_room_names:
-        room_name = name.title()  # Generates a random word as the room name
+        room_name = name.title().replace(" ", "-").lower()  # Generates a random word as the room name
         fake_entry = {
-            "name": room_name.replace("-", " ").title(),  # Convert back to title case for the name field
+            "name": room_name,  # Convert back to title case for the name field
             "count": faker.random_int(min=0, max=100),  # Random count between 0 and 100
             "capacity": faker.random_int(min=100, max=200),  # Random capacity between 100 and 200
             "isOpen": faker.boolean(),  # Randomly True or False
@@ -122,7 +122,6 @@ def scrape_and_update_cerce():
     # Update Firestore with fake data
     fake_collection_id = "crce"
     for room_name, room_data in fake_data.items():
-        print(room_name)
         doc_ref = db.collection(fake_collection_id).document(room_name)
         doc_ref.set(room_data, merge=True)  # Create or update document
 

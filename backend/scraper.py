@@ -26,7 +26,7 @@ def scrape_and_update():
 
     # Your XPaths go here
     xpaths = [
-        '/html/body/div/div/div[2]/div[1]/div/div[2]',
+    '/html/body/div/div/div[2]/div[1]/div/div[2]',
     '/html/body/div/div/div[2]/div[2]/div/div[2]',
     '/html/body/div/div/div[2]/div[3]/div/div[2]',
     '/html/body/div/div/div[2]/div[4]/div/div[2]',

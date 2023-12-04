@@ -12,6 +12,7 @@ app = Flask(__name__)
 def update_firestore():
     try:
         scrape_and_update()
+        scrape_and_update_cerce()
         return jsonify({"status": "Firestore updated with scraped data."}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500

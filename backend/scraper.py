@@ -120,8 +120,9 @@ def scrape_and_update_cerce():
     fake_data = generate_fake_data_cerce(faker, num_entries=20)  # Generates 20 fake entries
 
     # Update Firestore with fake data
-    fake_collection_id = "cerce"
+    fake_collection_id = "crce"
     for room_name, room_data in fake_data.items():
+        print(room_name)
         doc_ref = db.collection(fake_collection_id).document(room_name)
         doc_ref.set(room_data, merge=True)  # Create or update document
 

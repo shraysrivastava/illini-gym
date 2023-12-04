@@ -201,7 +201,13 @@ export const FavoritesHome: React.FC = () => {
         ) : favorites.length !== 0 ? (
           <SectionModal sections={favoriteSections} />
         ) : (
-          <CustomText>You have no favorites yet!</CustomText>
+          <CustomText style={{fontSize:18}}>
+  {"\n\n" +"You have no favorites yet!\n\n" +
+   "To add to your favorites navigate to the maps icon at the bottom navigation bar.\n\n" +
+   "Select the gym appropriate for you.\n\n" +
+   "Next to each room list, select the star for those you want on your favorites tab."}
+</CustomText>
+          
         )}
 
         

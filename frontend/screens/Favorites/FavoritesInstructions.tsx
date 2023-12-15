@@ -1,13 +1,13 @@
-import React from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
-import { FontAwesome } from '@expo/vector-icons'; // Example icon library
-import CustomText from '../Reusables/CustomText';
+import React from "react";
+import { View, Text, StyleSheet, Image } from "react-native";
+import { FontAwesome } from "@expo/vector-icons"; // Example icon library
+import CustomText from "../Reusables/CustomText";
 
 const FavoriteInstructions = () => {
   return (
     <View style={styles.container}>
       <CustomText style={styles.headerText}>Add to Your Favorites</CustomText>
-      
+
       <View style={styles.instructionContainer}>
         <FontAwesome name="map-o" size={24} color="white" />
         <CustomText style={styles.instructionText}>
@@ -25,7 +25,8 @@ const FavoriteInstructions = () => {
       <View style={styles.instructionContainer}>
         <FontAwesome name="star-o" size={24} color="white" />
         <CustomText style={styles.instructionText}>
-          Next to each room list, select the star for those you want on your favorites tab.
+          Next to each room list, select the star for those you want on your
+          favorites tab.
         </CustomText>
       </View>
     </View>
@@ -38,13 +39,13 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 10,
-    textAlign: 'center',
+    textAlign: "center",
   },
   instructionContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 10,
   },
   instructionText: {

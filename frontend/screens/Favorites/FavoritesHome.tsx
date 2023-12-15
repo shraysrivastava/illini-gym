@@ -72,7 +72,6 @@ export const FavoritesHome: React.FC = () => {
       console.error("Error fetching documents:", error);
     }
     setIsLoading(false);
-    
   }, [currentUserId]);
 
   useEffect(() => {
@@ -203,10 +202,7 @@ export const FavoritesHome: React.FC = () => {
           <SectionModal sections={favoriteSections} />
         ) : (
           <FavoriteInstructions />
-          
         )}
-
-        
       </ScrollView>
     </View>
   );

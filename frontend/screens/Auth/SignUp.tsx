@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { StyleSheet, TextInput, TouchableOpacity, View, Image } from "react-native";
+import {
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  View,
+  Image,
+} from "react-native";
 import { signUpUser } from "../../firebase/auth";
 import { SafeAreaView } from "react-native-safe-area-context";
 import DropDownPicker from "react-native-dropdown-picker";
@@ -16,7 +22,6 @@ const SignUp = (props: SignUpProps) => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
-  
 
   const handleUserRegistration = () => {
     if (name === "") {
@@ -148,8 +153,8 @@ const styles = StyleSheet.create({
     zIndex: 0,
   },
   logoImage: {
-    width: 200, 
-    height: 300, 
+    width: 200,
+    height: 300,
     marginBottom: 20,
   },
 });

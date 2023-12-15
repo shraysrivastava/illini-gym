@@ -2,7 +2,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
 
 import Colors from "../../constants/Colors";
-import { FavoriteSettings } from "../Settings/FavoriteSettings";
+import { FavoriteSettings } from "../Settings/SettingsScreens/FavoriteSettings";
 import { getCommonHeaderOptions } from "../CustomHeader";
 import { FavoritesHome } from "./FavoritesHome";
 export type FavoriteStackParamList = {

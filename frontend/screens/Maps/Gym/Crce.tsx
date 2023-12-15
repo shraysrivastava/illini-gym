@@ -1,6 +1,6 @@
-import React from 'react';
-import CustomText from '../Reusables/CustomText';
-import { View } from 'react-native';
+import React from "react";
+import CustomText from "../../Reusables/CustomText";
+import { View } from "react-native";
 
 export const Crce: React.FC = () => {
   return (
@@ -9,4 +9,3 @@ export const Crce: React.FC = () => {
     </View>
   );
 };
-

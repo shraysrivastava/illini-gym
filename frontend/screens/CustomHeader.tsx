@@ -22,7 +22,7 @@ export const CustomHeader: React.FC<CustomHeaderProps> = ({
         
       }}
     >
-      {/* <TouchableOpacity
+      <TouchableOpacity
         style={{ marginRight: 15 }}
         onPress={onInformationsPress}
       >
@@ -31,7 +31,7 @@ export const CustomHeader: React.FC<CustomHeaderProps> = ({
           size={28}
           color={Colors.uiucOrange}
         />
-      </TouchableOpacity> */}
+      </TouchableOpacity>
       <TouchableOpacity style={{ marginRight: 10 }} onPress={onSettingsPress}>
         <MaterialIcons name="settings" size={28} color={Colors.uiucOrange} />
       </TouchableOpacity>

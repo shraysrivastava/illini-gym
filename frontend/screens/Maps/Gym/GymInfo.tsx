@@ -2,11 +2,11 @@ import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { RouteProp, useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { MaterialIcons } from "@expo/vector-icons"; // Ensure you've installed @expo/vector-icons
-import Colors from "../../constants/Colors";
-import CustomText from "../Reusables/CustomText";
+import { MaterialIcons } from "@expo/vector-icons";
+import Colors from "../../../constants/Colors";
+import CustomText from "../../Reusables/CustomText";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { MapsStackParamList } from "./MapsNav";
+import { MapsStackParamList } from "../MapsNav";
 import { Arc } from "./Arc";
 import { Crce } from "./Crce";
 type GymInfoTypeRouteProp = RouteProp<MapsStackParamList, "GymInfo">;
@@ -22,11 +22,11 @@ export const GymInfo: React.FC<GymInfoTypeProps> = ({ route }) => {
   const { gym } = route.params;
 
   // Utility to convert gym identifier to display-friendly name
- 
+
   return (
     <SafeAreaView style={styles.container}>
       {/* Displaying the selected gym's name */}
-      {gym == 'arc' ? <Arc/> : <Crce/>}
+      {gym == "arc" ? <Arc /> : <Crce />}
 
       <TouchableOpacity
         style={styles.button}

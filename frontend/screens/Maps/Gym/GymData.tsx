@@ -1,10 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { RouteProp, useNavigation } from "@react-navigation/native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView, View, RefreshControl } from "react-native";
-import * as Progress from "react-native-progress";
-import { MaterialIcons } from "@expo/vector-icons";
-import { db, auth } from "../../firebase/firebaseConfig";
+import { db, auth } from "../../../firebase/firebaseConfig";
 import {
   getDocs,
   query,
@@ -18,11 +15,10 @@ import {
   arrayUnion,
   getDoc,
 } from "firebase/firestore";
-import Colors from "../../constants/Colors";
-import { styles } from "../Reusables/ModalStyles";
-import CustomText from "../Reusables/CustomText";
+import { styles } from "../../Reusables/ModalStyles";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { MapsStackParamList } from "./MapsNav";
+import { MapsStackParamList } from "../MapsNav";
+import { SectionModals } from "./SectionModal";
 
 export type GymDataProps = {
   route: RouteProp<Record<string, object>, "GymData"> & {
@@ -115,60 +111,6 @@ export const GymData: React.FC<GymDataProps> = ({ route }) => {
     [pressedSections, currentUserId]
   );
 
-  const SectionModal = (sections: DocumentData[]) => (
-    <View style={styles.sectionContainer}>
-      {sections.map((section, index) => (
-        <View key={index} style={styles.gymContainer}>
-          <View style={styles.headerContainer}>
-            <View style={styles.sectionHeader}>
-              {section.isOpen ? (
-                <MaterialIcons name="visibility" size={24} color="green" />
-              ) : (
-                <MaterialIcons name="visibility-off" size={24} color="red" />
-              )}
-              <CustomText style={styles.gymName}>{section.name}</CustomText>
-            </View>
-            <MaterialIcons
-              name={pressedSections[section.key] ? "star" : "star-outline"}
-              size={24}
-              color={pressedSections[section.key] ? "green" : "gray"}
-              style={styles.iconButton}
-              onPress={() => handleFavoritePress(section.key)}
-            />
-          </View>
-          <CustomText style={styles.lastUpdated}>
-            Last Updated: {section.lastUpdated}
-          </CustomText>
-          {section.isOpen ? (
-            <View style={styles.progressBarContainer}>
-              <Progress.Bar
-                progress={section.count / section.capacity}
-                width={250 - 60}
-                color={
-                  section.count / section.capacity <= 0.5
-                    ? "#4CAF50"
-                    : section.count / section.capacity < 0.8
-                    ? "#FFE66D"
-                    : "#FF6B6B"
-                }
-                unfilledColor="grey"
-                style={{ marginRight: 10 }}
-              />
-
-              <CustomText style={styles.countCapacityText}>
-                {section.count}/{section.capacity} People
-              </CustomText>
-            </View>
-          ) : (
-            <CustomText style={styles.unavailableText}>
-              Section Closed
-            </CustomText>
-          )}
-        </View>
-      ))}
-    </View>
-  );
-
   return (
     <View style={styles.container}>
       <ScrollView
@@ -178,8 +120,16 @@ export const GymData: React.FC<GymDataProps> = ({ route }) => {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       >
-        {SectionModal(openSections)}
-        {SectionModal(closedSections)}
+        <SectionModals
+          sections={openSections}
+          pressedSections={pressedSections}
+          handleFavoritePress={handleFavoritePress}
+        />
+        <SectionModals
+          sections={closedSections}
+          pressedSections={pressedSections}
+          handleFavoritePress={handleFavoritePress}
+        />
       </ScrollView>
     </View>
   );

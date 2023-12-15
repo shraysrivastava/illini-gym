@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { StyleSheet, TextInput, TouchableOpacity, View, Image } from "react-native";
+import {
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  View,
+  Image,
+} from "react-native";
 import { signInUser } from "../../firebase/auth";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Colors from "../../constants/Colors";

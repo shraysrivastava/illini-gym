@@ -2,7 +2,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
 
 import Colors from "../../constants/Colors";
-import { CalendarSettings } from "../Settings/CalendarSettings";
+import { CalendarSettings } from "../Settings/SettingsScreens/CalendarSettings";
 import { getCommonHeaderOptions } from "../CustomHeader";
 import { CalendarHome } from "./CalendarHome";
 

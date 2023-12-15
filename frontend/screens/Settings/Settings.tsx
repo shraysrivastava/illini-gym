@@ -3,10 +3,10 @@ import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { RouteProp } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { signOutUser } from "../../firebase/auth";
-import CustomText from "../Reusables/CustomText";
+
 import Colors from "../../constants/Colors";
 import { auth } from "../../firebase/firebaseConfig";
-
+import CustomText from "../Reusables/CustomText";
 
 export const Settings = () => {
   const userId = auth.currentUser?.uid;
@@ -14,7 +14,7 @@ export const Settings = () => {
   const [error, setError] = useState("");
   return (
     <SafeAreaView style={styles.container}>
-      <CustomText style={styles.text}>Settings</CustomText>
+      <CustomText style={styles.text}>Reusable Settings</CustomText>
       {/* Just for demonstration, display the userId and userEmail */}
       <CustomText style={styles.infoText}>User ID: {userId}</CustomText>
       <CustomText style={styles.infoText}>User Email: {userEmail}</CustomText>

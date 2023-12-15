@@ -17,10 +17,12 @@ const SignIn = (props: SignInProps) => {
 
   return (
     <SafeAreaView style={styles.parentContainer}>
-      <Image
+      {/* <Image
       source={require('../../Images/Illini.png')}
       style={styles.logoImage}
-    />
+    /> */}
+      <CustomText style={styles.signUpText}>Welcome!</CustomText>
+
       <TextInput
         style={styles.TextInput}
         placeholder="Email"
@@ -64,6 +66,13 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     margin: 5,
+  },
+  signUpText: {
+    marginTop: 20,
+    fontSize: 27,
+    fontWeight: "bold",
+    color: "white",
+    marginBottom: 10,
   },
   parentContainer: {
     flex: 1,

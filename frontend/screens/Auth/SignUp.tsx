@@ -30,10 +30,11 @@ const SignUp = (props: SignUpProps) => {
 
   return (
     <SafeAreaView style={styles.parentContainer}>
-      <Image
+      {/* <Image
       source={require('../../Images/Illini.png')}
       style={styles.logoImage}
-    />
+    /> */}
+      <CustomText style={styles.signUpText}>Welcome!</CustomText>
       <TextInput
         style={styles.inputField}
         value={name}

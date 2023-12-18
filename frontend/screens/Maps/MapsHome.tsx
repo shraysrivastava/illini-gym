@@ -9,7 +9,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation } from '@react-navigation/native';
 import { MapsStackParamList } from './MapsNav';
 import Colors from '../../constants/Colors';
-
+import { TouchableWithoutFeedback } from 'react-native';
 
 const INITIAL_REGION = {
   latitude: 40.10385157161382,
@@ -32,13 +32,30 @@ interface MarkerData {
 }
 
 export const MapsHome: React.FC = () => {
-  const navigation = useNavigation<StackNavigationProp<MapsStackParamList, "GymInfo">>();
+  const navigation = useNavigation<StackNavigationProp<MapsStackParamList, 'GymInfo'>>();
   const [currentLocation, setCurrentLocation] = useState<LocationCoords | null>(null);
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [selectedGym, setSelectedGym] = useState<MarkerData | null>(null);
   const mapRef = useRef<MapView>(null);
 
-  const handleMarkerPress = (gymKey: string) => {
-    const gym = gymKey === '1' ? 'arc' : 'crce';
-    navigation.navigate('GymData', { gym: gym, gymName: gym.toUpperCase() });
+  const handleMarkerPress = (marker: MarkerData) => {
+    setSelectedGym(marker);
+    setModalVisible(true);
+  };
+  
+  const navigateToGymData = () => {
+    if (selectedGym) {
+      const gym = selectedGym.key === '1' ? 'arc' : 'crce';
+      navigation.navigate('GymData', { gym: gym, gymName: gym.toUpperCase() });
+      setModalVisible(false);
+    }
+  };
+  
+  const navigateToGymInfo = () => {
+    if (selectedGym) {
+      navigation.navigate('GymInfo', { gym: selectedGym.key, gymName: selectedGym.title });
+      setModalVisible(false);
+    }
   };
 
   useEffect(() => {
@@ -76,10 +93,10 @@ export const MapsHome: React.FC = () => {
               latitude: marker.latitude,
               longitude: marker.longitude,
             }}
-            onPress={() => handleMarkerPress(marker.key)}
+            onPress={() => handleMarkerPress(marker)}
           >
             <Text style={styles.markerTitle}>{marker.title}</Text>
-            <TouchableOpacity onPress={() => handleMarkerPress(marker.key)}>
+            <TouchableOpacity onPress={() => handleMarkerPress(marker)}>
               <MaterialIcons name="place" size={32} color={Colors.uiucOrange} />
             </TouchableOpacity>
           </Marker>
@@ -97,6 +114,42 @@ export const MapsHome: React.FC = () => {
       <TouchableOpacity style={styles.recenterButton} onPress={resetMapToInitialRegion}>
         <MaterialIcons name="my-location" size={24} color="white" />
       </TouchableOpacity>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={isModalVisible}
+        onRequestClose={() => {
+          setModalVisible(!isModalVisible);
+        }}
+      >
+        <TouchableOpacity
+          style={styles.fullScreenButton}
+          activeOpacity={1}
+          onPressOut={() => setModalVisible(false)}
+        >
+          <View style={styles.centeredView}>
+            <TouchableWithoutFeedback>
+              <View style={styles.modalView}>
+                <View style={styles.buttonContainer}>
+                  <TouchableOpacity
+                    style={styles.button}
+                    onPress={navigateToGymInfo}
+                  >
+                    <Text style={styles.buttonText}>Basic Info</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.button}
+                    onPress={navigateToGymData}
+                  >
+                    <Text style={styles.buttonText}>Gym Data</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+        </TouchableOpacity>
+      </Modal>
+
     </SafeAreaView>
   );
 };
@@ -136,6 +189,63 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
   },
+  fullScreenButton: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    height: '100%',
+  },
+  centeredView: {
+    position: 'absolute', // Position absolutely within parent
+    bottom: 75, // Position above the bottom bar, adjust the value as needed
+    width: '100%', // Take full width of the parent
+    alignItems: 'center',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20, // Add right radius for consistency
+  },
+  
+  modalView: {
+    width: '100%',
+    backgroundColor: Colors.midnightBlue,
+    padding: 15,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: -2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center"
+  },
+  
+  buttonContainer: {
+    backgroundColor: Colors.midnightBlue,
+    flexDirection: 'row', // Arrange buttons side by side
+    justifyContent: 'space-evenly', // Even spacing between buttons
+    width: '100%', // Take full width of modal
+  },
+  
+  button: {
+    backgroundColor: Colors.uiucOrange,
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+    // Reduced margin as buttons are now side by side
+  },
+  
+  buttonText: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center"
+  },
+  
   
 });
 

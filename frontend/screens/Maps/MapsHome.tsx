@@ -37,6 +37,9 @@ export const MapsHome: React.FC = () => {
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedGym, setSelectedGym] = useState<MarkerData | null>(null);
   const mapRef = useRef<MapView>(null);
+  const [isBasicInfoModalVisible, setBasicInfoModalVisible] = useState(false);
+  const [displayBasicInfo, setDisplayBasicInfo] = useState(false);
+
 
   const handleMarkerPress = (marker: MarkerData) => {
     setSelectedGym(marker);
@@ -50,10 +53,10 @@ export const MapsHome: React.FC = () => {
       setModalVisible(false);
     }
   };
-  
+
   const navigateToGymInfo = () => {
     if (selectedGym) {
-      navigation.navigate('GymInfo', { gym: selectedGym.key, gymName: selectedGym.title });
+      setBasicInfoModalVisible(true);
       setModalVisible(false);
     }
   };
@@ -130,26 +133,38 @@ export const MapsHome: React.FC = () => {
           <View style={styles.centeredView}>
             <TouchableWithoutFeedback>
               <View style={styles.modalView}>
-                <View style={styles.buttonContainer}>
-                  <TouchableOpacity
-                    style={styles.button}
-                    onPress={navigateToGymInfo}
-                  >
-                    <Text style={styles.buttonText}>Basic Info</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={styles.button}
-                    onPress={navigateToGymData}
-                  >
-                    <Text style={styles.buttonText}>Gym Data</Text>
-                  </TouchableOpacity>
-                </View>
+                {displayBasicInfo ? (
+                  <>
+                    <Text style={styles.modalTitle}>{selectedGym?.title}</Text>
+                    <Text style={styles.modalAddress}>{selectedGym?.address}</Text>
+                    <TouchableOpacity
+                      style={styles.button}
+                      onPress={() => setDisplayBasicInfo(false)}
+                    >
+                      <Text style={styles.buttonText}>Close Info</Text>
+                    </TouchableOpacity>
+                  </>
+                ) : (
+                  <View style={styles.buttonContainer}>
+                    <TouchableOpacity
+                      style={styles.button}
+                      onPress={() => setDisplayBasicInfo(true)}
+                    >
+                      <Text style={styles.buttonText}>Basic Info</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={styles.button}
+                      onPress={navigateToGymData}
+                    >
+                      <Text style={styles.buttonText}>Gym Data</Text>
+                    </TouchableOpacity>
+                  </View>
+                )}
               </View>
             </TouchableWithoutFeedback>
           </View>
         </TouchableOpacity>
       </Modal>
-
     </SafeAreaView>
   );
 };
@@ -198,11 +213,9 @@ const styles = StyleSheet.create({
   },
   centeredView: {
     position: 'absolute', // Position absolutely within parent
-    bottom: 75, // Position above the bottom bar, adjust the value as needed
+    bottom: 75, // Position above the bottom bar
     width: '100%', // Take full width of the parent
     alignItems: 'center',
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20, // Add right radius for consistency
   },
   
   modalView: {
@@ -237,7 +250,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 10,
     elevation: 2,
-    // Reduced margin as buttons are now side by side
   },
   
   buttonText: {
@@ -245,7 +257,17 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center"
   },
-  
+  modalTitle: {
+    color: "white",
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  modalAddress: {
+    color: "white",
+    fontSize: 16,
+    marginBottom: 20,
+  },
   
 });
 

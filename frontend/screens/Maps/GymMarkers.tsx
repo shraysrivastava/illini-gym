@@ -5,7 +5,7 @@ export const gymMarkers = [
       description: 'This is marker 1',
       latitude: 40.1012424462291,
       longitude: -88.2361348201494,
-      address: '201 E Peabody Dr',
+      address: '201 E Peabody Dr, Champaign',
     },
     {
       key: '2',
@@ -13,7 +13,6 @@ export const gymMarkers = [
       description: 'This is marker 2',
       latitude: 40.10490659417567, 
       longitude: -88.2216739395398,
-      address: '201 E Peabody Dr',
+      address: '1102 W Gregory Dr, Urbana',
     }
-    // Add more markers here
   ];

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, View, TouchableOpacity, Text, Button, Modal, Animated, Dimensions} from 'react-native';
-import MapView, { Marker, Polyline, Circle , Region} from 'react-native-maps';
+import MapView, { Marker, Polyline, Circle, Region } from 'react-native-maps';
 import * as Location from 'expo-location';
 import { gymMarkers } from './GymMarkers';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -9,6 +9,14 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation } from '@react-navigation/native';
 import { MapsStackParamList } from './MapsNav';
 import Colors from '../../constants/Colors';
+
+
+const INITIAL_REGION = {
+  latitude: 40.10385157161382,
+  longitude: -88.23056902208337,
+  latitudeDelta: 0.03,
+  longitudeDelta: 0.01,
+};
 
 interface LocationCoords {
   latitude: number;
@@ -25,12 +33,11 @@ interface MarkerData {
 
 export const MapsHome: React.FC = () => {
   const navigation = useNavigation<StackNavigationProp<MapsStackParamList, "GymInfo">>();
-  const [currentLocation, setCurrentLocation] = useState<LocationCoords | null>(
-    null
-  );
+  const [currentLocation, setCurrentLocation] = useState<LocationCoords | null>(null);
+  const mapRef = useRef<MapView>(null);
+
   const handleMarkerPress = (gymKey: string) => {
-    // Determine the gym based on the marker's key or other relevant data
-    const gym = gymKey === '1' ? 'arc' : 'crce'; // Modify this logic as needed for your gym identifiers
+    const gym = gymKey === '1' ? 'arc' : 'crce';
     navigation.navigate('GymData', { gym: gym, gymName: gym.toUpperCase() });
   };
 
@@ -50,16 +57,16 @@ export const MapsHome: React.FC = () => {
     })();
   }, []);
 
+  const resetMapToInitialRegion = () => {
+    mapRef.current?.animateToRegion(INITIAL_REGION, 1000);
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <MapView
+        ref={mapRef}
         style={styles.map}
-        region={{
-          latitude: 40.10385157161382,
-          longitude: -88.23056902208337,
-          latitudeDelta: 0.03,
-          longitudeDelta: 0.01,
-        }}
+        initialRegion={INITIAL_REGION}
         showsUserLocation={true}
       >
         {gymMarkers.map((marker: MarkerData) => (
@@ -71,9 +78,7 @@ export const MapsHome: React.FC = () => {
             }}
             onPress={() => handleMarkerPress(marker.key)}
           >
-            
             <Text style={styles.markerTitle}>{marker.title}</Text>
-            
             <TouchableOpacity onPress={() => handleMarkerPress(marker.key)}>
               <MaterialIcons name="place" size={32} color={Colors.uiucOrange} />
             </TouchableOpacity>
@@ -89,6 +94,9 @@ export const MapsHome: React.FC = () => {
           />
         )}
       </MapView>
+      <TouchableOpacity style={styles.recenterButton} onPress={resetMapToInitialRegion}>
+        <MaterialIcons name="my-location" size={24} color="white" />
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };
@@ -113,6 +121,20 @@ const styles = StyleSheet.create({
     color: Colors.black, // Text color
     fontWeight: 'bold', // Bold text
     // You can add other styling like fontSize, etc.
+  },
+  recenterButton: {
+    position: 'absolute',
+    top: 10, // Changed from top to bottom
+    right: 10,
+    padding: 10,
+    backgroundColor: 'rgba(52, 52, 52, 0.8)', // Neutral color with transparency
+    borderRadius: 25, // Circular shape
+    zIndex: 1000,
+    shadowColor: '#000', // Shadow for an elevated look
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   
 });

@@ -9,8 +9,9 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation } from '@react-navigation/native';
 import { MapsStackParamList } from './MapsNav';
 import Colors from '../../constants/Colors';
-import { TouchableWithoutFeedback } from 'react-native';
 import { Linking, Platform } from 'react-native';
+import { Image } from 'react-native';
+
 
 
 const INITIAL_REGION = {
@@ -31,6 +32,8 @@ interface MarkerData {
   address: string;
   latitude: number;
   longitude: number;
+  imageUrl: string;
+  hours: string;
 }
 
 const openMapsApp = (latitude, longitude) => {
@@ -59,18 +62,11 @@ export const MapsHome: React.FC = () => {
     setSelectedGym(marker);
     setModalVisible(true);
   };
-  
+
   const navigateToGymData = () => {
     if (selectedGym) {
       const gym = selectedGym.key === '1' ? 'arc' : 'crce';
       navigation.navigate('GymData', { gym: gym, gymName: gym.toUpperCase() });
-      setModalVisible(false);
-    }
-  };
-
-  const navigateToGymInfo = () => {
-    if (selectedGym) {
-      setBasicInfoModalVisible(true);
       setModalVisible(false);
     }
   };
@@ -118,7 +114,7 @@ export const MapsHome: React.FC = () => {
             </TouchableOpacity>
           </Marker>
         ))}
-
+  
         {currentLocation && (
           <Circle
             center={currentLocation}
@@ -136,56 +132,72 @@ export const MapsHome: React.FC = () => {
         transparent={true}
         visible={isModalVisible}
         onRequestClose={() => {
-          setModalVisible(!isModalVisible);
+          setDisplayBasicInfo(false);
+          setModalVisible(true);
         }}
       >
         <TouchableOpacity
           style={styles.fullScreenButton}
           activeOpacity={1}
-          onPressOut={() => setModalVisible(false)}
+          onPressOut={() => {
+            setDisplayBasicInfo(false);
+            setModalVisible(false);
+          }}
+          
         >
-          <View style={styles.modalView}>
+          <View style={displayBasicInfo ? styles.modalView : styles.gymDataModalView}>
             {displayBasicInfo ? (
               <>
                 <Text style={styles.modalTitle}>{selectedGym?.title}</Text>
                 <Text style={styles.modalAddress}>{selectedGym?.address}</Text>
-                
+                <Text style={styles.modalHours}>{selectedGym.hours}</Text>
+                {selectedGym && (
+                  <Image
+                    source={{ uri: selectedGym.imageUrl }}
+                    style={styles.modalImage}
+                  />
+                )}
                 <TouchableOpacity
                   style={styles.button}
                   onPress={() => openMapsApp(selectedGym?.latitude, selectedGym?.longitude)}
-                >
+                >  
                   <Text style={styles.buttonText}>Directions</Text>
                 </TouchableOpacity>
-
+  
                 <TouchableOpacity
-                  style={styles.button}
-                  onPress={() => setDisplayBasicInfo(false)}
+                  style={styles.closeButton}
+                  onPress={() => {
+                    setDisplayBasicInfo(false);
+                    setModalVisible(true);
+                  }}
                 >
-                  <Text style={styles.buttonText}>Close Info</Text>
+                  <MaterialIcons name="close" size={24} color="white" />
                 </TouchableOpacity>
               </>
             ) : (
-              <View style={styles.buttonContainer}>
-                <TouchableOpacity
-                  style={styles.button}
-                  onPress={() => setDisplayBasicInfo(true)}
-                >
-                  <Text style={styles.buttonText}>Basic Info</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.button}
-                  onPress={navigateToGymData}
-                >
-                  <Text style={styles.buttonText}>Gym Data</Text>
-                </TouchableOpacity>
-              </View>
+              <>
+                <View style={styles.buttonRow}>
+                  <TouchableOpacity
+                    style={styles.button}
+                    onPress={() => setDisplayBasicInfo(true)}
+                  >
+                    <Text style={styles.buttonText}>Basic Info</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.button}
+                    onPress={navigateToGymData}
+                  >
+                    <Text style={styles.buttonText}>Gym Data</Text>
+                  </TouchableOpacity>
+                </View>
+              </>
             )}
           </View>
         </TouchableOpacity>
       </Modal>
     </SafeAreaView>
-  );
-};
+  ); 
+}  
 
 const styles = StyleSheet.create({
   container: {
@@ -197,15 +209,15 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
   },
   markerTitleContainer: {
-    backgroundColor: 'rgba(255, 255, 255, 0.9)', // Semi-transparent white background
+    backgroundColor: 'rgba(255, 255, 255, 0.9)', 
     padding: 5,
     borderRadius: 5,
-    marginBottom: 5, // Spacing between title and icon
-    alignItems: 'center', // Center align the text
+    marginBottom: 5, 
+    alignItems: 'center', 
   },
   markerTitle: {
-    color: Colors.black, // Text color
-    fontWeight: 'bold', // Bold text
+    color: Colors.black, 
+    fontWeight: 'bold', 
   },
   recenterButton: {
     position: 'absolute',
@@ -237,18 +249,49 @@ const styles = StyleSheet.create({
   },
   
   modalView: {
+    position: 'absolute',
+    bottom: 75, 
     width: '100%',
+    height: '50%', 
     backgroundColor: Colors.midnightBlue,
     padding: 15,
-    alignItems: "center",
-    shadowColor: "#000",
+    alignItems: 'center',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: -2
+      height: -2,
     },
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
+    justifyContent: 'space-between',
+    flexDirection: 'column', 
+    flex: 1,
+  },
+
+  gymDataModalView: {
+    position: 'absolute',
+    bottom: 75, 
+    width: '100%',
+    height: '10%', 
+    backgroundColor: Colors.midnightBlue,
+    padding: 15,
+    alignItems: 'center',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: -2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    justifyContent: 'space-between',
+    flexDirection: 'column', 
+    flex: 1,
   },
   
   modalText: {
@@ -256,11 +299,21 @@ const styles = StyleSheet.create({
     textAlign: "center"
   },
   
+  modalImage: {
+    width: '60%',
+    height: 100,
+    resizeMode: 'cover',
+    alignSelf: 'center', 
+    marginBottom: 20, 
+    marginHorizontal: 20, 
+  },
+  
   buttonContainer: {
     backgroundColor: Colors.midnightBlue,
-    flexDirection: 'row', // Arrange buttons side by side
-    justifyContent: 'space-evenly', // Even spacing between buttons
-    width: '100%', // Take full width of modal
+    flexDirection: 'column', 
+    justifyContent: 'center', 
+    alignItems: 'center',
+    width: '100%',   
   },
   
   button: {
@@ -270,6 +323,12 @@ const styles = StyleSheet.create({
     elevation: 2,
     marginBottom: 10,
   },
+
+  buttonRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-evenly', 
+    width: '100%', 
+  },
   
   buttonText: {
     color: "white",
@@ -278,6 +337,13 @@ const styles = StyleSheet.create({
     elevation: 2,
 
   },
+  closeButton: {
+    position: 'absolute',
+    top: 10,
+    left: 10,
+    padding: 10,
+    zIndex: 1000, 
+  },
   modalTitle: {
     color: "white",
     fontSize: 20,
@@ -285,6 +351,11 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   modalAddress: {
+    color: "white",
+    fontSize: 16,
+    marginBottom: 20,
+  },
+  modalHours: {
     color: "white",
     fontSize: 16,
     marginBottom: 20,

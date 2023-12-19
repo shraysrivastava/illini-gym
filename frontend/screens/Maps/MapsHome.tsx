@@ -10,6 +10,8 @@ import { useNavigation } from '@react-navigation/native';
 import { MapsStackParamList } from './MapsNav';
 import Colors from '../../constants/Colors';
 import { TouchableWithoutFeedback } from 'react-native';
+import { Linking, Platform } from 'react-native';
+
 
 const INITIAL_REGION = {
   latitude: 40.10385157161382,
@@ -30,6 +32,18 @@ interface MarkerData {
   latitude: number;
   longitude: number;
 }
+
+const openMapsApp = (latitude, longitude) => {
+  const label = encodeURIComponent('Gym Location');
+  const latLng = `${latitude},${longitude}`;
+
+  const url = Platform.select({
+    ios: `http://maps.apple.com/?ll=${latLng}&q=${label}`,
+    android: `geo:${latLng}?q=${latLng}(${label})`
+  });
+
+  Linking.openURL(url).catch(err => console.error('An error occurred', err));
+};
 
 export const MapsHome: React.FC = () => {
   const navigation = useNavigation<StackNavigationProp<MapsStackParamList, 'GymInfo'>>();
@@ -130,38 +144,42 @@ export const MapsHome: React.FC = () => {
           activeOpacity={1}
           onPressOut={() => setModalVisible(false)}
         >
-          <View style={styles.centeredView}>
-            <TouchableWithoutFeedback>
-              <View style={styles.modalView}>
-                {displayBasicInfo ? (
-                  <>
-                    <Text style={styles.modalTitle}>{selectedGym?.title}</Text>
-                    <Text style={styles.modalAddress}>{selectedGym?.address}</Text>
-                    <TouchableOpacity
-                      style={styles.button}
-                      onPress={() => setDisplayBasicInfo(false)}
-                    >
-                      <Text style={styles.buttonText}>Close Info</Text>
-                    </TouchableOpacity>
-                  </>
-                ) : (
-                  <View style={styles.buttonContainer}>
-                    <TouchableOpacity
-                      style={styles.button}
-                      onPress={() => setDisplayBasicInfo(true)}
-                    >
-                      <Text style={styles.buttonText}>Basic Info</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={styles.button}
-                      onPress={navigateToGymData}
-                    >
-                      <Text style={styles.buttonText}>Gym Data</Text>
-                    </TouchableOpacity>
-                  </View>
-                )}
+          <View style={styles.modalView}>
+            {displayBasicInfo ? (
+              <>
+                <Text style={styles.modalTitle}>{selectedGym?.title}</Text>
+                <Text style={styles.modalAddress}>{selectedGym?.address}</Text>
+                
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={() => openMapsApp(selectedGym?.latitude, selectedGym?.longitude)}
+                >
+                  <Text style={styles.buttonText}>Directions</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={() => setDisplayBasicInfo(false)}
+                >
+                  <Text style={styles.buttonText}>Close Info</Text>
+                </TouchableOpacity>
+              </>
+            ) : (
+              <View style={styles.buttonContainer}>
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={() => setDisplayBasicInfo(true)}
+                >
+                  <Text style={styles.buttonText}>Basic Info</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={navigateToGymData}
+                >
+                  <Text style={styles.buttonText}>Gym Data</Text>
+                </TouchableOpacity>
               </View>
-            </TouchableWithoutFeedback>
+            )}
           </View>
         </TouchableOpacity>
       </Modal>
@@ -188,17 +206,16 @@ const styles = StyleSheet.create({
   markerTitle: {
     color: Colors.black, // Text color
     fontWeight: 'bold', // Bold text
-    // You can add other styling like fontSize, etc.
   },
   recenterButton: {
     position: 'absolute',
-    top: 10, // Changed from top to bottom
+    top: 10, 
     right: 10,
     padding: 10,
-    backgroundColor: 'rgba(52, 52, 52, 0.8)', // Neutral color with transparency
-    borderRadius: 25, // Circular shape
+    backgroundColor: 'rgba(52, 52, 52, 0.8)', 
+    borderRadius: 25, 
     zIndex: 1000,
-    shadowColor: '#000', // Shadow for an elevated look
+    shadowColor: '#000', 
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
@@ -211,10 +228,11 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
+
   centeredView: {
-    position: 'absolute', // Position absolutely within parent
-    bottom: 75, // Position above the bottom bar
-    width: '100%', // Take full width of the parent
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
     alignItems: 'center',
   },
   
@@ -250,12 +268,15 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 10,
     elevation: 2,
+    marginBottom: 10,
   },
   
   buttonText: {
     color: "white",
     fontWeight: "bold",
-    textAlign: "center"
+    textAlign: "center",
+    elevation: 2,
+
   },
   modalTitle: {
     color: "white",

@@ -115,7 +115,7 @@ export const MapsHome: React.FC = () => {
             <TouchableOpacity onPress={() => handleMarkerPress(marker)}>
               <MaterialIcons
                 name="place"
-                size={marker.key === selectedMarkerKey ? 40 : 32} 
+                size={marker.key === selectedMarkerKey ? 45 : 32} 
                 color={Colors.uiucOrange}
               />
             </TouchableOpacity>
@@ -141,6 +141,7 @@ export const MapsHome: React.FC = () => {
         onRequestClose={() => {
           setDisplayBasicInfo(false);
           setModalVisible(true);
+          setSelectedMarkerKey(null);
         }}
       >
         <TouchableOpacity
@@ -149,6 +150,7 @@ export const MapsHome: React.FC = () => {
           onPressOut={() => {
             setDisplayBasicInfo(false);
             setModalVisible(false);
+            setSelectedMarkerKey(null);
           }}
           
         >
@@ -224,7 +226,7 @@ const styles = StyleSheet.create({
     alignItems: 'center', 
   },
   markerTitle: {
-    color: Colors.black, 
+    color: Colors.midnightBlue,
     fontWeight: 'bold', 
   },
   recenterButton: {

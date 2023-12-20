@@ -9,6 +9,7 @@ import { FavoritesNav } from "./Favorites/FavoritesNav";
 import { CalendarNav } from "./Calendar/CalendarNav";
 import { MapsNav } from "./Maps/MapsNav";
 
+
 export type NavProps = {
   user: User;
   userData: any;

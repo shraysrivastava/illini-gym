@@ -192,10 +192,13 @@ export const FavoritesHome: React.FC = () => {
           />
         }
       >
-        {favorites.length === 0 ? (
-          <FavoriteInstructions />
-        ) :  (
+        {isLoading && favorites.length === 0 ? (
+          <></>
+          // <ActivityIndicator size="large" color={Colors.uiucOrange} />
+        ) : favorites.length !== 0 ? (
           <SectionModal sections={favoriteSections} />
+        ) : (
+          <FavoriteInstructions />
         )}
       </ScrollView>
     </View>

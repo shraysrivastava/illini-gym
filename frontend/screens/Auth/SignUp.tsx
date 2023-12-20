@@ -6,7 +6,7 @@ import {
   View,
   Image,
 } from "react-native";
-import { signUpUser } from "../../firebase/auth";
+import { signUpUser } from "../../firebase/authConfig";
 import { SafeAreaView } from "react-native-safe-area-context";
 import DropDownPicker from "react-native-dropdown-picker";
 import CustomText from "../Reusables/CustomText";

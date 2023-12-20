@@ -123,11 +123,7 @@ export const FavoritesHome: React.FC = () => {
     [currentUserId]
   );
 
-  const SectionModal = ({
-    sections,
-  }: {
-    sections: { gym: string; section: SectionDetails }[];
-  }) => (
+  const SectionModal = ({sections,}: {sections: { gym: string; section: SectionDetails }[]}) => (
     <View style={styles.sectionContainer}>
       {sections.map(({ gym, section }, index) => (
         <View key={index} style={styles.gymContainer}>
@@ -190,18 +186,16 @@ export const FavoritesHome: React.FC = () => {
           <RefreshControl
             refreshing={refreshing}
             onRefresh={onRefresh}
-            colors={[Colors.uiucOrange]} // for Android
-            tintColor={Colors.uiucOrange} // Color for the spinner (iOS)
+            colors={[Colors.beige]} // for Android
+            tintColor={Colors.beige} // Color for the spinner (iOS)
             progressBackgroundColor="#ffffff"
           />
         }
       >
-        {isLoading && favorites.length === 0 ? (
-          <ActivityIndicator size="large" color={Colors.uiucOrange} />
-        ) : favorites.length !== 0 ? (
-          <SectionModal sections={favoriteSections} />
-        ) : (
+        {favorites.length === 0 ? (
           <FavoriteInstructions />
+        ) :  (
+          <SectionModal sections={favoriteSections} />
         )}
       </ScrollView>
     </View>

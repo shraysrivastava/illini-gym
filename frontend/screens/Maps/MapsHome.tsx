@@ -36,7 +36,7 @@ interface MarkerData {
   hours: string;
 }
 
-const openMapsApp = (latitude, longitude) => {
+const openMapsApp = (latitude: number, longitude: number) => {
   const label = encodeURIComponent('Gym Location');
   const latLng = `${latitude},${longitude}`;
 
@@ -45,7 +45,7 @@ const openMapsApp = (latitude, longitude) => {
     android: `geo:${latLng}?q=${latLng}(${label})`
   });
 
-  Linking.openURL(url).catch(err => console.error('An error occurred', err));
+  Linking.openURL(url ?? '').catch(err => console.error('An error occurred', err));
 };
 
 export const MapsHome: React.FC = () => {
@@ -54,13 +54,15 @@ export const MapsHome: React.FC = () => {
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedGym, setSelectedGym] = useState<MarkerData | null>(null);
   const mapRef = useRef<MapView>(null);
-  const [isBasicInfoModalVisible, setBasicInfoModalVisible] = useState(false);
   const [displayBasicInfo, setDisplayBasicInfo] = useState(false);
+  const [selectedMarkerKey, setSelectedMarkerKey] = useState<string | null>(null);
+
 
 
   const handleMarkerPress = (marker: MarkerData) => {
     setSelectedGym(marker);
     setModalVisible(true);
+    setSelectedMarkerKey(marker.key); 
   };
 
   const navigateToGymData = () => {
@@ -110,7 +112,11 @@ export const MapsHome: React.FC = () => {
           >
             <Text style={styles.markerTitle}>{marker.title}</Text>
             <TouchableOpacity onPress={() => handleMarkerPress(marker)}>
-              <MaterialIcons name="place" size={32} color={Colors.uiucOrange} />
+              <MaterialIcons
+                name="place"
+                size={marker.key === selectedMarkerKey ? 40 : 32} 
+                color={Colors.uiucOrange}
+              />
             </TouchableOpacity>
           </Marker>
         ))}
@@ -149,8 +155,9 @@ export const MapsHome: React.FC = () => {
             {displayBasicInfo ? (
               <>
                 <Text style={styles.modalTitle}>{selectedGym?.title}</Text>
-                <Text style={styles.modalAddress}>{selectedGym?.address}</Text>
-                <Text style={styles.modalHours}>{selectedGym.hours}</Text>
+                {selectedGym && (
+                  <Text style={styles.modalHours}>{selectedGym.hours}</Text>
+                )}
                 {selectedGym && (
                   <Image
                     source={{ uri: selectedGym.imageUrl }}
@@ -159,7 +166,7 @@ export const MapsHome: React.FC = () => {
                 )}
                 <TouchableOpacity
                   style={styles.button}
-                  onPress={() => openMapsApp(selectedGym?.latitude, selectedGym?.longitude)}
+                  onPress={() => openMapsApp(selectedGym?.latitude ?? 0, selectedGym?.longitude ?? 0)}
                 >  
                   <Text style={styles.buttonText}>Directions</Text>
                 </TouchableOpacity>

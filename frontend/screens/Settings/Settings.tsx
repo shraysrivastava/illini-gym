@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { RouteProp } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { createNewAccount } from "../../firebase/authConfig";
+import { createNewAccount, signOutUser } from "../../firebase/authConfig";
 
 import Colors from "../../constants/Colors";
 import { auth } from "../../firebase/firebaseConfig";
@@ -31,6 +31,7 @@ export const Settings = () => {
     } catch (error) {
       console.error("Error clearing users collection:", error);
     }
+    signOutUser(setError);
   };
   return (
     <SafeAreaView style={styles.container}>
@@ -45,7 +46,7 @@ export const Settings = () => {
       </TouchableOpacity>
       <View>
         <TouchableOpacity
-          onPress={() => createNewAccount()}
+          onPress={() => signOutUser(setError)}
           style={styles.signoutButton}
         >
           <CustomText style={styles.buttonText}>New Account</CustomText>

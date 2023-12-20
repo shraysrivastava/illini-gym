@@ -6,7 +6,7 @@ import {
   View,
   Image,
 } from "react-native";
-import { signInUser } from "../../firebase/auth";
+import { signInUser } from "../../firebase/authConfig";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Colors from "../../constants/Colors";
 import CustomText from "../Reusables/CustomText";

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, View, TouchableOpacity, Text, Button, Modal, Animated, Dimensions} from 'react-native';
-import MapView, { Marker, Polyline, Circle, Region } from 'react-native-maps';
+import MapView, { Marker, Polyline, Circle , Region} from 'react-native-maps';
 import * as Location from 'expo-location';
 import { gymMarkers } from './GymMarkers';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -20,6 +20,7 @@ const INITIAL_REGION = {
   latitudeDelta: 0.03,
   longitudeDelta: 0.01,
 };
+
 
 interface LocationCoords {
   latitude: number;

@@ -39,15 +39,19 @@ interface MarkerData {
 }
 
 const openMapsApp = (latitude: number, longitude: number) => {
-  const label = encodeURIComponent('Gym Location');
-  const latLng = `${latitude},${longitude}`;
+  const destination = encodeURIComponent(`${latitude},${longitude}`);
+  const url = `http://maps.google.com/maps?daddr=${destination}`;
 
-  const url = Platform.select({
-    ios: `http://maps.apple.com/?ll=${latLng}&q=${label}`,
-    android: `geo:${latLng}?q=${latLng}(${label})`
-  });
+  Linking.openURL(url).catch(err => console.error('An error occurred', err));
+};
 
-  Linking.openURL(url ?? '').catch(err => console.error('An error occurred', err));
+const openWebsite = (url) => {
+  Linking.openURL(url).catch(err => console.error('An error occurred', err));
+};
+
+const makeCall = (phoneNumber) => {
+  const url = `tel:${phoneNumber}`;
+  Linking.openURL(url).catch(err => console.error('An error occurred trying to call', err));
 };
 
 export const MapsHome: React.FC = () => {
@@ -191,29 +195,33 @@ export const MapsHome: React.FC = () => {
             <View style={styles.contactSection}>
               <View style={styles.contactSection}>
                 <Text style={styles.infoText}>Phone:</Text>
-                <Text style={styles.infoText}>{selectedGym.phone}</Text>
+                <TouchableOpacity onPress={() => makeCall(selectedGym.phone)}>
+                  <Text style={styles.callText}>{selectedGym.phone}</Text>
+                </TouchableOpacity>
               </View>
               <View style={styles.separator} />
               <View style={styles.contactSection}>
                 <Text style={styles.infoText}>Website:</Text>
-                <Text style={styles.infoText}>{selectedGym.website}</Text>
+                <TouchableOpacity onPress={() => openWebsite(selectedGym.website)}>
+                  <Text style={styles.linkText}>{selectedGym.website}</Text>
+                </TouchableOpacity>
               </View>
               <View style={styles.separator} />
               <View style={styles.contactSection}>
-                <View style={styles.addressContainer}>
+              <View style={styles.addressContainer}>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                   <Text style={styles.infoText}>Address:</Text>
-                  <Text style={styles.infoText}>{selectedGym.address}</Text>
-                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <TouchableOpacity
-                    style={styles.directionsIcon}
-                    onPress={() => openMapsApp(selectedGym.latitude, selectedGym.longitude)}
-                  >  
-                    <MaterialIcons name="directions" size={24} color="white" />
-                  </TouchableOpacity>
-                  </View>
+                  <Text style={[styles.infoText, { marginLeft: 5, flexShrink: 1 }]}>{selectedGym.address}</Text>
                 </View>
+                <TouchableOpacity
+                  style={styles.directionsIcon}
+                  onPress={() => openMapsApp(selectedGym.latitude, selectedGym.longitude)}
+                >  
+                  <MaterialIcons name="directions" size={24} color="white" />
+                </TouchableOpacity>
                 </View>
               </View>
+            </View>
             </View>
           </View>          
           ) : (
@@ -418,8 +426,7 @@ const styles = StyleSheet.create({
   addressContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 10, 
+    marginBottom: 0,
   },
 
   separator: {
@@ -433,8 +440,7 @@ const styles = StyleSheet.create({
     padding: 8,
     backgroundColor: Colors.uiucOrange,
     borderRadius: 25,
-    alignItems: 'center',
-    justifyContent: 'center',    
+    marginLeft: 10,
   },
 
   button: {
@@ -478,6 +484,14 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: 'white', 
     marginBottom: 5,
+  },
+  linkText: {
+    color: Colors.lightBlue,
+    textDecorationLine: 'underline',
+  },
+  callText: {
+    color: 'green', 
+    textDecorationLine: 'underline',
   },
   sectionHeader: {
     fontSize: 20,

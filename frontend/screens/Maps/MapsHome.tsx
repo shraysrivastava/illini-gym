@@ -163,34 +163,42 @@ export const MapsHome: React.FC = () => {
           {displayBasicInfo && selectedGym ? (
             <View style={styles.modalView}>
               <TouchableOpacity
-                style={styles.closeButton}
-                onPress={() => {
-                  setDisplayBasicInfo(false);
-                  setModalVisible(false);
-                }}
-              >
-                <MaterialIcons name="close" size={24} color="white" />
-              </TouchableOpacity>
-              <Text style={styles.modalTitle}>{selectedGym.title}</Text>
+                  style={styles.closeButton}
+                  onPress={() => {
+                    setDisplayBasicInfo(false);
+                    setModalVisible(true);
+                  }}
+                >
+                  <MaterialIcons name="close" size={24} color="white" />
+                </TouchableOpacity>
+            <Text style={styles.modalTitle}>{selectedGym.title}</Text>
+                        <View style={styles.gymContainer}>
+              <View style={styles.headerContainer}>
+                <Text style={styles.sectionHeader}>Hours</Text>
+              </View>
               <View style={styles.hoursSection}>
                 {selectedGym.hours.split('\n').map((line, index) => (
-                  <Text key={index} style={styles.hoursText}>{line}</Text>
+                  <Text key={index} style={styles.infoText}>{line}</Text>
                 ))}
               </View>
+            </View>
+            <View style={styles.gymContainer}>
+              <View style={styles.headerContainer}>
+                <Text style={styles.sectionHeader}>Contact Information</Text>
+              </View>
               <View style={styles.contactSection}>
-                <Text style={styles.contactText}>Phone: {selectedGym.phone}</Text>
-                <View style={styles.separator} />
-                <Text style={styles.contactText}>Website: {selectedGym.website}</Text>
-                <View style={styles.separator} />
-                <Text style={styles.contactText}>Address: {selectedGym.address}</Text>
+                <Text style={styles.infoText}>Phone: {selectedGym.phone}</Text>
+                <Text style={styles.infoText}>Website: {selectedGym.website}</Text>
+                <Text style={styles.infoText}>Address: {selectedGym.address}</Text>
                 <TouchableOpacity
-                  style={styles.smallButton}
+                  style={styles.smallButton} 
                   onPress={() => openMapsApp(selectedGym.latitude, selectedGym.longitude)}
                 >  
-                  <Text style={styles.smallButtonText}>Directions</Text>
+                  <Text style={styles.smallButtonText}>Directions</Text> 
                 </TouchableOpacity>
               </View>
             </View>
+          </View>          
           ) : (
             <View style={styles.gymDataModalView}> 
               <View style={styles.buttonRow}>
@@ -347,22 +355,12 @@ const styles = StyleSheet.create({
     padding: 10,
     zIndex: 1000, 
   },
+  
   modalTitle: {
     color: Colors.uiucOrange,
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 10,
-  },
-
-  weekdayHours: {
-    color: 'white',
-    fontSize: 16,
-  },
-  
-  weekendHours: {
-    color: 'white',
-    fontSize: 16,
-    // fontWeight: 'bold', 
   },
   
   modalImage: {
@@ -393,22 +391,10 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
 
-  hoursText: {
-    color: 'white',
-    fontSize: 16,
-    marginVertical: 2,
-  },
-
   contactSection: {
     width: '100%',
     alignItems: 'flex-start',
     justifyContent: 'center',
-  },
-
-  contactText: {
-    color: 'white',
-    fontSize: 16,
-    marginBottom: 5,
   },
 
   separator: {
@@ -433,7 +419,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
 
-  // Adjust existing button styles if needed
   button: {
     backgroundColor: Colors.uiucOrange,
     borderRadius: 20,
@@ -441,9 +426,41 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginVertical: 5, // Added for spacing
+    marginVertical: 5, 
   },
 
+  gymContainer: {
+    margin: 10,
+    padding: 10,
+    backgroundColor: Colors.subtleWhite, 
+    borderColor: Colors.subtleWhite,  
+    borderRadius: 8,             
+    alignItems: "center",
+    borderWidth: 2,                     
+    shadowColor: '#000',              
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 1,
+    elevation: 2,
+    width: '100%',
+  },
+  headerContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    width: "100%",
+    marginBottom: 5
+  },
+  infoText: {
+    fontSize: 14,
+    color: 'white', 
+    marginBottom: 5,
+  },
+  sectionHeader: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: Colors.uiucOrange,
+  },
 });
 
 export default MapsHome;

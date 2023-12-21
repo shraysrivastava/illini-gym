@@ -111,17 +111,25 @@ export const MapsHome: React.FC = () => {
             }}
             onPress={() => handleMarkerPress(marker)}
           >
-            <Text style={styles.markerTitle}>{marker.title}</Text>
-            <TouchableOpacity onPress={() => handleMarkerPress(marker)}>
-              <MaterialIcons
-                name="place"
-                size={marker.key === selectedMarkerKey ? 45 : 32} 
-                color={Colors.uiucOrange}
-              />
-            </TouchableOpacity>
+            <View style={styles.markerContainer}>
+              <Text 
+                style={[
+                  styles.markerTitle, 
+                  { bottom: marker.key === selectedMarkerKey ? 42 : 30 }
+                ]}
+              >
+                {marker.title}
+              </Text>
+              <TouchableOpacity onPress={() => handleMarkerPress(marker)}>
+                <MaterialIcons
+                  name="place"
+                  size={marker.key === selectedMarkerKey ? 45 : 32} 
+                  color={Colors.uiucOrange}
+                />
+              </TouchableOpacity>
+            </View>
           </Marker>
         ))}
-  
         {currentLocation && (
           <Circle
             center={currentLocation}
@@ -159,7 +167,17 @@ export const MapsHome: React.FC = () => {
               <>
                 <Text style={styles.modalTitle}>{selectedGym?.title}</Text>
                 {selectedGym && (
-                  <Text style={styles.modalHours}>{selectedGym.hours}</Text>
+                  selectedGym.hours.split('\n').map((line, index) => {
+                    let isWeekend = line.includes('Saturday') || line.includes('Sunday');
+                    return (
+                      <Text 
+                        key={index} 
+                        style={isWeekend ? styles.weekendHours : styles.weekdayHours}
+                      >
+                        {line}
+                      </Text>
+                    );
+                  })
                 )}
                 {selectedGym && (
                   <Image
@@ -218,17 +236,19 @@ const styles = StyleSheet.create({
   map: {
     ...StyleSheet.absoluteFillObject,
   },
-  markerTitleContainer: {
-    backgroundColor: 'rgba(255, 255, 255, 0.9)', 
-    padding: 5,
-    borderRadius: 5,
-    marginBottom: 5, 
-    alignItems: 'center', 
+  markerContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   markerTitle: {
     color: Colors.midnightBlue,
-    fontWeight: 'bold', 
+    fontWeight: 'bold',
+    position: 'absolute',
+    textAlign: 'center',
+    width: 100, 
+    flexShrink: 1,
   },
+  
   recenterButton: {
     position: 'absolute',
     top: 10, 
@@ -264,7 +284,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '50%', 
     backgroundColor: Colors.midnightBlue,
-    padding: 15,
+    padding: 10,
     alignItems: 'center',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
@@ -309,15 +329,6 @@ const styles = StyleSheet.create({
     textAlign: "center"
   },
   
-  modalImage: {
-    width: '60%',
-    height: 100,
-    resizeMode: 'cover',
-    alignSelf: 'center', 
-    marginBottom: 20, 
-    marginHorizontal: 20, 
-  },
-  
   buttonContainer: {
     backgroundColor: Colors.midnightBlue,
     flexDirection: 'column', 
@@ -330,8 +341,11 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.uiucOrange,
     borderRadius: 20,
     padding: 10,
-    elevation: 2,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
     marginBottom: 10,
+    elevation: 2,
   },
 
   buttonRow: {
@@ -355,20 +369,31 @@ const styles = StyleSheet.create({
     zIndex: 1000, 
   },
   modalTitle: {
-    color: "white",
-    fontSize: 20,
+    color: Colors.uiucOrange,
+    fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 10,
   },
-  modalAddress: {
-    color: "white",
+
+  weekdayHours: {
+    color: 'white',
     fontSize: 16,
-    marginBottom: 20,
   },
-  modalHours: {
-    color: "white",
+  
+  weekendHours: {
+    color: 'white',
     fontSize: 16,
-    marginBottom: 20,
+    // fontWeight: 'bold', 
+  },
+  
+  modalImage: {
+    borderRadius: 10,
+    width: '80%',
+    height: 140,
+    resizeMode: 'cover',
+    alignSelf: 'center', 
+    marginBottom: 0, 
+    marginHorizontal: 20, 
   },
   
 });

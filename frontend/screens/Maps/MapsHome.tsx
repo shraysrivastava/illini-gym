@@ -490,7 +490,7 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
   },
   callText: {
-    color: 'green', 
+    color: 'green',
     textDecorationLine: 'underline',
   },
   sectionHeader: {

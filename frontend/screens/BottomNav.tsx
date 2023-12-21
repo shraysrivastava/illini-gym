@@ -31,11 +31,14 @@ export const BottomNav = (props: NavProps) => {
           headerStyle: {
             backgroundColor: Colors.midnightBlue,
           },
-          // tabBarStyle: {
-          //   backgroundColor: Colors.midnightBlue,
-          //   borderTopColor: Colors.uiucOrange,
-          //   borderTopWidth: 2,
-          // },
+          tabBarStyle: {
+            backgroundColor: Colors.white,
+            borderTopColor: Colors.subtleWhite,
+            borderTopWidth: 2,
+          },
+          tabBarActiveTintColor: Colors.uiucOrange,
+          tabBarInactiveTintColor: Colors.gray,
+          tabBarHideOnKeyboard: true,
         }}
       >
         <Tab.Screen
@@ -46,24 +49,8 @@ export const BottomNav = (props: NavProps) => {
             tabBarIcon: ({ color, size }) => (
               <MaterialIcons name="star" color={color} size={size} />
             ),
-            tabBarActiveTintColor: Colors.uiucOrange,
-            tabBarHideOnKeyboard: true,
           })}
         />
-        {/* <Tab.Screen
-          name="Gym"
-          component={GymNav}
-          options={({ navigation }) => ({
-            // ...getCommonHeaderOptions(navigation, "Gym"),
-            tabBarIcon: ({ color, size }) => (
-              <MaterialIcons name="fitness-center" color={color} size={size} />
-            ),
-            tabBarActiveTintColor: Colors.uiucOrange,
-            tabBarHideOnKeyboard: true,
-            headerShown: false,
-          })}
-        /> */}
-        
         <Tab.Screen
           name="Maps"
           component={MapsNav}
@@ -72,8 +59,6 @@ export const BottomNav = (props: NavProps) => {
             tabBarIcon: ({ color, size }) => (
               <MaterialIcons name="map" color={color} size={size} />
             ),
-            tabBarActiveTintColor: Colors.uiucOrange,
-            tabBarHideOnKeyboard: true,
           })}
         />
         <Tab.Screen
@@ -84,8 +69,6 @@ export const BottomNav = (props: NavProps) => {
             tabBarIcon: ({ color, size }) => (
               <MaterialIcons name="event" color={color} size={size} />
             ),
-            tabBarActiveTintColor: Colors.uiucOrange,
-            tabBarHideOnKeyboard: true,
           })}
         />
       </Tab.Navigator>

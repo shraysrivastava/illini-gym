@@ -19,7 +19,6 @@ export const CustomHeader: React.FC<CustomHeaderProps> = ({
         flexDirection: "row",
         justifyContent: "flex-end",
         paddingRight: 10,
-        
       }}
     >
       <TouchableOpacity
@@ -46,6 +45,8 @@ export const getCommonHeaderOptions = (navigation: any, stackName: string, title
     backgroundColor: Colors.midnightBlue,
     shadowColor: "transparent",
     elevation: 0,
+    borderBottomColor: Colors.subtleWhite,
+    borderBottomWidth: 2,
   },
   headerRight: () => (
     <CustomHeader

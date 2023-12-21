@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { StyleSheet, View, TouchableOpacity, Text, Button, Modal, Animated, Dimensions, Image} from 'react-native';
 import MapView, { Marker, Polyline, Circle , Region} from 'react-native-maps';
 import * as Location from 'expo-location';
@@ -6,12 +6,10 @@ import { gymMarkers } from './GymMarkers';
 import { MaterialIcons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { MapsStackParamList } from './MapsNav';
 import Colors from '../../constants/Colors';
 import { Linking, Platform } from 'react-native';
-
-
 
 const INITIAL_REGION = {
   latitude: 40.10385157161382,
@@ -62,6 +60,7 @@ export const MapsHome: React.FC = () => {
   const mapRef = useRef<MapView>(null);
   const [displayBasicInfo, setDisplayBasicInfo] = useState(false);
   const [selectedMarkerKey, setSelectedMarkerKey] = useState<string | null>(null);
+  const [navigatedAway, setNavigatedAway] = useState(false);
 
 
 
@@ -76,8 +75,18 @@ export const MapsHome: React.FC = () => {
       const gym = selectedGym.key === '1' ? 'arc' : 'crce';
       navigation.navigate('GymData', { gym: gym, gymName: gym.toUpperCase() });
       setModalVisible(false);
+      setNavigatedAway(true);
     }
   };
+
+  useFocusEffect(
+    useCallback(() => {
+      if (navigatedAway && selectedGym) {
+        setModalVisible(true);
+        setNavigatedAway(false); // Reset the navigatedAway state
+      }
+    }, [navigatedAway, selectedGym])
+  );
 
   useEffect(() => {
     (async () => {

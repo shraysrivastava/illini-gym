@@ -9,9 +9,9 @@ export const gymMarkers = [
     phone: '(217) 333-3806',
     website: 'https://campusrec.illinois.edu/facilities/arc/',
     imageUrl: 'https://campusrec.illinois.edu/sites/default/files/styles/big_button_image/public/paragraphs/big-buttons/ARC_19_ACP_Exterior-01.jpg?h=0987e825&itok=7dN7kPrS',
-    hours: `Monday-Thursday:           6:00 AM - 11:00 PM
-Friday:                               6:00 AM - 10:00 PM
-Saturday-Sunday:            9:00 AM - 10:00 PM`
+    hours: `Monday-Thursday:                6:00 AM - 11:00 PM
+Friday:                                    6:00 AM - 10:00 PM
+Saturday-Sunday:                 9:00 AM - 10:00 PM`
 },
   {
     key: '2',

@@ -34,6 +34,8 @@ interface MarkerData {
   longitude: number;
   imageUrl: string;
   hours: string;
+  phone: string;
+  website: string;
 }
 
 const openMapsApp = (latitude: number, longitude: number) => {
@@ -172,30 +174,45 @@ export const MapsHome: React.FC = () => {
                   <MaterialIcons name="close" size={24} color="white" />
                 </TouchableOpacity>
             <Text style={styles.modalTitle}>{selectedGym.title}</Text>
-                        <View style={styles.gymContainer}>
+              <View style={styles.gymContainer}>
               <View style={styles.headerContainer}>
                 <Text style={styles.sectionHeader}>Hours</Text>
               </View>
               <View style={styles.hoursSection}>
                 {selectedGym.hours.split('\n').map((line, index) => (
-                  <Text key={index} style={styles.infoText}>{line}</Text>
+                  <Text key={index} style={styles.hourstext}>{line}</Text>
                 ))}
               </View>
             </View>
             <View style={styles.gymContainer}>
-              <View style={styles.headerContainer}>
-                <Text style={styles.sectionHeader}>Contact Information</Text>
-              </View>
+            <View style={styles.headerContainer}>
+              <Text style={styles.sectionHeader}>Contact Information</Text>
+            </View>
+            <View style={styles.contactSection}>
               <View style={styles.contactSection}>
-                <Text style={styles.infoText}>Phone: {selectedGym.phone}</Text>
-                <Text style={styles.infoText}>Website: {selectedGym.website}</Text>
-                <Text style={styles.infoText}>Address: {selectedGym.address}</Text>
-                <TouchableOpacity
-                  style={styles.smallButton} 
-                  onPress={() => openMapsApp(selectedGym.latitude, selectedGym.longitude)}
-                >  
-                  <Text style={styles.smallButtonText}>Directions</Text> 
-                </TouchableOpacity>
+                <Text style={styles.infoText}>Phone:</Text>
+                <Text style={styles.infoText}>{selectedGym.phone}</Text>
+              </View>
+              <View style={styles.separator} />
+              <View style={styles.contactSection}>
+                <Text style={styles.infoText}>Website:</Text>
+                <Text style={styles.infoText}>{selectedGym.website}</Text>
+              </View>
+              <View style={styles.separator} />
+              <View style={styles.contactSection}>
+                <View style={styles.addressContainer}>
+                  <Text style={styles.infoText}>Address:</Text>
+                  <Text style={styles.infoText}>{selectedGym.address}</Text>
+                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <TouchableOpacity
+                    style={styles.directionsIcon}
+                    onPress={() => openMapsApp(selectedGym.latitude, selectedGym.longitude)}
+                  >  
+                    <MaterialIcons name="directions" size={24} color="white" />
+                  </TouchableOpacity>
+                  </View>
+                </View>
+                </View>
               </View>
             </View>
           </View>          
@@ -278,7 +295,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 75, 
     width: '100%',
-    height: '50%',
+    height: '52%',
     backgroundColor: Colors.midnightBlue,
     padding: 10,
     alignItems: 'center',
@@ -388,13 +405,21 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'flex-start',
     justifyContent: 'center',
-    marginBottom: 15,
+    marginBottom: 0,
   },
 
   contactSection: {
     width: '100%',
     alignItems: 'flex-start',
     justifyContent: 'center',
+    marginBottom: 0,
+  },
+
+  addressContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 10, 
   },
 
   separator: {
@@ -404,19 +429,12 @@ const styles = StyleSheet.create({
     marginVertical: 5,
   },
 
-  smallButton: {
-    backgroundColor: Colors.uiucOrange,
-    borderRadius: 15,
+  directionsIcon: {
     padding: 8,
+    backgroundColor: Colors.uiucOrange,
+    borderRadius: 25,
     alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 10,
-  },
-
-  smallButtonText: {
-    color: "white",
-    fontSize: 14,
-    fontWeight: "bold",
+    justifyContent: 'center',    
   },
 
   button: {
@@ -451,8 +469,13 @@ const styles = StyleSheet.create({
     width: "100%",
     marginBottom: 5
   },
-  infoText: {
+  hourstext: {
     fontSize: 14,
+    color: 'white', 
+    marginBottom: 5,
+  },
+  infoText: {
+    fontSize: 12,
     color: 'white', 
     marginBottom: 5,
   },

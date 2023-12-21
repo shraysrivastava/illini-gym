@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { StyleSheet, View, TouchableOpacity, Text, Button, Modal, Animated, Dimensions} from 'react-native';
+import { StyleSheet, View, TouchableOpacity, Text, Button, Modal, Animated, Dimensions, Image} from 'react-native';
 import MapView, { Marker, Polyline, Circle , Region} from 'react-native-maps';
 import * as Location from 'expo-location';
 import { gymMarkers } from './GymMarkers';
@@ -10,7 +10,6 @@ import { useNavigation } from '@react-navigation/native';
 import { MapsStackParamList } from './MapsNav';
 import Colors from '../../constants/Colors';
 import { Linking, Platform } from 'react-native';
-import { Image } from 'react-native';
 
 
 
@@ -319,7 +318,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     flexDirection: 'column', 
     flex: 1,
   },
@@ -344,14 +343,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 10,
-    elevation: 2,
   },
 
   buttonRow: {
     flexDirection: 'row',
     justifyContent: 'space-evenly', 
     width: '100%', 
+    alignItems: 'center',
   },
   
   buttonText: {

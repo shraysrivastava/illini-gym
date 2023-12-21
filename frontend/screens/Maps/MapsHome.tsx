@@ -45,11 +45,11 @@ const openMapsApp = (latitude: number, longitude: number) => {
   Linking.openURL(url).catch(err => console.error('An error occurred', err));
 };
 
-const openWebsite = (url) => {
+const openWebsite = (url: string) => {
   Linking.openURL(url).catch(err => console.error('An error occurred', err));
 };
 
-const makeCall = (phoneNumber) => {
+const makeCall = (phoneNumber: string) => {
   const url = `tel:${phoneNumber}`;
   Linking.openURL(url).catch(err => console.error('An error occurred trying to call', err));
 };

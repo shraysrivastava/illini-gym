@@ -33,7 +33,7 @@ interface MarkerData {
   latitude: number;
   longitude: number;
   imageUrl: string;
-  hours: string;
+  hours: { day: string; time: string }[];
   phone: string;
   website: string;
 }
@@ -179,15 +179,18 @@ export const MapsHome: React.FC = () => {
                 </TouchableOpacity>
             <Text style={styles.modalTitle}>{selectedGym.title}</Text>
               <View style={styles.gymContainer}>
-              <View style={styles.headerContainer}>
-                <Text style={styles.sectionHeader}>Hours</Text>
+                <View style={styles.headerContainer}>
+                  <Text style={styles.sectionHeader}>Hours</Text>
+                </View>
+                <View style={styles.hoursSection}>
+                  {selectedGym.hours.map((hour, index) => (
+                    <View key={index} style={styles.hourRow}>
+                      <Text style={styles.dayText}>{hour.day}</Text>
+                      <Text style={styles.timeText}>{hour.time}</Text>
+                    </View>
+                  ))}
+                </View>
               </View>
-              <View style={styles.hoursSection}>
-                {selectedGym.hours.split('\n').map((line, index) => (
-                  <Text key={index} style={styles.hourstext}>{line}</Text>
-                ))}
-              </View>
-            </View>
             <View style={styles.gymContainer}>
             <View style={styles.headerContainer}>
               <Text style={styles.sectionHeader}>Contact Information</Text>
@@ -475,11 +478,27 @@ const styles = StyleSheet.create({
     width: "100%",
     marginBottom: 5
   },
-  hourstext: {
-    fontSize: 14,
-    color: 'white', 
+  hourRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',  // Ensure it takes full width
     marginBottom: 5,
   },
+  
+  dayText: {
+    flex: 1, // Added flex
+    fontSize: 14,
+    color: 'white',
+    textAlign: 'left',
+  },
+  
+  timeText: {
+    flex: 1, // Added flex
+    fontSize: 14,
+    color: 'white',
+    textAlign: 'right',
+  },
+  
   infoText: {
     fontSize: 12,
     color: 'white', 

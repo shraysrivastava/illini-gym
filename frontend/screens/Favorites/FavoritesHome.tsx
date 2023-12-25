@@ -37,11 +37,10 @@ interface SectionDetails {
 
 export const FavoritesHome: React.FC = () => {
   const [favorites, setFavorites] = useState<string[]>([]);
-  const [favoriteSections, setFavoriteSections] = useState<
-    { gym: string; section: SectionDetails }[]
-  >([]);
+  const [favoriteSections, setFavoriteSections] = useState<{ gym: string; section: SectionDetails }[]>([]);
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [sectionNicknames, setSectionNicknames] = useState<Record<string, string>>({});
   const currentUserId = auth.currentUser?.uid;
 
   const fetchAndUpdateFavorites = useCallback(async () => {
@@ -54,9 +53,12 @@ export const FavoritesHome: React.FC = () => {
       const userFavorites: string[] = userDoc.data().favorites || [];
       setFavorites(userFavorites);
 
+      const userNicknames: Record<string, string> = userDoc.data().nicknames || {};
+      setSectionNicknames(userNicknames);
+
       const newPressedSections: Record<string, boolean> = {};
       const promises = userFavorites.map(async (fav) => {
-        const [gym, sectionId] = fav.split("/");
+        const [gym, sectionId] = fav.split("=");
         const sectionDoc = await getDoc(doc(db, gym, sectionId));
         newPressedSections[sectionId] = true; // Update pressedSections
         return sectionDoc.exists()
@@ -84,6 +86,7 @@ export const FavoritesHome: React.FC = () => {
   }, [fetchAndUpdateFavorites]);
 
   const handleRemoveFavorite = (gym: string, sectionKey: string) => {
+    console.log("Removing favorite:", gym, sectionKey);
     Alert.alert(
       "Remove Favorite",
       "Are you sure you want to remove this section from your favorites?",
@@ -100,10 +103,15 @@ export const FavoritesHome: React.FC = () => {
     );
   };
 
+  const getDisplayName = (gym: string, sectionKey: string, sectionName: string) => {
+    const favoriteKey = `${gym}=${sectionKey}`;
+    return sectionNicknames[favoriteKey] || sectionName;
+  };
+
   const removeFromFavorites = useCallback(
-    (gym: string, sectionDocID: string) => {
+    (gym: string, sectionKey: string) => {
       const userDocRef = doc(collection(db, "users"), currentUserId);
-      const favoriteKey = gym + "/" + sectionDocID;
+      const favoriteKey = gym + "=" + sectionKey;
 
       updateDoc(userDocRef, { favorites: arrayRemove(favoriteKey) }).then(
         () => {
@@ -114,7 +122,7 @@ export const FavoritesHome: React.FC = () => {
           setFavoriteSections((sections) =>
             sections.filter(
               (section) =>
-                section.gym + "/" + section.section.key !== favoriteKey
+                section.gym + "=" + section.section.key !== favoriteKey
             )
           );
         }
@@ -135,7 +143,7 @@ export const FavoritesHome: React.FC = () => {
                 <MaterialIcons name="visibility-off" size={24} color="red" />
               )}
               <CustomText style={styles.gymName}>
-                {gym.toUpperCase()} {section.name}
+                {getDisplayName(gym, section.key, section.name)}
               </CustomText>
             </View>
             <MaterialIcons

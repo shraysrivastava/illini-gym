@@ -1,5 +1,5 @@
 import React from "react";
-import { View } from "react-native";
+import { View, Dimensions } from "react-native";
 import * as Progress from "react-native-progress";
 import { MaterialIcons } from "@expo/vector-icons";
 import { DocumentData } from "firebase/firestore";
@@ -7,6 +7,8 @@ import { DocumentData } from "firebase/firestore";
 import CustomText from "../../Reusables/CustomText";
 import { StyleSheet } from "react-native";
 import Colors from "../../../constants/Colors";
+import { getTimeDifference } from "../../Reusables/Calculations";
+import ProgressBar from "../../Reusables/ProgressBar";
 
 interface SectionProps {
   section: DocumentData;
@@ -23,7 +25,7 @@ interface SectionModalProps {
 export const SectionModals: React.FC<SectionModalProps> = React.memo(
   ({ sections, pressedSections, handleFavoritePress }) => {
     return (
-      <View style={styles.sectionContainer}>
+      <View style={styles.listContainer}>
         {sections.map((section) => (
           <Section
             key={section.key}
@@ -37,69 +39,109 @@ export const SectionModals: React.FC<SectionModalProps> = React.memo(
   }
 );
 
-const Section: React.FC<SectionProps> = React.memo(
-  ({ section, handleFavoritePress, isFavorite }) => {
-    return (
-      <View key={section.key} style={styles.gymContainer}>
-        <View style={styles.headerContainer}>
-          <View style={styles.sectionHeader}>
-            {section.isOpen ? (
-              <MaterialIcons name="visibility" size={24} color="green" />
-            ) : (
-              <MaterialIcons name="visibility-off" size={24} color="red" />
-            )}
-            <CustomText style={styles.gymName}>{section.name}</CustomText>
-          </View>
-          <MaterialIcons
-            name={isFavorite ? "star" : "star-outline"}
-            size={24}
-            color={isFavorite ? "green" : "gray"}
-            style={styles.iconButton}
-            onPress={() => handleFavoritePress(section.key, section.name)}
-          />
-        </View>
-        <CustomText style={styles.lastUpdated}>
-          Last Updated: {section.lastUpdated}
-        </CustomText>
-        {section.isOpen ? (
-          <View style={styles.progressBarContainer}>
-            <Progress.Bar
-              progress={section.count / section.capacity}
-              width={250 - 60}
-              color={
-                section.count / section.capacity <= 0.5
-                  ? "#4CAF50"
-                  : section.count / section.capacity < 0.8
-                  ? "#FFE66D"
-                  : "#FF6B6B"
-              }
-              unfilledColor="grey"
-              style={{ marginRight: 10 }}
-            />
+const VisibilityIcon: React.FC<{ isOpen: boolean }> = React.memo(({ isOpen }) => {
+  return isOpen ? (
+    <MaterialIcons name="visibility" size={24} color="green" />
+  ) : (
+    <MaterialIcons name="visibility-off" size={24} color="red" />
+  );
+});
 
-            <CustomText style={styles.countCapacityText}>
-              {section.count}/{section.capacity} People
-            </CustomText>
-          </View>
-        ) : (
-          <CustomText style={styles.unavailableText}>Section Closed</CustomText>
-        )}
+export const SectionInfo: React.FC<{section: DocumentData}> = ({ section }) => {
+  
+
+  return (
+    section.isOpen ? (
+      <ProgressBar  count={section.count} capacity={section.capacity} />
+    ) : (
+      <CustomText style={styles.closedText}>Section Closed</CustomText>
+    )
+  );
+};
+
+const Section: React.FC<SectionProps> = React.memo(({ section, handleFavoritePress, isFavorite }) => {
+  const timeDiff = getTimeDifference(section.lastUpdated);
+  return (
+    <View style={styles.individualSectionContainer}>
+      {/* Top Row: Visibility Icon, Section Name, and Star Icon */}
+      <View style={styles.row}>
+        <VisibilityIcon isOpen={section.isOpen} />
+        <CustomText style={styles.sectionName}>{section.name}</CustomText>
+        <MaterialIcons
+          name={isFavorite ? "star" : "star-outline"}
+          size={32}
+          color={isFavorite ? "green" : "gray"}
+          style={styles.starIcon}
+          onPress={() => handleFavoritePress(section.key, section.name)}
+        />
       </View>
-    );
-  }
-);
+
+      {/* Middle Row: Last Updated */}
+      <CustomText style={styles.lastUpdated}>As of {timeDiff}</CustomText>
+      
+      {/* Bottom Row: Either Progress Bar or 'Section Closed' Text */}
+      <View style={styles.row}>
+        <SectionInfo section={section} />
+        <MaterialIcons name="map" size={24} color="white" style={styles.mapIcon} />
+      </View>
+    </View>
+  );
+});
 
 const styles = StyleSheet.create({
-  gymContainer: {
-    marginHorizontal: 5,
+  listContainer: {
+    // width: "100%",
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  individualSectionContainer: {
+    width: "100%",
+    marginHorizontal: 10,
     marginVertical: 5,
-    paddingHorizontal: 10,
-    paddingVertical: 8,
+    paddingHorizontal:10,
+    paddingTop: 5,
+    paddingBottom: 10,
     backgroundColor: Colors.subtleWhite,
-    borderColor: Colors.subtleWhite,
     borderRadius: 8,
-    alignItems: "center",
     borderWidth: 2,
+    borderColor: Colors.subtleWhite,
+    position: 'relative',
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+  sectionName: {
+    marginLeft: 5,
+    fontSize: 20,
+    fontWeight: 'bold',
+    flex: 1, // Ensures name takes up the available space
+  },
+  starIcon: {
+    // Removed absolute positioning
+  },
+  lastUpdated: {
+    fontSize: 16,
+    color: 'gray',
+    alignSelf: 'flex-start',
+    marginBottom: 8,
+    marginHorizontal: 5,
+  },
+  bottomRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+  countCapacityText: {
+    fontSize: 15,
+  },
+  mapIcon: {
+    // Adjust positioning if necessary
+    right:3
   },
   progressBarContainer: {
     flexDirection: "row",
@@ -108,40 +150,19 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
     marginHorizontal: 10,
   },
-  headerContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    width: "100%",
-    marginBottom:5
+  progressPercentageContainer: {
+    position: 'absolute', // Position it over the progress bar
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  gymName: {
-    fontSize: 20,
-    fontWeight: "bold",
-    marginLeft: 10,
+  progressPercentageText: {
+    color: 'white', // Ensure the text is visible on the progress bar
   },
-  sectionHeader: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  iconButton: {},
-  sectionContainer: {
-    width: "100%",
-  },
-  lastUpdated: {
-    fontSize: 16,
-    color: "gray",
-    alignSelf: "flex-start",
-    marginBottom: 5,
-    marginHorizontal: 10,
-  },
-  countCapacityText: {
-    fontSize: 15,
-  },
-
-  unavailableText: {
+  closedText: {
     fontSize: 16,
     color: '#D9534F',
-    textAlign: 'center',
+    alignSelf: 'flex-start',
   },
+  // ... other styles ...
 });

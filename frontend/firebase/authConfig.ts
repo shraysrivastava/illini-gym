@@ -13,7 +13,7 @@ export const signInAnonymouslyUser = (setError: React.Dispatch<React.SetStateAct
             return setDoc(doc(db, "users", user.uid), {
                 uid: user.uid,
                 favorites: [],
-                nicknames: [],
+                nicknames: {},
                 createdAt: new Date()
             }).then(() => userCredential);
             

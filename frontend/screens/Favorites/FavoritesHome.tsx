@@ -22,9 +22,8 @@ import {
 } from "firebase/firestore";
 import Colors from "../../constants/Colors";
 import CustomText from "../Reusables/CustomText";
-import { styles } from "../Reusables/ModalStyles";
-import { ActivityIndicator } from "react-native";
 import FavoriteInstructions from "./FavoritesInstructions";
+import { StyleSheet } from "react-native";
 
 interface SectionDetails {
   isOpen: boolean;
@@ -37,11 +36,10 @@ interface SectionDetails {
 
 export const FavoritesHome: React.FC = () => {
   const [favorites, setFavorites] = useState<string[]>([]);
-  const [favoriteSections, setFavoriteSections] = useState<
-    { gym: string; section: SectionDetails }[]
-  >([]);
+  const [favoriteSections, setFavoriteSections] = useState<{ gym: string; section: SectionDetails }[]>([]);
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [sectionNicknames, setSectionNicknames] = useState<Record<string, string>>({});
   const currentUserId = auth.currentUser?.uid;
 
   const fetchAndUpdateFavorites = useCallback(async () => {
@@ -54,9 +52,12 @@ export const FavoritesHome: React.FC = () => {
       const userFavorites: string[] = userDoc.data().favorites || [];
       setFavorites(userFavorites);
 
+      const userNicknames: Record<string, string> = userDoc.data().nicknames || {};
+      setSectionNicknames(userNicknames);
+
       const newPressedSections: Record<string, boolean> = {};
       const promises = userFavorites.map(async (fav) => {
-        const [gym, sectionId] = fav.split("/");
+        const [gym, sectionId] = fav.split("=");
         const sectionDoc = await getDoc(doc(db, gym, sectionId));
         newPressedSections[sectionId] = true; // Update pressedSections
         return sectionDoc.exists()
@@ -84,6 +85,7 @@ export const FavoritesHome: React.FC = () => {
   }, [fetchAndUpdateFavorites]);
 
   const handleRemoveFavorite = (gym: string, sectionKey: string) => {
+    console.log("Removing favorite:", gym, sectionKey);
     Alert.alert(
       "Remove Favorite",
       "Are you sure you want to remove this section from your favorites?",
@@ -100,10 +102,15 @@ export const FavoritesHome: React.FC = () => {
     );
   };
 
+  const getDisplayName = (gym: string, sectionKey: string, sectionName: string) => {
+    const favoriteKey = `${gym}=${sectionKey}`;
+    return sectionNicknames[favoriteKey] || sectionName;
+  };
+
   const removeFromFavorites = useCallback(
-    (gym: string, sectionDocID: string) => {
+    (gym: string, sectionKey: string) => {
       const userDocRef = doc(collection(db, "users"), currentUserId);
-      const favoriteKey = gym + "/" + sectionDocID;
+      const favoriteKey = gym + "=" + sectionKey;
 
       updateDoc(userDocRef, { favorites: arrayRemove(favoriteKey) }).then(
         () => {
@@ -114,7 +121,7 @@ export const FavoritesHome: React.FC = () => {
           setFavoriteSections((sections) =>
             sections.filter(
               (section) =>
-                section.gym + "/" + section.section.key !== favoriteKey
+                section.gym + "=" + section.section.key !== favoriteKey
             )
           );
         }
@@ -123,7 +130,7 @@ export const FavoritesHome: React.FC = () => {
     [currentUserId]
   );
 
-  const SectionModal = ({sections,}: {sections: { gym: string; section: SectionDetails }[]}) => (
+  const FavoriteModal = ({sections,}: {sections: { gym: string; section: SectionDetails }[]}) => (
     <View style={styles.sectionContainer}>
       {sections.map(({ gym, section }, index) => (
         <View key={index} style={styles.gymContainer}>
@@ -135,7 +142,7 @@ export const FavoritesHome: React.FC = () => {
                 <MaterialIcons name="visibility-off" size={24} color="red" />
               )}
               <CustomText style={styles.gymName}>
-                {gym.toUpperCase()} {section.name}
+                {getDisplayName(gym, section.key, section.name)}
               </CustomText>
             </View>
             <MaterialIcons
@@ -196,7 +203,7 @@ export const FavoritesHome: React.FC = () => {
           <></>
           // <ActivityIndicator size="large" color={Colors.uiucOrange} />
         ) : favorites.length !== 0 ? (
-          <SectionModal sections={favoriteSections} />
+          <FavoriteModal sections={favoriteSections} />
         ) : (
           <FavoriteInstructions />
         )}
@@ -204,3 +211,71 @@ export const FavoritesHome: React.FC = () => {
     </View>
   );
 };
+
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: Colors.midnightBlue,
+  },
+  scrollView: {
+    flex: 1,
+    width: "100%",
+  },
+  contentContainer: {
+    paddingBottom: 20, // Adjust this value as needed
+  },
+  gymContainer: {
+    margin: 10,
+    padding: 10,
+    backgroundColor: Colors.subtleWhite,
+    borderColor: Colors.subtleWhite,
+    borderRadius: 8,
+    alignItems: "center",
+    borderWidth: 2,
+  },
+  progressBarContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    alignSelf: "flex-start",
+    marginHorizontal: 10,
+  },
+  headerContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    width: "100%",
+    marginBottom:5
+  },
+  gymName: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginLeft: 10,
+  },
+  sectionHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  iconButton: {},
+  sectionContainer: {
+    width: "100%",
+  },
+  lastUpdated: {
+    fontSize: 16,
+    color: "gray",
+    alignSelf: "flex-start",
+    marginBottom: 5,
+    marginHorizontal: 10,
+  },
+  countCapacityText: {
+    fontSize: 15,
+  },
+
+  unavailableText: {
+    fontSize: 16,
+    color: '#D9534F',
+    textAlign: 'center',
+  },
+});
+

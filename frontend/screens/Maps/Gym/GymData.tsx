@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { RouteProp, useNavigation } from "@react-navigation/native";
 import { ScrollView, View, RefreshControl } from "react-native";
 import { db, auth } from "../../../firebase/firebaseConfig";
@@ -15,10 +15,12 @@ import {
   arrayUnion,
   getDoc,
 } from "firebase/firestore";
-import { styles } from "../../Reusables/ModalStyles";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { MapsStackParamList } from "../MapsNav";
 import { SectionModals } from "./SectionModal";
+import CustomToast from "../../Reusables/Toast";
+import { StyleSheet } from "react-native";
+import Colors from "../../../constants/Colors";
 
 export type GymDataProps = {
   route: RouteProp<Record<string, object>, "GymData"> & {
@@ -38,6 +40,10 @@ export const GymData: React.FC<GymDataProps> = ({ route }) => {
   const currentUserId = auth.currentUser?.uid;
   const openSections = gymData.filter((section) => section.isOpen);
   const closedSections = gymData.filter((section) => !section.isOpen);
+  const [toastMessage, setToastMessage] = useState('');
+  const [isToastVisible, setIsToastVisible] = useState(false);
+  const toastTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
 
   const fetchGymData = useCallback(async () => {
     const gymQuery = query(collection(db, gym));
@@ -65,7 +71,7 @@ export const GymData: React.FC<GymDataProps> = ({ route }) => {
         // Filter favorites for the current gym and update pressedSections
         const updatedPressedSections: { [key: string]: boolean } = {};
         favorites.forEach((favoriteKey: string) => {
-          const [favoriteGym, sectionDocID] = favoriteKey.split("/");
+          const [favoriteGym, sectionDocID] = favoriteKey.split("=");
           if (favoriteGym === gym) {
             updatedPressedSections[sectionDocID] = true;
           }
@@ -85,6 +91,9 @@ export const GymData: React.FC<GymDataProps> = ({ route }) => {
       await loadFavorites();
     };
     loadData();
+    if (toastTimeoutRef.current) {
+      clearTimeout(toastTimeoutRef.current);
+    }
   }, [fetchGymData, loadFavorites]);
 
   const onRefresh = useCallback(async () => {
@@ -94,23 +103,24 @@ export const GymData: React.FC<GymDataProps> = ({ route }) => {
     setRefreshing(false);
   }, [fetchGymData, loadFavorites]);
 
-  const handleFavoritePress = useCallback(
-    (sectionDocID: string) => {
+  const handleFavoritePress = useCallback((sectionKey: string, sectionName: string) => {
       const userDocRef = doc(collection(db, "users"), currentUserId);
-      const favoriteKey = gym + "/" + sectionDocID;
-      if (pressedSections[sectionDocID]) {
+      const favoriteKey = gym + "=" + sectionKey;
+      const message = pressedSections[sectionKey] ? sectionName + ' removed from favorites' : sectionName + ' added to favorites';
+      setToastMessage(message);
+      if (pressedSections[sectionKey]) {
         updateDoc(userDocRef, { favorites: arrayRemove(favoriteKey) });
       } else {
         updateDoc(userDocRef, { favorites: arrayUnion(favoriteKey) });
       }
       setPressedSections((prev) => ({
         ...prev,
-        [sectionDocID]: !prev[sectionDocID],
+        [sectionKey]: !prev[sectionKey],
       }));
-    },
-    [pressedSections, currentUserId]
-  );
 
+    }, [pressedSections, currentUserId]
+  );
+  
   return (
     <View style={styles.container}>
       <ScrollView
@@ -131,6 +141,23 @@ export const GymData: React.FC<GymDataProps> = ({ route }) => {
           handleFavoritePress={handleFavoritePress}
         />
       </ScrollView>
+      <CustomToast message={toastMessage} />
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: Colors.midnightBlue,
+  },
+  scrollView: {
+    flex: 1,
+    width: "100%",
+  },
+  contentContainer: {
+    paddingBottom: 15, // Adjust this value as needed
+    margin: 5,
+  },
+});
+

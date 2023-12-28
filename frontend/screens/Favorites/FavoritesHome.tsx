@@ -22,9 +22,8 @@ import {
 } from "firebase/firestore";
 import Colors from "../../constants/Colors";
 import CustomText from "../Reusables/CustomText";
-import { styles } from "../Reusables/ModalStyles";
-import { ActivityIndicator } from "react-native";
 import FavoriteInstructions from "./FavoritesInstructions";
+import { StyleSheet } from "react-native";
 
 interface SectionDetails {
   isOpen: boolean;
@@ -131,7 +130,7 @@ export const FavoritesHome: React.FC = () => {
     [currentUserId]
   );
 
-  const SectionModal = ({sections,}: {sections: { gym: string; section: SectionDetails }[]}) => (
+  const FavoriteModal = ({sections,}: {sections: { gym: string; section: SectionDetails }[]}) => (
     <View style={styles.sectionContainer}>
       {sections.map(({ gym, section }, index) => (
         <View key={index} style={styles.gymContainer}>
@@ -204,7 +203,7 @@ export const FavoritesHome: React.FC = () => {
           <></>
           // <ActivityIndicator size="large" color={Colors.uiucOrange} />
         ) : favorites.length !== 0 ? (
-          <SectionModal sections={favoriteSections} />
+          <FavoriteModal sections={favoriteSections} />
         ) : (
           <FavoriteInstructions />
         )}
@@ -212,3 +211,71 @@ export const FavoritesHome: React.FC = () => {
     </View>
   );
 };
+
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: Colors.midnightBlue,
+  },
+  scrollView: {
+    flex: 1,
+    width: "100%",
+  },
+  contentContainer: {
+    paddingBottom: 20, // Adjust this value as needed
+  },
+  gymContainer: {
+    margin: 10,
+    padding: 10,
+    backgroundColor: Colors.subtleWhite,
+    borderColor: Colors.subtleWhite,
+    borderRadius: 8,
+    alignItems: "center",
+    borderWidth: 2,
+  },
+  progressBarContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    alignSelf: "flex-start",
+    marginHorizontal: 10,
+  },
+  headerContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    width: "100%",
+    marginBottom:5
+  },
+  gymName: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginLeft: 10,
+  },
+  sectionHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  iconButton: {},
+  sectionContainer: {
+    width: "100%",
+  },
+  lastUpdated: {
+    fontSize: 16,
+    color: "gray",
+    alignSelf: "flex-start",
+    marginBottom: 5,
+    marginHorizontal: 10,
+  },
+  countCapacityText: {
+    fontSize: 15,
+  },
+
+  unavailableText: {
+    fontSize: 16,
+    color: '#D9534F',
+    textAlign: 'center',
+  },
+});
+

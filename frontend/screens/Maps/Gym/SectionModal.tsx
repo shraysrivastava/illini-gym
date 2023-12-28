@@ -3,19 +3,21 @@ import { View } from "react-native";
 import * as Progress from "react-native-progress";
 import { MaterialIcons } from "@expo/vector-icons";
 import { DocumentData } from "firebase/firestore";
-import { styles } from "../../Reusables/ModalStyles";
+// import { dataStyles } from "../../Reusables/ModalStyles";
 import CustomText from "../../Reusables/CustomText";
+import { StyleSheet } from "react-native";
+import Colors from "../../../constants/Colors";
 
 interface SectionProps {
   section: DocumentData;
-  handleFavoritePress: (key: string) => void;
+  handleFavoritePress: (key: string, name: string) => void;
   isFavorite: boolean;
 }
 
 interface SectionModalProps {
   sections: DocumentData[];
   pressedSections: Record<string, boolean>;
-  handleFavoritePress: (key: string) => void;
+  handleFavoritePress: (key: string, name: string) => void;
 }
 
 export const SectionModals: React.FC<SectionModalProps> = React.memo(
@@ -34,6 +36,7 @@ export const SectionModals: React.FC<SectionModalProps> = React.memo(
     );
   }
 );
+
 const Section: React.FC<SectionProps> = React.memo(
   ({ section, handleFavoritePress, isFavorite }) => {
     return (
@@ -52,7 +55,7 @@ const Section: React.FC<SectionProps> = React.memo(
             size={24}
             color={isFavorite ? "green" : "gray"}
             style={styles.iconButton}
-            onPress={() => handleFavoritePress(section.key)}
+            onPress={() => handleFavoritePress(section.key, section.name)}
           />
         </View>
         <CustomText style={styles.lastUpdated}>
@@ -85,3 +88,60 @@ const Section: React.FC<SectionProps> = React.memo(
     );
   }
 );
+
+const styles = StyleSheet.create({
+  gymContainer: {
+    marginHorizontal: 5,
+    marginVertical: 5,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    backgroundColor: Colors.subtleWhite,
+    borderColor: Colors.subtleWhite,
+    borderRadius: 8,
+    alignItems: "center",
+    borderWidth: 2,
+  },
+  progressBarContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    alignSelf: "flex-start",
+    marginHorizontal: 10,
+  },
+  headerContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    width: "100%",
+    marginBottom:5
+  },
+  gymName: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginLeft: 10,
+  },
+  sectionHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  iconButton: {},
+  sectionContainer: {
+    width: "100%",
+  },
+  lastUpdated: {
+    fontSize: 16,
+    color: "gray",
+    alignSelf: "flex-start",
+    marginBottom: 5,
+    marginHorizontal: 10,
+  },
+  countCapacityText: {
+    fontSize: 15,
+  },
+
+  unavailableText: {
+    fontSize: 16,
+    color: '#D9534F',
+    textAlign: 'center',
+  },
+});

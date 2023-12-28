@@ -41,7 +41,6 @@ export const GymData: React.FC<GymDataProps> = ({ route }) => {
   const openSections = gymData.filter((section) => section.isOpen);
   const closedSections = gymData.filter((section) => !section.isOpen);
   const [toastMessage, setToastMessage] = useState('');
-  const [isToastVisible, setIsToastVisible] = useState(false);
   const toastTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
 
@@ -127,7 +126,13 @@ export const GymData: React.FC<GymDataProps> = ({ route }) => {
         style={styles.scrollView}
         contentContainerStyle={styles.contentContainer}
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            colors={[Colors.beige]} // for Android
+            tintColor={Colors.beige} // Color for the spinner (iOS)
+            progressBackgroundColor="#ffffff"
+          />
         }
       >
         <SectionModals

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, Animated } from 'react-native';
+import { View, Text, StyleSheet, Animated, TouchableOpacity } from 'react-native';
 import Colors from '../../constants/Colors';
 
 interface ToastProps {
@@ -32,14 +32,24 @@ const CustomToast: React.FC<ToastProps> = ({ message }) => {
         return () => clearTimeout(timeout);
       }
     }, [message]);
-  
+    
+    const closeToast = () => {
+        Animated.timing(opacity, {
+          toValue: 0,
+          duration: 500,
+          useNativeDriver: true,
+        }).start(() => setIsVisible(false));
+      };
+    
     if (!isVisible) return null;
   
     return (
-      <Animated.View style={[styles.toast, { opacity, backgroundColor }]}>
-        <Text style={styles.text}>{message}</Text>
-      </Animated.View>
-    );
+        <Animated.View style={[styles.toast, { opacity, backgroundColor }]}>
+          <TouchableOpacity onPress={closeToast} style={{width: '100%'}}>
+            <Text style={styles.text}>{message}</Text>
+          </TouchableOpacity>
+        </Animated.View>
+      );
   };
   
 
@@ -64,6 +74,7 @@ const styles = StyleSheet.create({
     fontSize: 12, 
     fontWeight: 'bold', 
   },
+  
 });
 
 

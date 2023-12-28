@@ -72,7 +72,18 @@ export const MapsHome: React.FC = () => {
 
   const navigateToGymData = () => {
     if (selectedGym) {
-      const gym = selectedGym.key === '1' ? 'arc' : 'crce';
+      let gym;
+      switch (selectedGym.key) {
+        case "1":
+          gym = "arc";
+          break;
+        case "2":
+          gym = "crce";
+          break;
+        default:
+          gym = "dev"; // This is a default case if none of the keys match
+      }
+
       navigation.navigate('GymData', { gym: gym, gymName: gym.toUpperCase() });
       setModalVisible(false);
       setNavigatedAway(true);

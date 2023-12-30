@@ -102,6 +102,14 @@ export const MapsHome: React.FC = () => {
     }, [navigatedAway, selectedGym])
   );
 
+  useFocusEffect(
+    useCallback(() => {
+      if (mapRef.current) {
+        mapRef.current.animateToRegion(INITIAL_REGION, 1000);
+      }
+    }, [])
+  );
+
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();

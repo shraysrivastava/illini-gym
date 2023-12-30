@@ -183,15 +183,16 @@ export const MapsHome: React.FC = () => {
           setSelectedMarkerKey(null);
         }}
       >
+        <View style={styles.fullScreenButton}>
         <TouchableOpacity
-          style={styles.fullScreenButton}
+          style={styles.modalBackground}
           activeOpacity={1}
           onPressOut={() => {
             setDisplayBasicInfo(false);
             setModalVisible(false);
             setSelectedMarkerKey(null);
           }}
-        >
+        />
           {displayBasicInfo && selectedGym ? (
             <View style={styles.modalView}>
               <TouchableOpacity
@@ -293,7 +294,7 @@ export const MapsHome: React.FC = () => {
               </View>
             </View>
           )}
-        </TouchableOpacity>
+        </View>
       </Modal>
     </SafeAreaView>
   );
@@ -564,6 +565,14 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: Colors.uiucOrange,
   },
+  modalBackground: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+  },
+  
 });
 
 export default MapsHome;

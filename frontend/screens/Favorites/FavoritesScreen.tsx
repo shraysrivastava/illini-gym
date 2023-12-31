@@ -24,6 +24,9 @@ import Colors from "../../constants/Colors";
 import CustomText from "../Reusables/CustomText";
 import FavoriteInstructions from "./FavoritesInstructions";
 import { StyleSheet } from "react-native";
+import { SectionInfo, VisibilityIcon, modalStyles } from "../Maps/Gym/SectionModal";
+import { getTimeDifference } from "../Reusables/Calculations";
+import { NicknamePopup } from "./NicknamePopup";
 
 interface SectionDetails {
   isOpen: boolean;
@@ -34,7 +37,16 @@ interface SectionDetails {
   key: string;
 }
 
-export const FavoritesHome: React.FC = () => {
+interface FavoriteModalsProps {
+  sections: { gym: string; section: SectionDetails }[];
+}
+
+type FavoriteModalProps = {
+  section: SectionDetails;
+  gym: string;
+};
+
+export const FavoritesScreen: React.FC = () => {
   const [favorites, setFavorites] = useState<string[]>([]);
   const [favoriteSections, setFavoriteSections] = useState<{ gym: string; section: SectionDetails }[]>([]);
   const [refreshing, setRefreshing] = useState<boolean>(false);
@@ -130,60 +142,59 @@ export const FavoritesHome: React.FC = () => {
     [currentUserId]
   );
 
-  const FavoriteModal = ({sections,}: {sections: { gym: string; section: SectionDetails }[]}) => (
-    <View style={styles.sectionContainer}>
-      {sections.map(({ gym, section }, index) => (
-        <View key={index} style={styles.gymContainer}>
-          <View style={styles.headerContainer}>
-            <View style={styles.sectionHeader}>
-              {section.isOpen ? (
-                <MaterialIcons name="visibility" size={24} color="green" />
-              ) : (
-                <MaterialIcons name="visibility-off" size={24} color="red" />
-              )}
-              <CustomText style={styles.gymName}>
-                {getDisplayName(gym, section.key, section.name)}
-              </CustomText>
-            </View>
-            <MaterialIcons
-              name={"cancel"}
-              size={24}
-              color={"gray"}
-              style={styles.iconButton}
-              onPress={() => handleRemoveFavorite(gym, section.key)}
-            />
-          </View>
-          <CustomText style={styles.lastUpdated}>
-            Last Updated: {section.lastUpdated}
-          </CustomText>
-          {section.isOpen ? (
-            <View style={styles.progressBarContainer}>
-              <Progress.Bar
-                progress={section.count / section.capacity}
-                width={250 - 60}
-                color={
-                  section.count / section.capacity <= 0.5
-                    ? "#4CAF50"
-                    : section.count / section.capacity < 0.8
-                    ? "#FFE66D"
-                    : "#FF6B6B"
-                }
-                unfilledColor="grey"
-                style={{ marginRight: 10 }}
-              />
-              <CustomText style={styles.countCapacityText}>
-                {section.count}/{section.capacity} People
-              </CustomText>
-            </View>
-          ) : (
-            <CustomText style={styles.unavailableText}>
-              Section Data Unavailable
-            </CustomText>
-          )}
-        </View>
+  const Favorites: React.FC<FavoriteModalsProps> = ({sections}) => (
+    <View style={modalStyles.listContainer}>
+      {sections.map(({ gym, section }) => (
+        <FavoriteModal
+          gym={gym}
+          section={section}
+        />
       ))}
     </View>
   );
+  
+
+  const FavoriteModal: React.FC<FavoriteModalProps> = ({section, gym }) => {
+    const timeDiff = getTimeDifference(section.lastUpdated);
+    return (
+      <View style={modalStyles.individualSectionContainer}>
+        {/* Top Row: Visibility Icon, Section Name, and Star Icon */}
+        <View style={modalStyles.row}>
+          <VisibilityIcon isOpen={section.isOpen} />
+          <CustomText style={modalStyles.sectionName}>
+            {getDisplayName(gym, section.key, section.name)}
+          </CustomText>
+          <MaterialIcons
+            name="edit"
+            size={24}
+            color="white"
+            style={modalStyles.starIcon}
+          />
+          <MaterialIcons
+            name="remove-circle-outline"
+            size={24}
+            color="red"
+            style={modalStyles.starIcon}
+            onPress={() => handleRemoveFavorite(gym, section.key)}
+          />
+        </View>
+
+        {/* Middle Row: Last Updated */}
+        <CustomText style={modalStyles.lastUpdated}>Last Updated: {timeDiff}</CustomText>
+
+        {/* Bottom Row: Either Progress Bar or 'Section Closed' Text */}
+        <View style={modalStyles.row}>
+          <SectionInfo section={section} />
+          <MaterialIcons
+            name="map"
+            size={24}
+            color="white"
+            style={modalStyles.mapIcon}
+          />
+        </View>
+      </View>
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -201,12 +212,14 @@ export const FavoritesHome: React.FC = () => {
       >
         {isLoading && favorites.length === 0 ? (
           <></>
-          // <ActivityIndicator size="large" color={Colors.uiucOrange} />
-        ) : favorites.length !== 0 ? (
-          <FavoriteModal sections={favoriteSections} />
+        ) : // <ActivityIndicator size="large" color={Colors.uiucOrange} />
+        favorites.length !== 0 ? (
+          <Favorites sections={favoriteSections} />
         ) : (
           <FavoriteInstructions />
         )}
+
+        
       </ScrollView>
     </View>
   );
@@ -222,60 +235,7 @@ const styles = StyleSheet.create({
     flex: 1,
     width: "100%",
   },
-  contentContainer: {
-    paddingBottom: 20, // Adjust this value as needed
-  },
-  gymContainer: {
-    margin: 10,
-    padding: 10,
-    backgroundColor: Colors.subtleWhite,
-    borderColor: Colors.subtleWhite,
-    borderRadius: 8,
-    alignItems: "center",
-    borderWidth: 2,
-  },
-  progressBarContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    alignSelf: "flex-start",
-    marginHorizontal: 10,
-  },
-  headerContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    width: "100%",
-    marginBottom:5
-  },
-  gymName: {
-    fontSize: 20,
-    fontWeight: "bold",
-    marginLeft: 10,
-  },
-  sectionHeader: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  iconButton: {},
-  sectionContainer: {
-    width: "100%",
-  },
-  lastUpdated: {
-    fontSize: 16,
-    color: "gray",
-    alignSelf: "flex-start",
-    marginBottom: 5,
-    marginHorizontal: 10,
-  },
-  countCapacityText: {
-    fontSize: 15,
-  },
-
-  unavailableText: {
-    fontSize: 16,
-    color: '#D9534F',
-    textAlign: 'center',
-  },
+  
+  
 });
 

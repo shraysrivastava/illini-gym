@@ -25,7 +25,7 @@ interface SectionModalProps {
 export const SectionModals: React.FC<SectionModalProps> = React.memo(
   ({ sections, pressedSections, handleFavoritePress }) => {
     return (
-      <View style={styles.listContainer}>
+      <View style={modalStyles.listContainer}>
         {sections.map((section) => (
           <Section
             key={section.key}
@@ -39,7 +39,7 @@ export const SectionModals: React.FC<SectionModalProps> = React.memo(
   }
 );
 
-const VisibilityIcon: React.FC<{ isOpen: boolean }> = React.memo(({ isOpen }) => {
+export const VisibilityIcon: React.FC<{ isOpen: boolean }> = React.memo(({ isOpen }) => {
   return isOpen ? (
     <MaterialIcons name="visibility" size={24} color="green" />
   ) : (
@@ -48,13 +48,11 @@ const VisibilityIcon: React.FC<{ isOpen: boolean }> = React.memo(({ isOpen }) =>
 });
 
 export const SectionInfo: React.FC<{section: DocumentData}> = ({ section }) => {
-  
-
   return (
     section.isOpen ? (
       <ProgressBar  count={section.count} capacity={section.capacity} />
     ) : (
-      <CustomText style={styles.closedText}>Section Closed</CustomText>
+      <CustomText style={modalStyles.closedText}>Section Closed</CustomText>
     )
   );
 };
@@ -62,33 +60,33 @@ export const SectionInfo: React.FC<{section: DocumentData}> = ({ section }) => {
 const Section: React.FC<SectionProps> = React.memo(({ section, handleFavoritePress, isFavorite }) => {
   const timeDiff = getTimeDifference(section.lastUpdated);
   return (
-    <View style={styles.individualSectionContainer}>
+    <View style={modalStyles.individualSectionContainer}>
       {/* Top Row: Visibility Icon, Section Name, and Star Icon */}
-      <View style={styles.row}>
+      <View style={modalStyles.row}>
         <VisibilityIcon isOpen={section.isOpen} />
-        <CustomText style={styles.sectionName}>{section.name}</CustomText>
+        <CustomText style={modalStyles.sectionName}>{section.name}</CustomText>
         <MaterialIcons
           name={isFavorite ? "star" : "star-outline"}
           size={32}
           color={isFavorite ? "green" : "gray"}
-          style={styles.starIcon}
+          style={modalStyles.starIcon}
           onPress={() => handleFavoritePress(section.key, section.name)}
         />
       </View>
 
       {/* Middle Row: Last Updated */}
-      <CustomText style={styles.lastUpdated}>As of {timeDiff}</CustomText>
+      <CustomText style={modalStyles.lastUpdated}>Last Updated: {timeDiff}</CustomText>
       
       {/* Bottom Row: Either Progress Bar or 'Section Closed' Text */}
-      <View style={styles.row}>
+      <View style={modalStyles.row}>
         <SectionInfo section={section} />
-        <MaterialIcons name="map" size={24} color="white" style={styles.mapIcon} />
+        <MaterialIcons name="map" size={24} color="white" style={modalStyles.mapIcon} />
       </View>
     </View>
   );
 });
 
-const styles = StyleSheet.create({
+export const modalStyles = StyleSheet.create({
   listContainer: {
     // width: "100%",
     flex: 1,
@@ -100,8 +98,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     marginVertical: 5,
     paddingHorizontal:10,
-    paddingTop: 5,
-    paddingBottom: 10,
+    paddingVertical:10,
     backgroundColor: Colors.subtleWhite,
     borderRadius: 8,
     borderWidth: 2,

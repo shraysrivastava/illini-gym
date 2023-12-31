@@ -12,7 +12,7 @@ export const getTimeDifference = (lastUpdated: string): string => {
   // Check if the difference is more than 24 hours
   if (now.diff(lastUpdatedMoment, 'hours') >= 24) {
     const dayWithOrdinal = getOrdinalSuffix(lastUpdatedMoment.date());
-    return `${lastUpdatedMoment.format('MMMM')} ${dayWithOrdinal}, ${lastUpdatedMoment.format('YYYY, h:mm A')}`;
+    return `${lastUpdatedMoment.format('MMM')} ${dayWithOrdinal}, ${lastUpdatedMoment.format('YYYY, h:mm A')}`;
   }
 
   const duration = moment.duration(now.diff(lastUpdatedMoment));

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import {
   ScrollView,
   RefreshControl,
@@ -8,6 +8,7 @@ import {
   Alert,
   Modal,
   TextInput,
+  TouchableHighlight,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as Progress from "react-native-progress";
@@ -30,6 +31,7 @@ import { SectionInfo, VisibilityIcon, modalStyles } from "../Maps/Gym/SectionMod
 import { getTimeDifference } from "../Reusables/Calculations";
 import { RemovePopup } from "../Reusables/RemovePopup";
 import { useFocusEffect } from '@react-navigation/native';
+import CustomToast from "../Reusables/Toast";
 
 
 interface SectionDetails {
@@ -49,6 +51,7 @@ type FavoriteModalProps = {
   id: string;
   section: SectionDetails;
   gym: string;
+  updateNickname: (id: string, newNickname: string) => void;
 };
 
 interface EditableNicknames {
@@ -66,6 +69,9 @@ export const FavoritesScreen: React.FC = () => {
   const [editableNicknames, setEditableNicknames] = useState<EditableNicknames>({});
   const [isRemovePopupVisible, setIsRemovePopupVisible] = useState(false);
   const [sectionToRemove, setSectionToRemove] = useState<string>("");
+  const [selectedSection, setSelectedSection] = useState<string>("");
+  const [toastMessage, setToastMessage] = useState('');
+  const toastTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
 
 
@@ -104,6 +110,9 @@ export const FavoritesScreen: React.FC = () => {
 
   useEffect(() => {
     fetchAndUpdateFavorites();
+    if (toastTimeoutRef.current) {
+      clearTimeout(toastTimeoutRef.current);
+    }
   }, [fetchAndUpdateFavorites]);
 
   useFocusEffect(
@@ -117,10 +126,11 @@ export const FavoritesScreen: React.FC = () => {
     fetchAndUpdateFavorites().then(() => setRefreshing(false));
   }, [fetchAndUpdateFavorites]);
 
-  const handleRemoveFavorite = (gym: string, sectionKey: string) => {
+  const handleRemoveFavorite = (gym: string, sectionKey: string, sectionName: string) => {
     console.log("Removing favorite:", gym, sectionKey);
     setIsRemovePopupVisible(true);
     setSectionToRemove(gym + "=" + sectionKey);
+    setSelectedSection(sectionName);
   };
 
   const getDisplayName = (gym: string, sectionKey: string, sectionName: string) => {
@@ -128,10 +138,11 @@ export const FavoritesScreen: React.FC = () => {
     return sectionNicknames[favoriteKey] || sectionName;
   };
 
-  const removeFromFavorites = useCallback((favoriteKey: string) => {
+  const removeFromFavorites = useCallback((favoriteKey: string, sectionName: string) => {
       const userDocRef = doc(collection(db, "users"), currentUserId);
       console.log("Removing from favorites:", favoriteKey);
-
+      const message = sectionNicknames[favoriteKey] ? sectionNicknames[favoriteKey] + ' removed from favorites' : sectionName + ' removed from favorites';
+      setToastMessage(message);
       updateDoc(userDocRef, { favorites: arrayRemove(favoriteKey) }).then(
         () => {
           // Also remove the nickname associated with this section
@@ -164,9 +175,25 @@ export const FavoritesScreen: React.FC = () => {
   }, [editableNicknames, currentUserId]);
 
   const onSavePress = () => {
+    setToastMessage('Changes Saved');
     handleNicknameUpdate();
     setIsEditMode(false);
     fetchAndUpdateFavorites();
+  };
+
+  const toggleEditMode = () => {
+    if (isEditMode) {
+      setEditableNicknames({});
+      setToastMessage('Changes Discarded');
+    }
+    setIsEditMode(!isEditMode);
+  };
+
+  const updateNickname = (id: string, newNickname: string) => {
+    setEditableNicknames({
+      ...editableNicknames,
+      [id]: newNickname
+    });
   };
 
   const Favorites: React.FC<FavoriteModalsProps> = React.memo(({sections}) => (
@@ -177,13 +204,14 @@ export const FavoritesScreen: React.FC = () => {
           id={gym + "=" + section.key}
           gym={gym}
           section={section}
+          updateNickname={updateNickname}
         />
       ))}
     </View>
   ));
   
 
-  const FavoriteModal: React.FC<FavoriteModalProps> = React.memo(({section, gym, id }) => {
+  const FavoriteModal: React.FC<FavoriteModalProps> = React.memo(({section, gym, id}) => {
     const timeDiff = getTimeDifference(section.lastUpdated);
     return (
       <View style={modalStyles.individualSectionContainer}>
@@ -213,7 +241,7 @@ export const FavoritesScreen: React.FC = () => {
             size={24}
             color="red"
             style={modalStyles.starIcon}
-            onPress={() => handleRemoveFavorite(gym, section.key)}
+            onPress={() => handleRemoveFavorite(gym, section.key, section.name)}
           />
         </View>
 
@@ -242,9 +270,9 @@ export const FavoritesScreen: React.FC = () => {
         name="edit"
         color={isEditMode ? Colors.uiucOrange : Colors.beige}
         size={24}
-        onPress={() => setIsEditMode(!isEditMode)}
+        onPress={toggleEditMode}
       />
-      {isEditMode && <Button title="Save Changes" onPress={onSavePress} />}
+
       <ScrollView
         style={styles.scrollView}
         refreshControl={
@@ -272,8 +300,26 @@ export const FavoritesScreen: React.FC = () => {
           onCancel={() => setIsRemovePopupVisible(false)}
           onConfirm={removeFromFavorites}
           favoriteKey={sectionToRemove}
+          sectionName={sectionNicknames[sectionToRemove] || selectedSection}
         />
       )}
+      {isEditMode && (
+        <View style={styles.buttonContainer}>
+        <TouchableHighlight
+          style={styles.cancelButton}
+          onPress={toggleEditMode}
+        >
+          <CustomText style={styles.buttonText}>Cancel</CustomText>
+        </TouchableHighlight>
+        <TouchableHighlight
+          style={styles.saveButton}
+          onPress={onSavePress}
+        >
+          <CustomText style={styles.buttonText}>Save</CustomText>
+        </TouchableHighlight>
+      </View>
+      )}
+      <CustomToast message={toastMessage} />
     </View>
   );
 };
@@ -287,6 +333,37 @@ const styles = StyleSheet.create({
   scrollView: {
     flex: 1,
     width: "100%",
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    padding: 15,
+  },
+  saveButton: {
+    backgroundColor: Colors.uiucOrange,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+  },
+  cancelButton: {
+    backgroundColor: Colors.uiucBlue,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+  },
+  buttonText: {
+    color: "white",
+    textAlign: "center",
+    fontWeight: "bold",
+    fontSize: 16,
   },
 
   

@@ -5,11 +5,12 @@ import Colors from "../../constants/Colors";
 interface RemovePopupProps {
   isVisible: boolean;
   onCancel: () => void;
-  onConfirm: (favoriteKey: string) => void;
+  onConfirm: (favoriteKey: string, sectionName: string) => void;
   favoriteKey: string;
+  sectionName: string;
 }
 
-export const RemovePopup: React.FC<RemovePopupProps> = ({isVisible, onCancel, onConfirm, favoriteKey}) => {
+export const RemovePopup: React.FC<RemovePopupProps> = ({isVisible, onCancel, onConfirm, favoriteKey, sectionName}) => {
     return (
       <Modal
         visible={isVisible}
@@ -31,7 +32,7 @@ export const RemovePopup: React.FC<RemovePopupProps> = ({isVisible, onCancel, on
               </TouchableHighlight>
               <TouchableHighlight
                 style={styles.confirmButton}
-                onPress={() => onConfirm(favoriteKey)}
+                onPress={() => onConfirm(favoriteKey, sectionName)}
               >
                 <Text style={styles.buttonText}>Confirm</Text>
               </TouchableHighlight>

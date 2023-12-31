@@ -14,6 +14,7 @@ import {
   arrayRemove,
   arrayUnion,
   getDoc,
+  deleteField,
 } from "firebase/firestore";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { MapsStackParamList } from "../MapsNav";
@@ -109,6 +110,10 @@ export const GymData: React.FC<GymDataProps> = ({ route }) => {
       setToastMessage(message);
       if (pressedSections[sectionKey]) {
         updateDoc(userDocRef, { favorites: arrayRemove(favoriteKey) });
+        // Also remove the nickname associated with this section
+        updateDoc(userDocRef, {
+          [`nicknames.${favoriteKey}`]: deleteField(),
+        });
       } else {
         updateDoc(userDocRef, { favorites: arrayUnion(favoriteKey) });
       }

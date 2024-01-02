@@ -14,6 +14,7 @@ import {
   arrayRemove,
   arrayUnion,
   getDoc,
+  deleteField,
 } from "firebase/firestore";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { MapsStackParamList } from "../MapsNav";
@@ -40,7 +41,7 @@ export const GymData: React.FC<GymDataProps> = ({ route }) => {
   const currentUserId = auth.currentUser?.uid;
   const openSections = gymData.filter((section) => section.isOpen);
   const closedSections = gymData.filter((section) => !section.isOpen);
-  const [toastMessage, setToastMessage] = useState('');
+  const [toastMessage, setToastMessage] = useState<string>("");
   const toastTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
 
@@ -109,6 +110,10 @@ export const GymData: React.FC<GymDataProps> = ({ route }) => {
       setToastMessage(message);
       if (pressedSections[sectionKey]) {
         updateDoc(userDocRef, { favorites: arrayRemove(favoriteKey) });
+        // Also remove the nickname associated with this section
+        updateDoc(userDocRef, {
+          [`nicknames.${favoriteKey}`]: deleteField(),
+        });
       } else {
         updateDoc(userDocRef, { favorites: arrayUnion(favoriteKey) });
       }

@@ -4,7 +4,7 @@ import React from "react";
 import Colors from "../../constants/Colors";
 import { FavoriteSettings } from "../Settings/SettingsScreens/FavoriteSettings";
 import { getCommonHeaderOptions } from "../CustomHeader";
-import { FavoritesHome } from "./FavoritesHome";
+import { FavoritesScreen } from "./FavoritesScreen";
 export type FavoriteStackParamList = {
   FavoritesHome: undefined;
   FavoriteSettings: undefined;
@@ -29,7 +29,7 @@ export const FavoritesNav = () => {
     >
       <FavoritesStack.Screen
         name="FavoritesHome"
-        component={FavoritesHome}
+        component={FavoritesScreen}
         options={({ navigation }) =>
           getCommonHeaderOptions(navigation, "Favorites", "Favorites")
         }

@@ -9,8 +9,9 @@ interface ToastProps {
 const CustomToast: React.FC<ToastProps> = ({ message }) => {
     const [isVisible, setIsVisible] = useState(false);
     const opacity = useRef(new Animated.Value(0)).current;
-    const backgroundColor = message.includes('added') ? 'green' : 'red';
-  
+    const backgroundColor = message.includes('added') || message.includes('Saved') ? 'green' : 'red';
+    const textColor = message.includes('Changes') ? 'white' : 'white';
+
     useEffect(() => {
       if (message) {
         setIsVisible(true);
@@ -44,9 +45,10 @@ const CustomToast: React.FC<ToastProps> = ({ message }) => {
     if (!isVisible) return null;
   
     return (
+      
         <Animated.View style={[styles.toast, { opacity, backgroundColor }]}>
           <TouchableOpacity onPress={closeToast} style={{width: '100%'}}>
-            <Text style={styles.text}>{message}</Text>
+            <Text style={[styles.text, { color: textColor }]}>{message}</Text>
           </TouchableOpacity>
         </Animated.View>
       );

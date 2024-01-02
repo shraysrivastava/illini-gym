@@ -72,7 +72,7 @@ const Section: React.FC<SectionProps> = React.memo(
           </CustomText>
           <MaterialIcons
             name={isFavorite ? "star" : "star-outline"}
-            size={32}
+            size={28}
             color={isFavorite ? "green" : "gray"}
             style={modalStyles.starIcon}
             onPress={() => handleFavoritePress(section.key, section.name)}
@@ -137,7 +137,7 @@ export const modalStyles = StyleSheet.create({
     fontSize: 16,
     color: "gray",
     alignSelf: "flex-start",
-    marginBottom: 8,
+    marginVertical: 5,
     marginHorizontal: 5,
   },
   bottomRow: {

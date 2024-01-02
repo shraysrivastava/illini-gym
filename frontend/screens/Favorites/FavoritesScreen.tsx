@@ -64,23 +64,17 @@ interface EditableNicknames {
 
 export const FavoritesScreen: React.FC = () => {
   const [favorites, setFavorites] = useState<string[]>([]);
-  const [favoriteSections, setFavoriteSections] = useState<
-    { gym: string; section: SectionDetails }[]
-  >([]);
+  const [favoriteSections, setFavoriteSections] = useState<{ gym: string; section: SectionDetails }[]>([]);
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [sectionNicknames, setSectionNicknames] = useState<
-    Record<string, string>
-  >({});
+  const [sectionNicknames, setSectionNicknames] = useState< Record<string, string>>({});
   const currentUserId = auth.currentUser?.uid;
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
-  const [editableNicknames, setEditableNicknames] = useState<EditableNicknames>(
-    {}
-  );
+  const [editableNicknames, setEditableNicknames] = useState<EditableNicknames>({});
   const [isRemovePopupVisible, setIsRemovePopupVisible] = useState(false);
   const [sectionToRemove, setSectionToRemove] = useState<string>("");
   const [selectedSection, setSelectedSection] = useState<string>("");
-  const [toastMessage, setToastMessage] = useState("");
+  const [toastMessage, setToastMessage] = useState<string>("");
   const toastTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const fetchAndUpdateFavorites = useCallback(async () => {
@@ -121,12 +115,14 @@ export const FavoritesScreen: React.FC = () => {
     fetchAndUpdateFavorites();
     if (toastTimeoutRef.current) {
       clearTimeout(toastTimeoutRef.current);
+      setToastMessage("");
     }
   }, [fetchAndUpdateFavorites]);
 
   useFocusEffect(
     useCallback(() => {
       fetchAndUpdateFavorites();
+      setIsEditMode(false);
     }, [fetchAndUpdateFavorites])
   );
 
@@ -175,22 +171,46 @@ export const FavoritesScreen: React.FC = () => {
     [currentUserId, favoriteSections, sectionNicknames]
   );
 
-  const handleNicknameUpdate = useCallback(() => {
+
+
+  const handleNicknameUpdate = useCallback(async () => {
     const userDocRef = doc(collection(db, "users"), currentUserId);
-    updateDoc(userDocRef, {
-      nicknames: editableNicknames,
+
+    // Prepare the updates object
+    const updates: Record<string, any> = {};
+
+    // Iterate through the editableNicknames
+    Object.keys(editableNicknames).forEach((key) => {
+      if (editableNicknames[key] !== sectionNicknames[key]) {
+        updates[`nicknames.${key}`] = editableNicknames[key];
+      }
     });
-    fetchAndUpdateFavorites();
-  }, [editableNicknames, currentUserId]);
+
+    // Check if there are updates to be made
+    if (Object.keys(updates).length > 0) {
+      try {
+        await updateDoc(userDocRef, updates);
+        fetchAndUpdateFavorites();
+      } catch (error) {
+        console.error("Error updating nicknames:", error);
+      }
+    } else {
+      console.log("No nickname updates to be made.");
+    }
+  }, [
+    editableNicknames,
+    sectionNicknames,
+    currentUserId,
+    fetchAndUpdateFavorites,
+  ]);
 
   const onSavePress = () => {
     setToastMessage("Changes Saved");
     handleNicknameUpdate();
     setIsEditMode(false);
-    fetchAndUpdateFavorites();
   };
 
-  const toggleEditMode = () => {
+  const onCancelPress = () => {
     if (isEditMode) {
       setEditableNicknames({});
       setToastMessage("Changes Discarded");
@@ -216,6 +236,7 @@ export const FavoritesScreen: React.FC = () => {
           gym={gym}
           section={section}
           isEditMode={isEditMode}
+          sectionNicknames={sectionNicknames}
           editableNicknames={editableNicknames}
           handleRemoveFavorite={handleRemoveFavorite}
           updateNickname={updateNickname}
@@ -227,15 +248,36 @@ export const FavoritesScreen: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <MaterialIcons
-        name="edit"
-        color={isEditMode ? Colors.uiucOrange : Colors.beige}
-        size={24}
-        onPress={toggleEditMode}
-      />
+      {isEditMode ? (
+        <View style={styles.editModeContainer}>
+          <MaterialIcons
+            name="close"
+            color="red"
+            size={28}
+            onPress={onCancelPress}
+            style={styles.cancelIcon}
+          />
+          <MaterialIcons
+            name="check"
+            color="green"
+            size={28}
+            onPress={onSavePress}
+            style={styles.saveIcon}
+          />
+        </View>
+      ) : (
+        <MaterialIcons
+          name="edit"
+          color={Colors.beige}
+          size={24}
+          onPress={() => setIsEditMode(true)}
+          style={styles.editIcon}
+        />
+      )}
 
       <ScrollView
         style={styles.scrollView}
+        contentContainerStyle={styles.contentContainer}
         refreshControl={
           <RefreshControl
             refreshing={refreshing}
@@ -264,19 +306,7 @@ export const FavoritesScreen: React.FC = () => {
           sectionName={sectionNicknames[sectionToRemove] || selectedSection}
         />
       )}
-      {isEditMode && (
-        <View style={styles.buttonContainer}>
-          <TouchableHighlight
-            style={styles.cancelButton}
-            onPress={toggleEditMode}
-          >
-            <CustomText style={styles.buttonText}>Cancel</CustomText>
-          </TouchableHighlight>
-          <TouchableHighlight style={styles.saveButton} onPress={onSavePress}>
-            <CustomText style={styles.buttonText}>Save</CustomText>
-          </TouchableHighlight>
-        </View>
-      )}
+
       <CustomToast message={toastMessage} />
     </View>
   );
@@ -291,35 +321,22 @@ const styles = StyleSheet.create({
     flex: 1,
     width: "100%",
   },
-  buttonContainer: {
-    flexDirection: "row",
-    justifyContent: "space-evenly",
-    padding: 15,
+  contentContainer: {
+    paddingBottom: 15, // Adjust this value as needed
+    margin: 5,
   },
-  saveButton: {
-    backgroundColor: Colors.uiucOrange,
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 8,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
+  editModeContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 10, // Adjust as needed
   },
-  cancelButton: {
-    backgroundColor: Colors.uiucBlue,
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 8,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
+  cancelIcon: {
+    alignSelf: 'flex-start',
   },
-  buttonText: {
-    color: "white",
-    textAlign: "center",
-    fontWeight: "bold",
-    fontSize: 16,
+  saveIcon: {
+    alignSelf: 'flex-end',
+  },
+  editIcon: {
+    // Style for the edit icon, if needed
   },
 });

@@ -41,7 +41,7 @@ export const GymData: React.FC<GymDataProps> = ({ route }) => {
   const currentUserId = auth.currentUser?.uid;
   const openSections = gymData.filter((section) => section.isOpen);
   const closedSections = gymData.filter((section) => !section.isOpen);
-  const [toastMessage, setToastMessage] = useState('');
+  const [toastMessage, setToastMessage] = useState<string>("");
   const toastTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
 

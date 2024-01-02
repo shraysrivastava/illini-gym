@@ -36,8 +36,9 @@ import { getTimeDifference } from "../Reusables/Utilities";
 import { RemovePopup } from "../Reusables/RemovePopup";
 import { useFocusEffect } from "@react-navigation/native";
 import CustomToast from "../Reusables/Toast";
+import FavoriteModal from "./FavoriteModal";
 
-interface SectionDetails {
+export interface SectionDetails {
   isOpen: boolean;
   name: string;
   lastUpdated: string;
@@ -134,25 +135,14 @@ export const FavoritesScreen: React.FC = () => {
     fetchAndUpdateFavorites().then(() => setRefreshing(false));
   }, [fetchAndUpdateFavorites]);
 
-  const handleRemoveFavorite = (
-    gym: string,
-    sectionKey: string,
-    sectionName: string
-  ) => {
+  const handleRemoveFavorite = useCallback((gym: string, sectionKey: string, sectionName: string) => {
     console.log("Removing favorite:", gym, sectionKey);
     setIsRemovePopupVisible(true);
     setSectionToRemove(gym + "=" + sectionKey);
     setSelectedSection(sectionName);
-  };
+  }, []
+  );
 
-  const getDisplayName = (
-    gym: string,
-    sectionKey: string,
-    sectionName: string
-  ) => {
-    const favoriteKey = `${gym}=${sectionKey}`;
-    return sectionNicknames[favoriteKey] || sectionName;
-  };
 
   const removeFromFavorites = useCallback(
     (favoriteKey: string, sectionName: string) => {
@@ -182,7 +172,7 @@ export const FavoritesScreen: React.FC = () => {
       );
       setIsRemovePopupVisible(false);
     },
-    [currentUserId]
+    [currentUserId, favoriteSections, sectionNicknames]
   );
 
   const handleNicknameUpdate = useCallback(() => {
@@ -208,85 +198,31 @@ export const FavoritesScreen: React.FC = () => {
     setIsEditMode(!isEditMode);
   };
 
-  const updateNickname = (id: string, newNickname: string) => {
+  const updateNickname = useCallback((id: string, newNickname: string) => {
     setEditableNicknames({
       ...editableNicknames,
       [id]: newNickname,
     });
-  };
+  }, [editableNicknames]
+  );
 
   const Favorites: React.FC<FavoriteModalsProps> = React.memo(
     ({ sections }) => (
       <View style={modalStyles.listContainer}>
         {sections.map(({ gym, section }, index) => (
           <FavoriteModal
-            key={gym + "=" + section.key}
-            id={gym + "=" + section.key}
-            gym={gym}
-            section={section}
-            updateNickname={updateNickname}
-          />
+          key={gym + "=" + section.key}
+          id={gym + "=" + section.key}
+          gym={gym}
+          section={section}
+          isEditMode={isEditMode}
+          editableNicknames={editableNicknames}
+          handleRemoveFavorite={handleRemoveFavorite}
+          updateNickname={updateNickname}
+        />
         ))}
       </View>
     )
-  );
-
-  const FavoriteModal: React.FC<FavoriteModalProps> = React.memo(
-    ({ section, gym, id }) => {
-      const timeDiff = getTimeDifference(section.lastUpdated);
-      return (
-        <View style={modalStyles.individualSectionContainer}>
-          {/* Top Row: Visibility Icon, Section Name, and Star Icon */}
-          <View style={modalStyles.row}>
-            <VisibilityIcon isOpen={section.isOpen} />
-            {isEditMode ? (
-              <TextInput
-                style={modalStyles.sectionName}
-                value={editableNicknames[id] || section.name}
-                onChangeText={(text) =>
-                  setEditableNicknames({
-                    ...editableNicknames,
-                    [id]: text,
-                  })
-                }
-                placeholderTextColor={"gray"}
-                maxLength={20}
-                // style and other props
-              />
-            ) : (
-              <CustomText style={modalStyles.sectionName}>
-                {getDisplayName(gym, section.key, section.name)}
-              </CustomText>
-            )}
-            <MaterialIcons
-              name="remove-circle-outline"
-              size={24}
-              color="red"
-              style={modalStyles.starIcon}
-              onPress={() =>
-                handleRemoveFavorite(gym, section.key, section.name)
-              }
-            />
-          </View>
-
-          {/* Middle Row: Last Updated */}
-          <CustomText style={modalStyles.lastUpdated}>
-            Last Updated: {timeDiff}
-          </CustomText>
-
-          {/* Bottom Row: Either Progress Bar or 'Section Closed' Text */}
-          <View style={modalStyles.row}>
-            <SectionInfo section={section} />
-            <MaterialIcons
-              name="map"
-              size={24}
-              color="white"
-              style={modalStyles.mapIcon}
-            />
-          </View>
-        </View>
-      );
-    }
   );
 
   return (

@@ -5,17 +5,21 @@ import Colors from "../../constants/Colors";
 import { FavoriteSettings } from "../Settings/SettingsScreens/FavoriteSettings";
 import { getCommonHeaderOptions } from "../CustomHeader";
 import { FavoritesScreen } from "./FavoritesScreen";
+import { TouchableOpacity, View } from "react-native";
+import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
+
 export type FavoriteStackParamList = {
-  FavoritesHome: undefined;
+  FavoritesScreen: undefined;
   FavoriteSettings: undefined;
 };
 
 const FavoritesStack = createStackNavigator<FavoriteStackParamList>();
 
+
 export const FavoritesNav = () => {
   return (
     <FavoritesStack.Navigator
-      initialRouteName="FavoritesHome"
+      initialRouteName="FavoritesScreen"
       screenOptions={{
         gestureEnabled: true,
         gestureDirection: "horizontal",
@@ -28,7 +32,7 @@ export const FavoritesNav = () => {
       }}
     >
       <FavoritesStack.Screen
-        name="FavoritesHome"
+        name="FavoritesScreen"
         component={FavoritesScreen}
         options={({ navigation }) =>
           getCommonHeaderOptions(navigation, "Favorites", "Favorites")

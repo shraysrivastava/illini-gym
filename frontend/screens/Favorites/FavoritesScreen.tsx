@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect, useCallback, useRef, useLayoutEffect } from "react";
 import {
   ScrollView,
   RefreshControl,
@@ -189,10 +189,12 @@ export const FavoritesScreen: React.FC = () => {
     // Check if there are updates to be made
     if (Object.keys(updates).length > 0) {
       try {
+        setToastMessage("Changes Successfuly Saved");
         await updateDoc(userDocRef, updates);
         fetchAndUpdateFavorites();
       } catch (error) {
         console.error("Error updating nicknames:", error);
+        setToastMessage("Error updating nicknames");
       }
     } else {
       console.log("No nickname updates to be made.");
@@ -205,17 +207,22 @@ export const FavoritesScreen: React.FC = () => {
   ]);
 
   const onSavePress = () => {
-    setToastMessage("Changes Saved");
     handleNicknameUpdate();
     setIsEditMode(false);
   };
 
   const onCancelPress = () => {
-    if (isEditMode) {
-      setEditableNicknames({});
+    
+    const changesMade = Object.keys(editableNicknames).some(
+      (key) => editableNicknames[key] !== sectionNicknames[key]
+    );
+
+    if (changesMade) {
       setToastMessage("Changes Discarded");
     }
-    setIsEditMode(!isEditMode);
+    
+    setEditableNicknames({});
+    setIsEditMode(false);
   };
 
   const updateNickname = useCallback((id: string, newNickname: string) => {
@@ -248,29 +255,14 @@ export const FavoritesScreen: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      {isEditMode ? (
-        <View style={styles.editModeContainer}>
-          <MaterialIcons
-            name="close"
-            color="red"
-            size={28}
-            onPress={onCancelPress}
-            style={styles.cancelIcon}
-          />
-          <MaterialIcons
-            name="check"
-            color="green"
-            size={28}
-            onPress={onSavePress}
-            style={styles.saveIcon}
-          />
-        </View>
-      ) : (
+      { !isEditMode &&(
         <MaterialIcons
           name="edit"
           color={Colors.beige}
           size={24}
-          onPress={() => setIsEditMode(true)}
+          onPress={() => {
+            setIsEditMode(true);
+            setToastMessage("Edit Mode Enabled");}}
           style={styles.editIcon}
         />
       )}
@@ -306,6 +298,24 @@ export const FavoritesScreen: React.FC = () => {
           sectionName={sectionNicknames[sectionToRemove] || selectedSection}
         />
       )}
+      {isEditMode && (
+        <View style={styles.editModeContainer}>
+          <MaterialIcons
+            name="close"
+            color="red"
+            size={32}
+            onPress={onCancelPress}
+            style={styles.cancelIcon}
+          />
+          <MaterialIcons
+            name="check"
+            color="green"
+            size={32}
+            onPress={onSavePress}
+            style={styles.saveIcon}
+          />
+        </View>
+      )}
 
       <CustomToast message={toastMessage} />
     </View>
@@ -322,13 +332,14 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   contentContainer: {
-    paddingBottom: 15, // Adjust this value as needed
+    paddingBottom: 15,
     margin: 5,
   },
   editModeContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: 10, // Adjust as needed
+    paddingHorizontal: 10,
+    marginBottom: 5, 
   },
   cancelIcon: {
     alignSelf: 'flex-start',

@@ -24,12 +24,12 @@ const FavoriteModal: React.FC<FavoriteModalProps> = ({ section, gym, id, isEditM
   const timeDiff = getTimeDifference(section.lastUpdated);
   const initialNickname = editableNicknames[id] ?? sectionNicknames[id] ?? section.name;
   const [localNickname, setLocalNickname] = useState(initialNickname);
-
   
   const resetNickname = () => {
     setLocalNickname(section.name);
     updateNickname(id, section.name);
   };
+
   return (
     <View style={modalStyles.individualSectionContainer}>
       {isEditMode ? (
@@ -43,7 +43,7 @@ const FavoriteModal: React.FC<FavoriteModalProps> = ({ section, gym, id, isEditM
             onEndEditing={() => updateNickname(id, localNickname)}
             placeholder="Enter Name"
             placeholderTextColor="gray"
-            maxLength={20}
+            maxLength={27}
           />
           <MaterialCommunityIcons name="restart" size={28} color={Colors.uiucOrange} onPress={resetNickname} />
         </View>

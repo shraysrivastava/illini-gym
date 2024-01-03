@@ -9,7 +9,9 @@ interface ToastProps {
 const CustomToast: React.FC<ToastProps> = ({ message }) => {
     const [isVisible, setIsVisible] = useState(false);
     const opacity = useRef(new Animated.Value(0)).current;
-    const backgroundColor = message.includes('added') || message.includes('Saved') ? 'green' : 'red';
+    const backgroundColor = message.includes('added') || message.includes('Saved') ? 'green' 
+                            : message.includes('removed') || message.includes('Discarded') ? 'red' 
+                            : Colors.uiucOrange;
     const textColor = message.includes('Changes') ? 'white' : 'white';
 
     useEffect(() => {

@@ -3,8 +3,11 @@
 from flask import Flask, jsonify
 from scraper import scrape_and_update
 from scraper import scrape_and_update_cerce
+import firebase_admin
+from firebase_admin import credentials, firestore
 import threading
 import time
+import schedule
 
 app = Flask(__name__)
 
@@ -34,6 +37,3 @@ if __name__ == '__main__':
             time.sleep(3600)  # Sleep for 1 hour (adjust as needed)
         except Exception as e:
             print(f"Error updating Firestore: {str(e)}")
-
-
-

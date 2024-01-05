@@ -1,6 +1,9 @@
 
 # scraper.py
-
+import csv
+from io import StringIO
+import firebase_admin
+from firebase_admin import credentials, storage
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -11,9 +14,10 @@ from firebase_admin import credentials, firestore
 from faker import Faker
 import random
 from datetime import datetime
+import pytz
 
 # Initialize Firebase Admin
-cred = credentials.Certificate("/Users/taiguewoods/Desktop/CS 222/group-project-team70/backend/illini-gymv2-firebase-adminsdk-q06e1-e91944c6ea.json")
+cred = credentials.Certificate("/Users/taiguewoods/Desktop/CS 222/illini-gym/backend/illini-gymv2-firebase-adminsdk-q06e1-e91944c6ea.json")
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 
@@ -47,6 +51,21 @@ def scrape_and_update():
     '/html/body/div/div/div[2]/div[19]/div/div[2]',
     '/html/body/div/div/div[2]/div[20]/div/div[2]',
     '/html/body/div/div/div[2]/div[21]/div/div[2]',
+    '/html/body/div/div/div[2]/div[22]/div/div[2]',
+    '/html/body/div/div/div[2]/div[23]/div/div[2]',
+    '/html/body/div/div/div[2]/div[24]/div/div[2]',
+    '/html/body/div/div/div[2]/div[25]/div/div[2]',
+    '/html/body/div/div/div[2]/div[26]/div/div[2]',
+    '/html/body/div/div/div[2]/div[27]/div/div[2]',
+    '/html/body/div/div/div[2]/div[28]/div/div[2]',
+    '/html/body/div/div/div[2]/div[29]/div/div[2]',
+    '/html/body/div/div/div[2]/div[30]/div/div[2]',
+    '/html/body/div/div/div[2]/div[31]/div/div[2]',
+    '/html/body/div/div/div[2]/div[32]/div/div[2]',
+    '/html/body/div/div/div[2]/div[33]/div/div[2]',
+    '/html/body/div/div/div[2]/div[34]/div/div[2]',
+    '/html/body/div/div/div[2]/div[35]/div/div[2]',
+    '/html/body/div/div/div[2]/div[36]/div/div[2]',
     ]
 
     data_ = {}
@@ -54,7 +73,7 @@ def scrape_and_update():
     # ...
     for path in xpaths:
         try:
-            element = WebDriverWait(browser, 10).until(
+            element = WebDriverWait(browser, 0).until(
                 EC.presence_of_element_located((By.XPATH, path))
             )
             text = element.text.split('\n')
@@ -96,6 +115,35 @@ def scrape_and_update():
         doc_ref = db.collection(collection_id_one).document(room_name)
         doc_ref.set(room_data, merge=True)  # Use set with merge=True to create or update
     
+    # Converting data to CSV format
+    csv_file = StringIO()
+    csv_writer = csv.writer(csv_file)
+    csv_writer.writerow(['Room Name', 'Status', 'Last Count', 'Capacity', 'Last Updated'])
+
+    for room_data in data_.values():
+        csv_writer.writerow([room_data['name'], room_data['isOpen'], room_data['count'], room_data['capacity'], room_data['lastUpdated']])
+    
+    csv_string = csv_file.getvalue()
+    csv_file.close()
+
+    # Get the current timestamp in CST
+    cst_timezone = pytz.timezone('America/Chicago')
+    timestamp = datetime.now(cst_timezone).strftime('%Y-%m-%d_%H-%M-%S')
+
+    # Firestore document to store the CSV data
+    collection_name = "Arc_ml_data"  # Update with your actual collection name
+    print(csv_string)
+    try:
+        # Upload the CSV data to Firestore
+        db.collection(collection_name).document(timestamp).set({"csv_data": csv_string})
+        print(f"CSV data uploaded to Firestore under document name: {timestamp}")
+    except Exception as e:
+        print(f"Error updating Firestore: {e}")
+    
+
+
+
+#THIS IS PHONY SHIT NOT REAL AT ALL FUCK CRCE
 #scrape_and_update() only used to test output of this
 def generate_fake_data_cerce(faker, num_entries=10):
     fake_data = {}
@@ -124,4 +172,3 @@ def scrape_and_update_cerce():
     for room_name, room_data in fake_data.items():
         doc_ref = db.collection(fake_collection_id).document(room_name)
         doc_ref.set(room_data, merge=True)  # Create or update document
-

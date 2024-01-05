@@ -7,7 +7,6 @@ import firebase_admin
 from firebase_admin import credentials, firestore
 import threading
 import time
-import schedule
 
 app = Flask(__name__)
 

@@ -1,6 +1,6 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import React, { useState } from "react";
-import { TouchableOpacity, View } from "react-native";
+import { TouchableOpacity, View, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { MaterialIcons } from '@expo/vector-icons';
 import Colors from "../../constants/Colors";
 import { FavoriteSettings } from "../Settings/SettingsScreens/FavoriteSettings";
@@ -16,54 +16,64 @@ const FavoritesStack = createStackNavigator<FavoriteStackParamList>();
 
 export const FavoritesNav = () => {
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
-
+  const [title, setTitle] = useState<string>("Favorites");
   const enableEditMode = (navigation: any ) => {
     setIsEditMode(true);
+    setTitle("Edit Favorites");
     navigation.setParams({ isEditMode: true, action: 'editModeOn' });
   };
 
-  const renderHeaderLeft = (navigation: any) => 
-  isEditMode ? (
-    <TouchableOpacity
-      onPress={() => {
-        setIsEditMode(false);
-        navigation.setParams({ isEditMode: false, action: 'cancel' });
-      }}
-      style={{ marginLeft: 10 }}
-    >
-      <MaterialIcons name="close" size={28} color="red" />
-    </TouchableOpacity>
-  ) : null;
+  const renderHeaderLeft = (navigation: any) =>
+    isEditMode ? (
+      <TouchableOpacity
+        onPress={() => {
+          Keyboard.dismiss();
+          setTimeout(() => {
+            setIsEditMode(false);
+            setTitle("Favorites");
+            navigation.setParams({ isEditMode: false, action: "cancel" });
+          }, 100); // Delay to allow local nickname state to update
+        }}
+        style={{ marginLeft: 10 }}
+      >
+        <MaterialIcons name="close" size={28} color="red" />
+      </TouchableOpacity>
+    ) : null;
 
-  const renderHeaderRight = (navigation: any) => 
-  isEditMode ? (
-    <TouchableOpacity
-    onPress={() => {
-      setIsEditMode(false);
-      navigation.setParams({ isEditMode: false, action: 'save' });
-    }}
-    style={{ marginRight: 10 }}
-  >
-      <MaterialIcons name="check" size={32} color="green" />
-    </TouchableOpacity>
-  ) : (
-    <View style={{ flexDirection: "row" }}>
+  const renderHeaderRight = (navigation: any) =>
+    isEditMode ? (
       <TouchableOpacity
-        onPress={() => navigation.navigate("FavoriteSettings")}
+        onPress={() => {
+          Keyboard.dismiss();
+          setTimeout(() => {
+            setIsEditMode(false);
+            setTitle("Favorites");
+            navigation.setParams({ isEditMode: false, action: "save" });
+          }, 100); // Delay to allow local nickname state to update
+        }}
         style={{ marginRight: 10 }}
       >
-        <MaterialIcons name="settings" size={32} color={Colors.uiucOrange} />
+        <MaterialIcons name="check" size={32} color="green" />
       </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => enableEditMode(navigation)}
-        style={{ marginRight: 10 }}
-      >
-        <MaterialIcons name="edit" size={32} color={Colors.uiucOrange} />
-      </TouchableOpacity>
-    </View>
-  );
+    ) : (
+      <View style={{ flexDirection: "row" }}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("FavoriteSettings")}
+          style={{ marginRight: 10 }}
+        >
+          <MaterialIcons name="settings" size={32} color={Colors.uiucOrange} />
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => enableEditMode(navigation)}
+          style={{ marginRight: 10 }}
+        >
+          <MaterialIcons name="edit" size={32} color={Colors.uiucOrange} />
+        </TouchableOpacity>
+      </View>
+    );
 
   return (
+
     <FavoritesStack.Navigator
       initialRouteName="FavoritesScreen"
       screenOptions={{
@@ -82,7 +92,7 @@ export const FavoritesNav = () => {
         options={({ navigation }) => ({
           headerLeft: () => renderHeaderLeft(navigation),
           headerRight: () => renderHeaderRight(navigation),
-          headerTitle: "Favorites",
+          headerTitle: title,
           headerTitleStyle: {
             fontSize: 20, 
           },
@@ -97,8 +107,6 @@ export const FavoritesNav = () => {
           headerTitleStyle: {
             fontSize: 20, 
           },
-          
-          
         })}
         
       />

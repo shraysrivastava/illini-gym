@@ -3,16 +3,9 @@ import {
   ScrollView,
   RefreshControl,
   View,
-  Button,
-  Touchable,
-  Alert,
-  Modal,
-  TextInput,
-  TouchableHighlight,
+  Keyboard,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import * as Progress from "react-native-progress";
-import { MaterialIcons } from "@expo/vector-icons";
+
 import { db, auth } from "../../firebase/firebaseConfig";
 import {
   getDoc,
@@ -20,24 +13,18 @@ import {
   collection,
   updateDoc,
   arrayRemove,
-  arrayUnion,
   deleteField,
 } from "firebase/firestore";
 import Colors from "../../constants/Colors";
-import CustomText from "../Reusables/CustomText";
 import FavoriteInstructions from "./FavoritesInstructions";
 import { StyleSheet } from "react-native";
-import {
-  SectionInfo,
-  VisibilityIcon,
-  modalStyles,
-} from "../Maps/Gym/SectionModal";
-import { getTimeDifference } from "../Reusables/Utilities";
+import {modalStyles,} from "../Maps/Gym/SectionModal";
 import { RemovePopup } from "../Reusables/RemovePopup";
 import { RouteProp, useFocusEffect, useRoute } from "@react-navigation/native";
 import CustomToast from "../Reusables/Toast";
 import FavoriteModal from "./FavoriteModal";
 import { FavoriteStackParamList } from "./FavoritesNav";
+import { useNavigation } from '@react-navigation/native';
 
 export interface SectionDetails {
   isOpen: boolean;
@@ -68,6 +55,7 @@ type FavoritesScreenRouteParams = {
 };
 
 export const FavoritesScreen: React.FC = () => {
+  const navigation = useNavigation();
   const [favorites, setFavorites] = useState<string[]>([]);
   const [favoriteSections, setFavoriteSections] = useState<{ gym: string; section: SectionDetails }[]>([]);
   const [refreshing, setRefreshing] = useState<boolean>(false);
@@ -75,7 +63,7 @@ export const FavoritesScreen: React.FC = () => {
   const [sectionNicknames, setSectionNicknames] = useState< Record<string, string>>({});
   const currentUserId = auth.currentUser?.uid;
   const route = useRoute<RouteProp<FavoriteStackParamList, 'FavoritesScreen'>>();
-  // const navigation = route.params?.navigation;
+  
   const isEditMode = route.params?.isEditMode || false;
   
   const [editableNicknames, setEditableNicknames] = useState<EditableNicknames>({});
@@ -83,6 +71,7 @@ export const FavoritesScreen: React.FC = () => {
   const [sectionToRemove, setSectionToRemove] = useState<string>("");
   const [selectedSection, setSelectedSection] = useState<string>("");
   const [toastMessage, setToastMessage] = useState<string>("");
+  const [toastColor, setToastColor] = useState<string>("");
   const toastTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   
   
@@ -135,12 +124,15 @@ export const FavoritesScreen: React.FC = () => {
     } else if (route.params?.action === 'cancel') {
       onCancelPress();
     } else if (route.params?.action === 'editModeOn') {
-      setToastMessage("Edit Mode Enabled");
+      // setToastMessage("Edit Mode Enabled");
+      // setToastColor(Colors.uiucOrange);
     }
   }, [fetchAndUpdateFavorites, route.params?.isEditMode, route.params?.action]);
 
   useFocusEffect(
+   
     useCallback(() => {
+      
       fetchAndUpdateFavorites();
     }, [fetchAndUpdateFavorites])
   );
@@ -167,6 +159,7 @@ export const FavoritesScreen: React.FC = () => {
         ? sectionNicknames[favoriteKey] + " removed from favorites"
         : sectionName + " removed from favorites";
       setToastMessage(message);
+      setToastColor("red");
       updateDoc(userDocRef, { favorites: arrayRemove(favoriteKey) }).then(
         () => {
           // Also remove the nickname associated with this section
@@ -209,11 +202,14 @@ export const FavoritesScreen: React.FC = () => {
     if (Object.keys(updates).length > 0) {
       try {
         setToastMessage("Changes Successfuly Saved");
+        setToastColor("green");
+        console.log("Updating nicknames:", updates);
         await updateDoc(userDocRef, updates);
         fetchAndUpdateFavorites();
       } catch (error) {
         console.error("Error updating nicknames:", error);
         setToastMessage("Error updating nicknames");
+        setToastColor("red");
       }
     } else {
       console.log("No nickname updates to be made.");
@@ -226,6 +222,7 @@ export const FavoritesScreen: React.FC = () => {
   ]);
 
   const onSavePress = () => {
+    Keyboard.dismiss();
     handleNicknameUpdate();
   };
 
@@ -236,6 +233,7 @@ export const FavoritesScreen: React.FC = () => {
  
     if (changesMade) {
       setToastMessage("Changes Discarded");
+      setToastColor("red");
     }
      
     setEditableNicknames({});
@@ -302,8 +300,9 @@ export const FavoritesScreen: React.FC = () => {
           sectionName={sectionNicknames[sectionToRemove] || selectedSection}
         />
       )}
+      
 
-      <CustomToast message={toastMessage} />
+      <CustomToast message={toastMessage} color={toastColor} />
     </View>
   );
 };

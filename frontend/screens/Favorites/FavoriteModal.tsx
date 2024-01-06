@@ -1,6 +1,6 @@
 // FavoriteModal.tsx
 import React, { useState } from 'react';
-import { View, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, TextInput, TouchableWithoutFeedback, StyleSheet, Keyboard } from 'react-native';
 import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
 import CustomText from '../Reusables/CustomText';
 import { getTimeDifference } from '../Reusables/Utilities';
@@ -34,14 +34,14 @@ const FavoriteModal: React.FC<FavoriteModalProps> = ({ section, gym, id, isEditM
     <View style={modalStyles.individualSectionContainer}>
       {isEditMode ? (
         // Edit Mode UI
-        <View style={modalStyles.row}>
-          <MaterialIcons name="edit" size={20} color={Colors.uiucOrange} style={{ marginLeft: 5 }} />
+        <View style={[modalStyles.row]}>
+          <VisibilityIcon isOpen={section.isOpen} />
           <TextInput
             style={styles.editName}
             value={localNickname}
             onChangeText={setLocalNickname}
             onEndEditing={() => updateNickname(id, localNickname)}
-            placeholder="Enter Name"
+            placeholder="Enter Nickname"
             placeholderTextColor="gray"
             maxLength={27}
           />

@@ -19,7 +19,7 @@ import {
 import { StackNavigationProp } from "@react-navigation/stack";
 import { MapsStackParamList } from "../MapsNav";
 import { SectionModals } from "./SectionModal";
-import CustomToast from "../../Reusables/Toast";
+import CustomToast, { ToastProps } from "../../Reusables/Toast";
 import { StyleSheet } from "react-native";
 import Colors from "../../../constants/Colors";
 
@@ -28,6 +28,8 @@ export type GymDataProps = {
     params: { gym: "arc" | "crce" };
   };
 };
+
+
 
 export const GymData: React.FC<GymDataProps> = ({ route }) => {
   const navigation =
@@ -41,7 +43,7 @@ export const GymData: React.FC<GymDataProps> = ({ route }) => {
   const currentUserId = auth.currentUser?.uid;
   const openSections = gymData.filter((section) => section.isOpen);
   const closedSections = gymData.filter((section) => !section.isOpen);
-  const [toastMessage, setToastMessage] = useState<string>("");
+  const [toast, setToast] = useState<ToastProps>({ message: "", color: "" });
   const toastTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
 
@@ -107,7 +109,7 @@ export const GymData: React.FC<GymDataProps> = ({ route }) => {
       const userDocRef = doc(collection(db, "users"), currentUserId);
       const favoriteKey = gym + "=" + sectionKey;
       const message = pressedSections[sectionKey] ? sectionName + ' removed from favorites' : sectionName + ' added to favorites';
-      setToastMessage(message);
+      setToast({ message, color: message.includes('added') ? "green" : "red" });
       if (pressedSections[sectionKey]) {
         updateDoc(userDocRef, { favorites: arrayRemove(favoriteKey) });
         // Also remove the nickname associated with this section
@@ -151,7 +153,7 @@ export const GymData: React.FC<GymDataProps> = ({ route }) => {
           handleFavoritePress={handleFavoritePress}
         />
       </ScrollView>
-      <CustomToast message={toastMessage} />
+      <CustomToast message={toast.message} color={toast.color} />
     </View>
   );
 };

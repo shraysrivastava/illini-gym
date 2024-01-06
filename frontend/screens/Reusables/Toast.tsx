@@ -2,16 +2,16 @@ import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, Animated, TouchableOpacity } from 'react-native';
 import Colors from '../../constants/Colors';
 
-interface ToastProps {
+export interface ToastProps {
     message: string;
+    color: string;
 };
 
-const CustomToast: React.FC<ToastProps> = ({ message }) => {
+
+const CustomToast: React.FC<ToastProps> = ({ message, color }) => {
     const [isVisible, setIsVisible] = useState(false);
     const opacity = useRef(new Animated.Value(0)).current;
-    const backgroundColor = message.includes('added') || message.includes('Saved') ? 'green' 
-                            : message.includes('removed') || message.includes('Discarded') ? 'red' 
-                            : Colors.uiucOrange;
+    const backgroundColor = color;
     const textColor = message.includes('Changes') ? 'white' : 'white';
 
     useEffect(() => {

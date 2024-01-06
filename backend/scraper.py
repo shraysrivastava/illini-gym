@@ -17,7 +17,7 @@ from datetime import datetime
 import pytz
 
 # Initialize Firebase Admin
-cred = credentials.Certificate("./illini-gymv2-firebase-adminsdk-q06e1-e91944c6ea.json")
+cred = credentials.Certificate("./firebase.json")
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 

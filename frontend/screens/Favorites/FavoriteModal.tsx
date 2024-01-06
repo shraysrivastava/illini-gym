@@ -5,7 +5,7 @@ import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
 import CustomText from '../Reusables/CustomText';
 import { getTimeDifference } from '../Reusables/Utilities';
 import Colors from '../../constants/Colors';
-import { SectionDetails } from './FavoritesScreen';
+import { SectionDetails } from './useFavorites';
 import { SectionInfo, VisibilityIcon, modalStyles } from '../Maps/Gym/SectionModal';
 
 

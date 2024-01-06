@@ -2,10 +2,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, Animated, TouchableOpacity } from 'react-native';
 import Colors from '../../constants/Colors';
 
-interface ToastProps {
+export interface ToastProps {
     message: string;
-    color: any;
+    color: string;
 };
+
 
 const CustomToast: React.FC<ToastProps> = ({ message, color }) => {
     const [isVisible, setIsVisible] = useState(false);

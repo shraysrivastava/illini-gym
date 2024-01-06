@@ -34,9 +34,10 @@ import {
 } from "../Maps/Gym/SectionModal";
 import { getTimeDifference } from "../Reusables/Utilities";
 import { RemovePopup } from "../Reusables/RemovePopup";
-import { useFocusEffect } from "@react-navigation/native";
+import { RouteProp, useFocusEffect, useRoute } from "@react-navigation/native";
 import CustomToast from "../Reusables/Toast";
 import FavoriteModal from "./FavoriteModal";
+import { FavoriteStackParamList } from "./FavoritesNav";
 
 export interface SectionDetails {
   isOpen: boolean;
@@ -62,6 +63,10 @@ interface EditableNicknames {
   [key: string]: string;
 }
 
+type FavoritesScreenRouteParams = {
+  isEditMode: boolean;
+};
+
 export const FavoritesScreen: React.FC = () => {
   const [favorites, setFavorites] = useState<string[]>([]);
   const [favoriteSections, setFavoriteSections] = useState<{ gym: string; section: SectionDetails }[]>([]);
@@ -69,13 +74,18 @@ export const FavoritesScreen: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [sectionNicknames, setSectionNicknames] = useState< Record<string, string>>({});
   const currentUserId = auth.currentUser?.uid;
-  const [isEditMode, setIsEditMode] = useState<boolean>(false);
+  const route = useRoute<RouteProp<FavoriteStackParamList, 'FavoritesScreen'>>();
+  // const navigation = route.params?.navigation;
+  const isEditMode = route.params?.isEditMode || false;
+  
   const [editableNicknames, setEditableNicknames] = useState<EditableNicknames>({});
   const [isRemovePopupVisible, setIsRemovePopupVisible] = useState(false);
   const [sectionToRemove, setSectionToRemove] = useState<string>("");
   const [selectedSection, setSelectedSection] = useState<string>("");
   const [toastMessage, setToastMessage] = useState<string>("");
   const toastTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  
+  
 
   const fetchAndUpdateFavorites = useCallback(async () => {
     if (!currentUserId) return;
@@ -117,12 +127,21 @@ export const FavoritesScreen: React.FC = () => {
       clearTimeout(toastTimeoutRef.current);
       setToastMessage("");
     }
-  }, [fetchAndUpdateFavorites]);
+    
+    
+    
+    if (route.params?.action === 'save') {
+      onSavePress();
+    } else if (route.params?.action === 'cancel') {
+      onCancelPress();
+    } else if (route.params?.action === 'editModeOn') {
+      setToastMessage("Edit Mode Enabled");
+    }
+  }, [fetchAndUpdateFavorites, route.params?.isEditMode, route.params?.action]);
 
   useFocusEffect(
     useCallback(() => {
       fetchAndUpdateFavorites();
-      setIsEditMode(false);
     }, [fetchAndUpdateFavorites])
   );
 
@@ -203,26 +222,23 @@ export const FavoritesScreen: React.FC = () => {
     editableNicknames,
     sectionNicknames,
     currentUserId,
-    fetchAndUpdateFavorites,
+    fetchAndUpdateFavorites, 
   ]);
 
   const onSavePress = () => {
     handleNicknameUpdate();
-    setIsEditMode(false);
   };
 
   const onCancelPress = () => {
-    
     const changesMade = Object.keys(editableNicknames).some(
       (key) => editableNicknames[key] !== sectionNicknames[key]
     );
-
+ 
     if (changesMade) {
       setToastMessage("Changes Discarded");
     }
-    
+     
     setEditableNicknames({});
-    setIsEditMode(false);
   };
 
   const updateNickname = useCallback((id: string, newNickname: string) => {
@@ -255,18 +271,6 @@ export const FavoritesScreen: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      { !isEditMode &&(
-        <MaterialIcons
-          name="edit"
-          color={Colors.beige}
-          size={24}
-          onPress={() => {
-            setIsEditMode(true);
-            setToastMessage("Edit Mode Enabled");}}
-          style={styles.editIcon}
-        />
-      )}
-
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.contentContainer}
@@ -297,24 +301,6 @@ export const FavoritesScreen: React.FC = () => {
           favoriteKey={sectionToRemove}
           sectionName={sectionNicknames[sectionToRemove] || selectedSection}
         />
-      )}
-      {isEditMode && (
-        <View style={styles.editModeContainer}>
-          <MaterialIcons
-            name="close"
-            color="red"
-            size={32}
-            onPress={onCancelPress}
-            style={styles.cancelIcon}
-          />
-          <MaterialIcons
-            name="check"
-            color="green"
-            size={32}
-            onPress={onSavePress}
-            style={styles.saveIcon}
-          />
-        </View>
       )}
 
       <CustomToast message={toastMessage} />

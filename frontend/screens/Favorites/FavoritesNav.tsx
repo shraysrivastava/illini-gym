@@ -1,22 +1,68 @@
 import { createStackNavigator } from "@react-navigation/stack";
-import React from "react";
-
+import React, { useState } from "react";
+import { TouchableOpacity, View } from "react-native";
+import { MaterialIcons } from '@expo/vector-icons';
 import Colors from "../../constants/Colors";
 import { FavoriteSettings } from "../Settings/SettingsScreens/FavoriteSettings";
-import { getCommonHeaderOptions } from "../CustomHeader";
 import { FavoritesScreen } from "./FavoritesScreen";
-import { TouchableOpacity, View } from "react-native";
-import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { getCommonHeaderOptions } from "../CustomHeader";
 
 export type FavoriteStackParamList = {
-  FavoritesScreen: undefined;
+  FavoritesScreen: { isEditMode: boolean, action?: string };
   FavoriteSettings: undefined;
 };
 
 const FavoritesStack = createStackNavigator<FavoriteStackParamList>();
 
-
 export const FavoritesNav = () => {
+  const [isEditMode, setIsEditMode] = useState<boolean>(false);
+
+  const enableEditMode = (navigation: any ) => {
+    setIsEditMode(true);
+    navigation.setParams({ isEditMode: true, action: 'editModeOn' });
+  };
+
+  const renderHeaderLeft = (navigation: any) => 
+  isEditMode ? (
+    <TouchableOpacity
+      onPress={() => {
+        setIsEditMode(false);
+        navigation.setParams({ isEditMode: false, action: 'cancel' });
+      }}
+      style={{ marginLeft: 10 }}
+    >
+      <MaterialIcons name="close" size={28} color="red" />
+    </TouchableOpacity>
+  ) : null;
+
+  const renderHeaderRight = (navigation: any) => 
+  isEditMode ? (
+    <TouchableOpacity
+    onPress={() => {
+      setIsEditMode(false);
+      navigation.setParams({ isEditMode: false, action: 'save' });
+    }}
+    style={{ marginRight: 10 }}
+  >
+      <MaterialIcons name="check" size={32} color="green" />
+    </TouchableOpacity>
+  ) : (
+    <View style={{ flexDirection: "row" }}>
+      <TouchableOpacity
+        onPress={() => navigation.navigate("FavoriteSettings")}
+        style={{ marginRight: 10 }}
+      >
+        <MaterialIcons name="settings" size={32} color={Colors.uiucOrange} />
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => enableEditMode(navigation)}
+        style={{ marginRight: 10 }}
+      >
+        <MaterialIcons name="edit" size={32} color={Colors.uiucOrange} />
+      </TouchableOpacity>
+    </View>
+  );
+
   return (
     <FavoritesStack.Navigator
       initialRouteName="FavoritesScreen"
@@ -24,26 +70,37 @@ export const FavoritesNav = () => {
         gestureEnabled: true,
         gestureDirection: "horizontal",
         headerShown: true,
-        headerTintColor: "#fff", // Color of header text and back button
+        headerTintColor: "#fff",
         headerBackTitleVisible: false,
-        headerStyle: {
-          backgroundColor: Colors.midnightBlue,
-        },
+        headerStyle: { backgroundColor: Colors.midnightBlue },
       }}
     >
       <FavoritesStack.Screen
         name="FavoritesScreen"
         component={FavoritesScreen}
-        options={({ navigation }) =>
-          getCommonHeaderOptions(navigation, "Favorites", "Favorites")
-        }
+        initialParams={{ isEditMode: isEditMode }}
+        options={({ navigation }) => ({
+          headerLeft: () => renderHeaderLeft(navigation),
+          headerRight: () => renderHeaderRight(navigation),
+          headerTitle: "Favorites",
+          headerTitleStyle: {
+            fontSize: 20, 
+          },
+          
+        })}
       />
       <FavoritesStack.Screen
         name="FavoriteSettings"
         component={FavoriteSettings}
-        options={({ navigation }) =>
-          getCommonHeaderOptions(navigation, "Favorites", "Settings")
-        }
+        options={() => ({
+          headerTitle: "Settings",
+          headerTitleStyle: {
+            fontSize: 20, 
+          },
+          
+          
+        })}
+        
       />
     </FavoritesStack.Navigator>
   );

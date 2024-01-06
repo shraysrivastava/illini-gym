@@ -44,7 +44,7 @@ export const FavoritesNav = () => {
     }}
     style={{ marginRight: 10 }}
   >
-      <MaterialIcons name="check" size={28} color="green" />
+      <MaterialIcons name="check" size={32} color="green" />
     </TouchableOpacity>
   ) : (
     <View style={{ flexDirection: "row" }}>
@@ -52,13 +52,13 @@ export const FavoritesNav = () => {
         onPress={() => navigation.navigate("FavoriteSettings")}
         style={{ marginRight: 10 }}
       >
-        <MaterialIcons name="settings" size={28} color={Colors.uiucOrange} />
+        <MaterialIcons name="settings" size={32} color={Colors.uiucOrange} />
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => enableEditMode(navigation)}
         style={{ marginRight: 10 }}
       >
-        <MaterialIcons name="edit" size={28} color={Colors.uiucOrange} />
+        <MaterialIcons name="edit" size={32} color={Colors.uiucOrange} />
       </TouchableOpacity>
     </View>
   );
@@ -82,12 +82,24 @@ export const FavoritesNav = () => {
         options={({ navigation }) => ({
           headerLeft: () => renderHeaderLeft(navigation),
           headerRight: () => renderHeaderRight(navigation),
-          // ...getCommonHeaderOptions(navigation, "Favorites", "Favorites"),
+          headerTitle: "Favorites",
+          headerTitleStyle: {
+            fontSize: 20, 
+          },
+          
         })}
       />
       <FavoritesStack.Screen
         name="FavoriteSettings"
         component={FavoriteSettings}
+        options={() => ({
+          headerTitle: "Settings",
+          headerTitleStyle: {
+            fontSize: 20, 
+          },
+          
+          
+        })}
         
       />
     </FavoritesStack.Navigator>

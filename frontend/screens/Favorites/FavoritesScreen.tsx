@@ -137,8 +137,6 @@ export const FavoritesScreen: React.FC = () => {
     } else if (route.params?.action === 'editModeOn') {
       setToastMessage("Edit Mode Enabled");
     }
-    // Reset the action in the route params to prevent repeated actions
-    // navigation.setParams({ action: undefined });
   }, [fetchAndUpdateFavorites, route.params?.isEditMode, route.params?.action]);
 
   useFocusEffect(

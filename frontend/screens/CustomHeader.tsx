@@ -41,6 +41,9 @@ export const CustomHeader: React.FC<CustomHeaderProps> = ({
 export const getCommonHeaderOptions = (navigation: any, stackName: string, title: string, gymName?:string) => ({
   headerShown: true,
   headerTitle: gymName || title,
+  headerTitleStyle: {
+    fontSize: 20, 
+  },
   headerStyle: {
     backgroundColor: Colors.midnightBlue,
     shadowColor: "transparent",

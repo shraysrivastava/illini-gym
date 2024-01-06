@@ -350,10 +350,6 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(52, 52, 52, 0.8)",
     borderRadius: 25,
     zIndex: 1000,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
     elevation: 5,
   },
   fullScreenButton: {
@@ -373,7 +369,7 @@ const styles = StyleSheet.create({
 
   modalView: {
     position: "absolute",
-    bottom: Platform.OS === 'ios' ? 75 : 45, 
+    bottom: Platform.OS === 'ios' ? 75 : 44, 
     width: "100%",
     height: Platform.OS === 'ios' ? "52%" : "56%",
     backgroundColor: Colors.midnightBlue,
@@ -381,13 +377,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: -2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
     elevation: 5,
     justifyContent: "space-between",
     flexDirection: "column",
@@ -396,7 +385,7 @@ const styles = StyleSheet.create({
 
   gymDataModalView: {
     position: "absolute",
-    bottom: Platform.OS === 'ios' ? 75 : 45, 
+    bottom: Platform.OS === 'ios' ? 75 : 44, 
     width: "100%",
     height: "10%",
     backgroundColor: Colors.midnightBlue,
@@ -404,13 +393,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: -2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
     elevation: 5,
     justifyContent: "center",
     flexDirection: "column",
@@ -531,10 +513,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignItems: "center",
     borderWidth: 2,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
-    shadowRadius: 1,
     elevation: 2,
     width: "100%",
   },

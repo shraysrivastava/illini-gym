@@ -1,7 +1,7 @@
 // FavoriteModal.tsx
 import React, { useState } from 'react';
 import { View, TextInput, TouchableWithoutFeedback, StyleSheet, Keyboard } from 'react-native';
-import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { MaterialIcons, MaterialCommunityIcons, } from '@expo/vector-icons';
 import CustomText from '../Reusables/CustomText';
 import { getTimeDifference } from '../Reusables/Utilities';
 import Colors from '../../constants/Colors';
@@ -14,16 +14,19 @@ interface FavoriteModalProps {
   gym: string;
   id: string;
   isEditMode: boolean;
+  isMarkedForDeletion: boolean;
   editableNicknames: { [key: string]: string };
   sectionNicknames: { [key: string]: string };
-  handleRemoveFavorite: (gym: string, sectionKey: string, sectionName: string) => void;
+  handleToggleMarkForDeletion: (id: string, sectionName:string, mark: boolean) => void;
   updateNickname: (id: string, newNickname: string) => void;
 }
 
-const FavoriteModal: React.FC<FavoriteModalProps> = ({ section, gym, id, isEditMode, sectionNicknames, editableNicknames, handleRemoveFavorite, updateNickname }) => {
+const FavoriteModal: React.FC<FavoriteModalProps> = ({ section, gym, id, isEditMode,isMarkedForDeletion, sectionNicknames, editableNicknames, handleToggleMarkForDeletion, updateNickname }) => {
   const timeDiff = getTimeDifference(section.lastUpdated);
   const initialNickname = editableNicknames[id] ?? sectionNicknames[id] ?? section.name;
   const [localNickname, setLocalNickname] = useState(initialNickname);
+  const itemStyle = isMarkedForDeletion ? styles.markedForDeletion : null;
+
   
   const resetNickname = () => {
     setLocalNickname(section.name);
@@ -31,11 +34,11 @@ const FavoriteModal: React.FC<FavoriteModalProps> = ({ section, gym, id, isEditM
   };
 
   return (
-    <View style={modalStyles.individualSectionContainer}>
+    <View style={[modalStyles.individualSectionContainer, itemStyle]}>
       {isEditMode ? (
         // Edit Mode UI
         <View style={[modalStyles.row]}>
-          <VisibilityIcon isOpen={section.isOpen} />
+          <MaterialCommunityIcons name="restart" size={28} color={Colors.uiucOrange} onPress={resetNickname} />
           <TextInput
             style={styles.editName}
             value={localNickname}
@@ -44,19 +47,34 @@ const FavoriteModal: React.FC<FavoriteModalProps> = ({ section, gym, id, isEditM
             placeholder="Enter Nickname"
             placeholderTextColor="gray"
             maxLength={27}
+            editable={!isMarkedForDeletion}
           />
-          <MaterialCommunityIcons name="restart" size={28} color={Colors.uiucOrange} onPress={resetNickname} />
+          {isMarkedForDeletion ? (
+            <MaterialIcons
+              name="add-circle-outline"
+              size={28}
+              color="green"
+              opacity={1}
+              onPress={() => handleToggleMarkForDeletion(id,localNickname, false)}
+            />
+          ) : (
+            <MaterialIcons
+              name="remove-circle-outline"
+              size={28}
+              color="red"
+              onPress={() => handleToggleMarkForDeletion(id, localNickname, true)}
+            />
+          )}
         </View>
       ) : (
         // Regular Display UI
         <View style={modalStyles.row}>
           <VisibilityIcon isOpen={section.isOpen} />
           <CustomText style={modalStyles.sectionName}>{localNickname}</CustomText>
-          <MaterialIcons
-            name="remove-circle-outline"
+          <MaterialCommunityIcons
+            name="dumbbell"
             size={28}
-            color="red"
-            onPress={() => handleRemoveFavorite(gym, section.key, section.name)}
+            color="white"
           />
         </View>
       )}
@@ -71,6 +89,9 @@ const FavoriteModal: React.FC<FavoriteModalProps> = ({ section, gym, id, isEditM
 };
 
 const styles = StyleSheet.create({
+  markedForDeletion: {
+    opacity: 0.5, // Or use any other visual representation
+  },
     editName: {
         color: "white",
         marginLeft: 5,

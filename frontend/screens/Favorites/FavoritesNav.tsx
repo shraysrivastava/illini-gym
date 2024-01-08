@@ -1,27 +1,37 @@
 import { createStackNavigator } from "@react-navigation/stack";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { TouchableOpacity, View, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { MaterialIcons } from '@expo/vector-icons';
 import Colors from "../../constants/Colors";
 import { FavoriteSettings } from "../Settings/SettingsScreens/FavoriteSettings";
 import { FavoritesScreen } from "./FavoritesScreen";
 import { getCommonHeaderOptions } from "../CustomHeader";
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 
 export type FavoriteStackParamList = {
-  FavoritesScreen: { isEditMode: boolean, action: string, isRemoveAll: boolean };
+  FavoritesScreen: { isEditMode: boolean, action: string};
   FavoriteSettings: undefined;
 };
 
 const FavoritesStack = createStackNavigator<FavoriteStackParamList>();
 
 export const FavoritesNav = () => {
+  const route = useRoute<RouteProp<FavoriteStackParamList, 'FavoritesScreen'>>();
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const [title, setTitle] = useState<string>("Favorites");
+
+  useEffect(() => {
+    if (isEditMode) {
+      setTitle("Edit Favorites");
+    } else {
+      setTitle("Favorites");
+    }
+  }, [isEditMode]);
   
   const enableEditMode = (navigation: any ) => {
     setIsEditMode(true);
-    setTitle("Edit Favorites");
-    navigation.setParams({ isEditMode: true, action: 'editModeOn', isRemoveAll: false });
+    // setTitle("Edit Favorites");
+    navigation.setParams({ isEditMode: true, action: 'editModeOn'});
   };
 
   const renderHeaderLeft = (navigation: any) =>
@@ -32,21 +42,12 @@ export const FavoritesNav = () => {
             Keyboard.dismiss();
             setTimeout(() => {
               setIsEditMode(false);
-              setTitle("Favorites");
-              navigation.setParams({ isEditMode: false, action: "cancel", isRemoveAll: false });
+              navigation.setParams({ isEditMode: false, action: "cancel"});
             }, 100); // Delay to allow local nickname state to update
           }}
           style={{ marginLeft: 10 }}
         >
           <MaterialIcons name="close" size={28} color="red" />
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.setParams({isEditMode: false, action: "editModeOn", isRemoveAll: true});
-          }}
-          style={{ marginLeft: 10 }}
-        >
-          <MaterialIcons name="delete" size={28} color="red" />
         </TouchableOpacity>
       </View>
     ) : null;
@@ -58,8 +59,8 @@ export const FavoritesNav = () => {
           Keyboard.dismiss();
           setTimeout(() => {
             setIsEditMode(false);
-            setTitle("Favorites");
-            navigation.setParams({ isEditMode: false, action: "save", isRemoveAll: false });
+            // setTitle("Favorites");
+            navigation.setParams({ isEditMode: false, action: "save" });
           }, 100); // Delay to allow local nickname state to update
         }}
         style={{ marginRight: 10 }}
@@ -99,7 +100,7 @@ export const FavoritesNav = () => {
       <FavoritesStack.Screen
         name="FavoritesScreen"
         component={FavoritesScreen}
-        initialParams={{ isEditMode: isEditMode }}
+        initialParams={{ isEditMode: isEditMode}}
         options={({ navigation }) => ({
           headerLeft: () => renderHeaderLeft(navigation),
           headerRight: () => renderHeaderRight(navigation),
@@ -108,7 +109,9 @@ export const FavoritesNav = () => {
             fontSize: 20, 
           },
           
+          
         })}
+        
       />
       <FavoritesStack.Screen
         name="FavoriteSettings"

@@ -15,6 +15,7 @@ export interface SectionDetails {
   lastUpdated: string;
   count: number;
   capacity: number;
+  isPopular: boolean;
   key: string;
 }
 

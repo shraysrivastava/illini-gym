@@ -95,7 +95,10 @@ def scrape_and_update():
                     "count": int(last_count),
                     "capacity": int(capacity),  # Added capacity
                     "isOpen": is_open,
-                    "lastUpdated": last_updated  # This should now hold the correct date and time
+                    "lastUpdated": last_updated,  # This should now hold the correct date and time
+                    "key": room_name,
+                    "gym": "arc",
+                    "isPopular": False
                 }
             print(f"Room Name: {room_name}")
             print(f"Status: {status}")
@@ -116,29 +119,23 @@ def scrape_and_update():
         doc_ref.set(room_data, merge=True)  # Use set with merge=True to create or update
     
     # Converting data to CSV format
-    csv_file = StringIO()
+    existing_csv_data = get_existing_csv_data()
+    csv_file = StringIO(existing_csv_data)
     csv_writer = csv.writer(csv_file)
-    csv_writer.writerow(['Room Name', 'Status', 'Last Count', 'Capacity', 'Last Updated'])
 
+    # Check if it's the first time creating the CSV, if so, write headers
+    if not existing_csv_data:
+        csv_writer.writerow(['Room Name', 'Status', 'Last Count', 'Capacity', 'Last Updated', 'key', 'gym', 'isPopular'])
+
+    # Append new data
     for room_data in data_.values():
-        csv_writer.writerow([room_data['name'], room_data['isOpen'], room_data['count'], room_data['capacity'], room_data['lastUpdated']])
-    
-    csv_string = csv_file.getvalue()
+        csv_writer.writerow([room_data['name'], room_data['isOpen'], room_data['count'], room_data['capacity'], room_data['lastUpdated'], room_data['key'], room_data['gym'], room_data['isPopular']])
+
+    new_csv_data = csv_file.getvalue()
     csv_file.close()
 
-    # Get the current timestamp in CST
-    cst_timezone = pytz.timezone('America/Chicago')
-    timestamp = datetime.now(cst_timezone).strftime('%Y-%m-%d_%H-%M-%S')
-
-    # Firestore document to store the CSV data
-    collection_name = "Arc_ml_data"  # Update with your actual collection name
-    print(csv_string)
-    try:
-        # Upload the CSV data to Firestore
-        db.collection(collection_name).document(timestamp).set({"csv_data": csv_string})
-        print(f"CSV data uploaded to Firestore under document name: {timestamp}")
-    except Exception as e:
-        print(f"Error updating Firestore: {e}")
+    # Update the CSV data in Firestore
+    update_csv_data_in_firestore(new_csv_data)
     
 
 
@@ -172,3 +169,30 @@ def scrape_and_update_cerce():
     for room_name, room_data in fake_data.items():
         doc_ref = db.collection(fake_collection_id).document(room_name)
         doc_ref.set(room_data, merge=True)  # Create or update document
+
+
+#Helper functions for accumulating csv data
+
+def get_existing_csv_data():
+    collection_name = "Arc_ml_data"  # Your actual collection name
+    document_name = "cumulative_csv_data"
+    try:
+        doc_ref = db.collection(collection_name).document(document_name)
+        doc = doc_ref.get()
+        if doc.exists:
+            return doc.to_dict().get("csv_data", "")
+        else:
+            return ""
+    except Exception as e:
+        print(f"Error reading Firestore: {e}")
+        return ""
+
+# Function to update CSV data in Firestore
+def update_csv_data_in_firestore(new_csv_data):
+    collection_name = "Arc_ml_data"  # Your actual collection name
+    document_name = "cumulative_csv_data"
+    try:
+        db.collection(collection_name).document(document_name).set({"csv_data": new_csv_data}, merge=True)
+        print("CSV data updated in Firestore.")
+    except Exception as e:
+        print(f"Error updating Firestore: {e}")

@@ -60,7 +60,7 @@ export const SectionInfo: React.FC<{ section: DocumentData }> = ({
 };
 
 const Section: React.FC<SectionProps> = React.memo(
-  ({ section, handleFavoritePress, isFavorite }) => {
+  ({ section, handleFavoritePress, isFavorite}) => {
     const timeDiff = getTimeDifference(section.lastUpdated);
     return (
       <View style={modalStyles.individualSectionContainer}>
@@ -105,6 +105,7 @@ export const modalStyles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+    padding:2
   },
   individualSectionContainer: {
     width: "100%",

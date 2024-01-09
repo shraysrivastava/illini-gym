@@ -3,16 +3,9 @@ import {
   ScrollView,
   RefreshControl,
   View,
-  Button,
-  Touchable,
-  Alert,
-  Modal,
-  TextInput,
-  TouchableHighlight,
+  Keyboard,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import * as Progress from "react-native-progress";
-import { MaterialIcons } from "@expo/vector-icons";
+
 import { db, auth } from "../../firebase/firebaseConfig";
 import {
   getDoc,
@@ -20,227 +13,139 @@ import {
   collection,
   updateDoc,
   arrayRemove,
-  arrayUnion,
   deleteField,
 } from "firebase/firestore";
 import Colors from "../../constants/Colors";
-import CustomText from "../Reusables/CustomText";
 import FavoriteInstructions from "./FavoritesInstructions";
 import { StyleSheet } from "react-native";
-import {
-  SectionInfo,
-  VisibilityIcon,
-  modalStyles,
-} from "../Maps/Gym/SectionModal";
-import { getTimeDifference } from "../Reusables/Utilities";
-import { RemovePopup } from "../Reusables/RemovePopup";
+import {modalStyles,} from "../Maps/Gym/SectionModal";
+import { RemoveSingle } from "../Reusables/RemoveSingle";
+import { RemoveAll } from "../Reusables/RemoveAll";
 import { RouteProp, useFocusEffect, useRoute } from "@react-navigation/native";
-import CustomToast from "../Reusables/Toast";
+import CustomToast, { ToastProps } from "../Reusables/Toast";
 import FavoriteModal from "./FavoriteModal";
 import { FavoriteStackParamList } from "./FavoritesNav";
+import { useNavigation } from '@react-navigation/native';
+import { useFavorites, SectionDetails } from './useFavorites';
 
-export interface SectionDetails {
-  isOpen: boolean;
-  name: string;
-  lastUpdated: string;
-  count: number;
-  capacity: number;
-  key: string;
+interface FavoritesProps {
+  sections: SectionDetails[];
 }
-
-interface FavoriteModalsProps {
-  sections: { gym: string; section: SectionDetails }[];
-}
-
-type FavoriteModalProps = {
-  id: string;
-  section: SectionDetails;
-  gym: string;
-  updateNickname: (id: string, newNickname: string) => void;
-};
-
 interface EditableNicknames {
   [key: string]: string;
 }
 
-type FavoritesScreenRouteParams = {
-  isEditMode: boolean;
-};
 
 export const FavoritesScreen: React.FC = () => {
-  const [favorites, setFavorites] = useState<string[]>([]);
-  const [favoriteSections, setFavoriteSections] = useState<{ gym: string; section: SectionDetails }[]>([]);
+  const navigation = useNavigation();
   const [refreshing, setRefreshing] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [sectionNicknames, setSectionNicknames] = useState< Record<string, string>>({});
   const currentUserId = auth.currentUser?.uid;
   const route = useRoute<RouteProp<FavoriteStackParamList, 'FavoritesScreen'>>();
-  // const navigation = route.params?.navigation;
-  const isEditMode = route.params?.isEditMode || false;
-  
+  const isEditMode = route.params?.isEditMode || false
   const [editableNicknames, setEditableNicknames] = useState<EditableNicknames>({});
-  const [isRemovePopupVisible, setIsRemovePopupVisible] = useState(false);
-  const [sectionToRemove, setSectionToRemove] = useState<string>("");
-  const [selectedSection, setSelectedSection] = useState<string>("");
-  const [toastMessage, setToastMessage] = useState<string>("");
+  const [toast, setToast] = useState<ToastProps>({ message: "", color: "" });
   const toastTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  
-  
-
-  const fetchAndUpdateFavorites = useCallback(async () => {
-    if (!currentUserId) return;
-    setIsLoading(true);
-    try {
-      const userDoc = await getDoc(doc(db, "users", currentUserId));
-      if (!userDoc.exists()) return;
-
-      const userFavorites: string[] = userDoc.data().favorites || [];
-      setFavorites(userFavorites);
-
-      const userNicknames: Record<string, string> =
-        userDoc.data().nicknames || {};
-      setSectionNicknames(userNicknames);
-
-      const newPressedSections: Record<string, boolean> = {};
-      const promises = userFavorites.map(async (fav) => {
-        const [gym, sectionId] = fav.split("=");
-        const sectionDoc = await getDoc(doc(db, gym, sectionId));
-        newPressedSections[sectionId] = true; // Update pressedSections
-        return sectionDoc.exists()
-          ? { gym, section: { key: sectionId, ...sectionDoc.data() } }
-          : null;
-      });
-
-      const fetchedData = (await Promise.all(promises)).filter(Boolean);
-      setFavoriteSections(
-        fetchedData as { gym: string; section: SectionDetails }[]
-      );
-    } catch (error) {
-      console.error("Error fetching documents:", error);
-    }
-    setIsLoading(false);
-  }, [currentUserId]);
+  const { favorites, setFavorites, favoriteSections, setFavoriteSections,
+          sectionNicknames, setSectionNicknames, fetchAndUpdateFavorites,
+  } = useFavorites(currentUserId);
+  const openSections = favoriteSections.filter((favorite) => favorite.isOpen);
+  const closedSections = favoriteSections.filter((favorite) => !favorite.isOpen);  
+  const [markedForDeletion, setMarkedForDeletion] = useState<string[]>([]);
 
   useEffect(() => {
     fetchAndUpdateFavorites();
     if (toastTimeoutRef.current) {
       clearTimeout(toastTimeoutRef.current);
-      setToastMessage("");
+      // setToastMessage("");
     }
-    
-    
-    
-    if (route.params?.action === 'save') {
-      onSavePress();
-    } else if (route.params?.action === 'cancel') {
-      onCancelPress();
-    } else if (route.params?.action === 'editModeOn') {
-      setToastMessage("Edit Mode Enabled");
-    }
-  }, [fetchAndUpdateFavorites, route.params?.isEditMode, route.params?.action]);
+    handleEditMode();
+  }, [fetchAndUpdateFavorites, route.params]);
 
   useFocusEffect(
     useCallback(() => {
+      
       fetchAndUpdateFavorites();
     }, [fetchAndUpdateFavorites])
   );
+
+  const handleToggleMarkForDeletion = (id: string, sectionName:string, mark: boolean) => {
+    setMarkedForDeletion(current => {
+      if (mark) {
+        setToast({ message: sectionName + " marked for deletion", color: Colors.uiucOrange });
+        return [...current, id]; // Add to marked list
+      } else {
+        return current.filter(item => item !== id); // Remove from marked list
+      }
+    });
+  };
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     fetchAndUpdateFavorites().then(() => setRefreshing(false));
   }, [fetchAndUpdateFavorites]);
-
-  const handleRemoveFavorite = useCallback((gym: string, sectionKey: string, sectionName: string) => {
-    console.log("Removing favorite:", gym, sectionKey);
-    setIsRemovePopupVisible(true);
-    setSectionToRemove(gym + "=" + sectionKey);
-    setSelectedSection(sectionName);
-  }, []
-  );
-
-
-  const removeFromFavorites = useCallback(
-    (favoriteKey: string, sectionName: string) => {
-      const userDocRef = doc(collection(db, "users"), currentUserId);
-      console.log("Removing from favorites:", favoriteKey);
-      const message = sectionNicknames[favoriteKey]
-        ? sectionNicknames[favoriteKey] + " removed from favorites"
-        : sectionName + " removed from favorites";
-      setToastMessage(message);
-      updateDoc(userDocRef, { favorites: arrayRemove(favoriteKey) }).then(
-        () => {
-          // Also remove the nickname associated with this section
-          updateDoc(userDocRef, {
-            [`nicknames.${favoriteKey}`]: deleteField(),
-          });
-          // Update local state to reflect the removal
-          setFavorites((favs) => favs.filter((fav) => fav !== favoriteKey));
-
-          // Optionally, you can also update favoriteSections state to immediately reflect the change
-          setFavoriteSections((sections) =>
-            sections.filter(
-              (section) =>
-                section.gym + "=" + section.section.key !== favoriteKey
-            )
-          );
-        }
-      );
-      setIsRemovePopupVisible(false);
-    },
-    [currentUserId, favoriteSections, sectionNicknames]
-  );
-
-
-
-  const handleNicknameUpdate = useCallback(async () => {
+  
+  const handleSave = useCallback(async () => {
     const userDocRef = doc(collection(db, "users"), currentUserId);
-
-    // Prepare the updates object
     const updates: Record<string, any> = {};
-
-    // Iterate through the editableNicknames
+  
+    // Handle deletions
+    if (markedForDeletion.length > 0) {
+      updates.favorites = favorites.filter(fav => !markedForDeletion.includes(fav));
+      markedForDeletion.forEach(key => {
+        updates[`nicknames.${key}`] = deleteField();
+      });
+    }
+    console.log(updates);
+  
+    // Handle nickname updates
     Object.keys(editableNicknames).forEach((key) => {
       if (editableNicknames[key] !== sectionNicknames[key]) {
         updates[`nicknames.${key}`] = editableNicknames[key];
       }
     });
-
+  
     // Check if there are updates to be made
     if (Object.keys(updates).length > 0) {
       try {
-        setToastMessage("Changes Successfuly Saved");
+        setToast({ message: "Changes Successfully Saved", color: "green" });
         await updateDoc(userDocRef, updates);
         fetchAndUpdateFavorites();
       } catch (error) {
-        console.error("Error updating nicknames:", error);
-        setToastMessage("Error updating nicknames");
+        console.error("Error updating data:", error);
+        setToast({ message: "Error updating data", color: "red" });
       }
-    } else {
-      console.log("No nickname updates to be made.");
     }
-  }, [
-    editableNicknames,
-    sectionNicknames,
-    currentUserId,
-    fetchAndUpdateFavorites, 
-  ]);
+  
+    setMarkedForDeletion([]);
+  }, [editableNicknames, sectionNicknames, currentUserId, fetchAndUpdateFavorites, markedForDeletion, favorites]);
 
-  const onSavePress = () => {
-    handleNicknameUpdate();
-  };
-
-  const onCancelPress = () => {
-    const changesMade = Object.keys(editableNicknames).some(
-      (key) => editableNicknames[key] !== sectionNicknames[key]
-    );
- 
-    if (changesMade) {
-      setToastMessage("Changes Discarded");
+  
+  const handleEditMode = () => {
+    switch (route.params?.action) {
+      case "save":
+        handleSave();
+        break;
+      case "cancel":
+        const changesMade = Object.keys(editableNicknames).some(
+          key => editableNicknames[key] !== sectionNicknames[key]
+        ) || markedForDeletion.length > 0;
+  
+        if (changesMade) {
+          setToast({ message: "Changes Discarded", color: "red" });
+        }
+        
+        setEditableNicknames({});
+        setMarkedForDeletion([]); 
+        break;
+      case "editModeOn":
+        // setToast({ message: "Edit Mode Enabled", color: Colors.uiucOrange });
+        break;
+      default:
+        // Handle any other cases or do nothing
+        break;
     }
-     
-    setEditableNicknames({});
   };
-
+  
   const updateNickname = useCallback((id: string, newNickname: string) => {
     setEditableNicknames({
       ...editableNicknames,
@@ -249,19 +154,19 @@ export const FavoritesScreen: React.FC = () => {
   }, [editableNicknames]
   );
 
-  const Favorites: React.FC<FavoriteModalsProps> = React.memo(
+  const Favorites: React.FC<FavoritesProps> = React.memo(
     ({ sections }) => (
       <View style={modalStyles.listContainer}>
-        {sections.map(({ gym, section }, index) => (
+        {sections.map((section, index) => (
           <FavoriteModal
-          key={gym + "=" + section.key}
-          id={gym + "=" + section.key}
-          gym={gym}
+          key={section.gym + "=" + section.key}
+          fullID={section.gym + "=" + section.key}
           section={section}
           isEditMode={isEditMode}
+          isMarkedForDeletion={markedForDeletion.includes(section.gym + "=" + section.key)}
+          handleToggleMarkForDeletion={handleToggleMarkForDeletion}
           sectionNicknames={sectionNicknames}
           editableNicknames={editableNicknames}
-          handleRemoveFavorite={handleRemoveFavorite}
           updateNickname={updateNickname}
         />
         ))}
@@ -284,26 +189,18 @@ export const FavoritesScreen: React.FC = () => {
           />
         }
       >
-        {isLoading && favorites.length === 0 ? (
-          <></>
-        ) : // <ActivityIndicator size="large" color={Colors.uiucOrange} />
-        favorites.length !== 0 ? (
-          <Favorites sections={favoriteSections} />
+        {favorites.length !== 0 ? (
+          <View>
+            <Favorites sections={openSections} />
+            <Favorites sections={closedSections} />
+          </View>
+
         ) : (
           <FavoriteInstructions />
         )}
       </ScrollView>
-      {isRemovePopupVisible && (
-        <RemovePopup
-          isVisible={isRemovePopupVisible}
-          onCancel={() => setIsRemovePopupVisible(false)}
-          onConfirm={removeFromFavorites}
-          favoriteKey={sectionToRemove}
-          sectionName={sectionNicknames[sectionToRemove] || selectedSection}
-        />
-      )}
 
-      <CustomToast message={toastMessage} />
+      <CustomToast message={toast.message} color={toast.color} />
     </View>
   );
 };

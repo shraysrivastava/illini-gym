@@ -14,7 +14,9 @@ export const signInAnonymouslyUser = (setError: React.Dispatch<React.SetStateAct
                 uid: user.uid,
                 favorites: [],
                 nicknames: {},
-                createdAt: new Date()
+                createdAt: new Date(),
+                type: 'dev',
+                device: ""
             }).then(() => userCredential);
             
         })

@@ -17,38 +17,25 @@ import  fetchImageFromFirebase  from  "../../firebase/images";
 
 interface FavoriteModalProps {
   section: SectionDetails;
-  gym: string;
-  id: string;
+  fullID: string;
   isEditMode: boolean;
+  isMarkedForDeletion: boolean;
   editableNicknames: { [key: string]: string };
   sectionNicknames: { [key: string]: string };
-  handleRemoveFavorite: (
-    gym: string,
-    sectionKey: string,
-    sectionName: string
-  ) => void;
+  handleToggleMarkForDeletion: (id: string, sectionName:string, mark: boolean) => void;
   updateNickname: (id: string, newNickname: string) => void;
 }
 
-
-const FavoriteModal: React.FC<FavoriteModalProps> = ({
-  section,
-  gym,
-  id,
-  isEditMode,
-  sectionNicknames,
-  editableNicknames,
-  handleRemoveFavorite,
-  updateNickname,
-}) => {
+const FavoriteModal: React.FC<FavoriteModalProps> = ({ section, fullID, isEditMode,isMarkedForDeletion, sectionNicknames, editableNicknames, handleToggleMarkForDeletion, updateNickname }) => {
   const timeDiff = getTimeDifference(section.lastUpdated);
-  const initialNickname =
-    editableNicknames[id] ?? sectionNicknames[id] ?? section.name;
+  const initialNickname = editableNicknames[fullID] ?? sectionNicknames[fullID] ?? section.name;
   const [localNickname, setLocalNickname] = useState(initialNickname);
+  const itemStyle = isMarkedForDeletion ? styles.markedForDeletion : null;
 
+  
   const resetNickname = () => {
     setLocalNickname(section.name);
-    updateNickname(id, section.name);
+    updateNickname(fullID, section.name);
   };
 
   const [imageURL, setImageURL] = useState<string | null>(null);
@@ -66,44 +53,47 @@ const FavoriteModal: React.FC<FavoriteModalProps> = ({
   };
   
   return (
-    <View style={modalStyles.individualSectionContainer}>
+    <View style={[modalStyles.individualSectionContainer, itemStyle]}>
       {isEditMode ? (
         // Edit Mode UI
-        <View style={modalStyles.row}>
-          <MaterialIcons
-            name="edit"
-            size={20}
-            color={Colors.uiucOrange}
-            style={{ marginLeft: 5 }}
-          />
+        <View style={[modalStyles.row]}>
+          <MaterialCommunityIcons name="restart" size={28} color={Colors.uiucOrange} onPress={resetNickname} />
           <TextInput
             style={styles.editName}
             value={localNickname}
             onChangeText={setLocalNickname}
-            onEndEditing={() => updateNickname(id, localNickname)}
-            placeholder="Enter Name"
+            onEndEditing={() => updateNickname(fullID, localNickname)}
+            placeholder="Enter Nickname"
             placeholderTextColor="gray"
             maxLength={27}
+            editable={!isMarkedForDeletion}
           />
-          <MaterialCommunityIcons
-            name="restart"
-            size={28}
-            color={Colors.uiucOrange}
-            onPress={resetNickname}
-          />
+          {isMarkedForDeletion ? (
+            <MaterialIcons
+              name="add-circle-outline"
+              size={28}
+              color="green"
+              opacity={1}
+              onPress={() => handleToggleMarkForDeletion(fullID,localNickname, false)}
+            />
+          ) : (
+            <MaterialIcons
+              name="remove-circle-outline"
+              size={28}
+              color="red"
+              onPress={() => handleToggleMarkForDeletion(fullID, localNickname, true)}
+            />
+          )}
         </View>
       ) : (
         // Regular Display UI
         <View style={modalStyles.row}>
           <VisibilityIcon isOpen={section.isOpen} />
-          <CustomText style={modalStyles.sectionName}>
-            {localNickname}
-          </CustomText>
-          <MaterialIcons
-            name="remove-circle-outline"
+          <CustomText style={modalStyles.sectionName}>{localNickname}</CustomText>
+          <MaterialCommunityIcons
+            name="dumbbell"
             size={28}
-            color="red"
-            onPress={() => handleRemoveFavorite(gym, section.key, section.name)}
+            color="white"
           />
         </View>
       )}
@@ -131,7 +121,6 @@ const FavoriteModal: React.FC<FavoriteModalProps> = ({
           activeOpacity={1}
           onPress={closeImagePopup}
         >
-          <View style={styles.popupContainer}>
             {imageURL && (
               <Image
                 source={{ uri: imageURL }}
@@ -139,7 +128,6 @@ const FavoriteModal: React.FC<FavoriteModalProps> = ({
                 resizeMode="contain"
               />
             )}
-          </View>
         </TouchableOpacity>
       </Modal>
     </View>
@@ -161,21 +149,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  popupContainer: {
-    margin: 20,
-    backgroundColor: 'white',
-    borderRadius: 20,
-    padding: 35,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
   },
   popupImage: {
     width: 300, // or your desired width

@@ -96,7 +96,7 @@ def scrape_and_update():
                     "capacity": int(capacity),  # Added capacity
                     "isOpen": is_open,
                     "lastUpdated": last_updated,  # This should now hold the correct date and time
-                    "key": room_name.replace("-", " ").title(),
+                    "key": room_name,
                     "gym": "arc",
                     "isPopular": False
                 }

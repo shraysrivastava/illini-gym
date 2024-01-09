@@ -7,10 +7,12 @@ import { FavoriteSettings } from "../Settings/SettingsScreens/FavoriteSettings";
 import { FavoritesScreen } from "./FavoritesScreen";
 import { getCommonHeaderOptions } from "../CustomHeader";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
+import DisplayLargeMap from "../Reusables/DisplayLargeMap";
 
 export type FavoriteStackParamList = {
   FavoritesScreen: { isEditMode: boolean, action: string};
   FavoriteSettings: undefined;
+  DisplayLargeMap: undefined;
 };
 
 const FavoritesStack = createStackNavigator<FavoriteStackParamList>();
@@ -42,7 +44,7 @@ export const FavoritesNav = () => {
             Keyboard.dismiss();
             setTimeout(() => {
               setIsEditMode(false);
-              navigation.setParams({ isEditMode: false, action: "cancel"});
+              navigation.setParams({ isEditMode: false, action: "cancel" });
             }, 100); // Delay to allow local nickname state to update
           }}
           style={{ marginLeft: 10 }}
@@ -50,7 +52,22 @@ export const FavoritesNav = () => {
           <MaterialIcons name="close" size={28} color="red" />
         </TouchableOpacity>
       </View>
-    ) : null;
+    ) : (
+      <View style={{ flexDirection: "row" }}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("FavoriteSettings")}
+          style={{ marginLeft: 10 }}
+        >
+          <MaterialIcons name="settings" size={32} color={Colors.uiucOrange} />
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("DisplayLargeMap")}
+          style={{ marginLeft: 10 }}
+        >
+          <MaterialIcons name="map" size={32} color={Colors.uiucOrange} />
+        </TouchableOpacity>
+      </View>
+    );
 
   const renderHeaderRight = (navigation: any) =>
     isEditMode ? (
@@ -69,12 +86,7 @@ export const FavoritesNav = () => {
       </TouchableOpacity>
     ) : (
       <View style={{ flexDirection: "row" }}>
-        <TouchableOpacity
-          onPress={() => navigation.navigate("FavoriteSettings")}
-          style={{ marginRight: 10 }}
-        >
-          <MaterialIcons name="settings" size={32} color={Colors.uiucOrange} />
-        </TouchableOpacity>
+        
         <TouchableOpacity
           onPress={() => enableEditMode(navigation)}
           style={{ marginRight: 10 }}
@@ -124,6 +136,18 @@ export const FavoritesNav = () => {
         })}
         
       />
+      <FavoritesStack.Screen
+        name="DisplayLargeMap"
+        component={DisplayLargeMap}
+        options={() => ({
+          headerTitle: "View Arc map",
+          headerTitleStyle: {
+            fontSize: 20, 
+          },
+        })}
+        
+      />
+      
     </FavoritesStack.Navigator>
   );
 };

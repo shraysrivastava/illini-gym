@@ -11,8 +11,7 @@ import { SectionInfo, VisibilityIcon, modalStyles } from '../Maps/Gym/SectionMod
 
 interface FavoriteModalProps {
   section: SectionDetails;
-  gym: string;
-  id: string;
+  fullID: string;
   isEditMode: boolean;
   isMarkedForDeletion: boolean;
   editableNicknames: { [key: string]: string };
@@ -21,16 +20,16 @@ interface FavoriteModalProps {
   updateNickname: (id: string, newNickname: string) => void;
 }
 
-const FavoriteModal: React.FC<FavoriteModalProps> = ({ section, gym, id, isEditMode,isMarkedForDeletion, sectionNicknames, editableNicknames, handleToggleMarkForDeletion, updateNickname }) => {
+const FavoriteModal: React.FC<FavoriteModalProps> = ({ section, fullID, isEditMode,isMarkedForDeletion, sectionNicknames, editableNicknames, handleToggleMarkForDeletion, updateNickname }) => {
   const timeDiff = getTimeDifference(section.lastUpdated);
-  const initialNickname = editableNicknames[id] ?? sectionNicknames[id] ?? section.name;
+  const initialNickname = editableNicknames[fullID] ?? sectionNicknames[fullID] ?? section.name;
   const [localNickname, setLocalNickname] = useState(initialNickname);
   const itemStyle = isMarkedForDeletion ? styles.markedForDeletion : null;
 
   
   const resetNickname = () => {
     setLocalNickname(section.name);
-    updateNickname(id, section.name);
+    updateNickname(fullID, section.name);
   };
 
   return (
@@ -43,7 +42,7 @@ const FavoriteModal: React.FC<FavoriteModalProps> = ({ section, gym, id, isEditM
             style={styles.editName}
             value={localNickname}
             onChangeText={setLocalNickname}
-            onEndEditing={() => updateNickname(id, localNickname)}
+            onEndEditing={() => updateNickname(fullID, localNickname)}
             placeholder="Enter Nickname"
             placeholderTextColor="gray"
             maxLength={27}
@@ -55,14 +54,14 @@ const FavoriteModal: React.FC<FavoriteModalProps> = ({ section, gym, id, isEditM
               size={28}
               color="green"
               opacity={1}
-              onPress={() => handleToggleMarkForDeletion(id,localNickname, false)}
+              onPress={() => handleToggleMarkForDeletion(fullID,localNickname, false)}
             />
           ) : (
             <MaterialIcons
               name="remove-circle-outline"
               size={28}
               color="red"
-              onPress={() => handleToggleMarkForDeletion(id, localNickname, true)}
+              onPress={() => handleToggleMarkForDeletion(fullID, localNickname, true)}
             />
           )}
         </View>

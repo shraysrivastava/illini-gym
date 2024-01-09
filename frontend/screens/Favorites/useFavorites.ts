@@ -16,18 +16,14 @@ export interface SectionDetails {
   count: number;
   capacity: number;
   isPopular: boolean;
-  key: string;
+  key: string; // ie. gym-1, gym-2
+  gym: string; // ie. arc, now integrated into each section
 }
 
 export const useFavorites = (currentUserId: string | undefined) => {
   const [favorites, setFavorites] = useState<string[]>([]);
-  const [favoriteSections, setFavoriteSections] = useState<
-    { gym: string; section: SectionDetails }[]
-  >([]);
-  const [sectionNicknames, setSectionNicknames] = useState<
-    Record<string, string>
-  >({});
-
+  const [favoriteSections, setFavoriteSections] = useState<SectionDetails[]>([]);
+  const [sectionNicknames, setSectionNicknames] = useState<Record<string, string>>({});
 
   const fetchAndUpdateFavorites = useCallback(async () => {
     if (!currentUserId) return;
@@ -38,31 +34,25 @@ export const useFavorites = (currentUserId: string | undefined) => {
       const userFavorites: string[] = userDoc.data().favorites || [];
       setFavorites(userFavorites);
 
-      const userNicknames: Record<string, string> =
-        userDoc.data().nicknames || {};
+      const userNicknames: Record<string, string> = userDoc.data().nicknames || {};
       setSectionNicknames(userNicknames);
 
-      const newPressedSections: Record<string, boolean> = {};
-      const promises = userFavorites.map(async (fav) => {
-        const [gym, sectionId] = fav.split("=");
-        const sectionDoc = await getDoc(doc(db, gym, sectionId));
-        newPressedSections[sectionId] = true; // Update pressedSections
-        return sectionDoc.exists()
-          ? { gym, section: { key: sectionId, ...sectionDoc.data() } }
-          : null;
-      });
-
-      const fetchedData = (await Promise.all(promises)).filter(Boolean);
-      setFavoriteSections(
-        fetchedData as { gym: string; section: SectionDetails }[]
+      const fetchedSections: (SectionDetails | null)[] = await Promise.all(
+        userFavorites.map(async (fav) => {
+          const [gym, sectionId] = fav.split("=");
+          const sectionDoc = await getDoc(doc(db, gym, sectionId));
+          return sectionDoc.exists()
+            ? { gym, key: sectionId, ...sectionDoc.data() } as SectionDetails
+            : null;
+        })
       );
+
+      const validSections: SectionDetails[] = fetchedSections.filter((section): section is SectionDetails => section !== null);
+      setFavoriteSections(validSections);
     } catch (error) {
       console.error("Error fetching documents:", error);
     }
   }, [currentUserId]);
-
-  
-  
 
   return {
     favorites,
@@ -74,3 +64,4 @@ export const useFavorites = (currentUserId: string | undefined) => {
     fetchAndUpdateFavorites,
   };
 };
+

@@ -29,7 +29,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useFavorites, SectionDetails } from './useFavorites';
 
 interface FavoritesProps {
-  sections: { gym: string; section: SectionDetails }[];
+  sections: SectionDetails[];
 }
 interface EditableNicknames {
   [key: string]: string;
@@ -48,8 +48,8 @@ export const FavoritesScreen: React.FC = () => {
   const { favorites, setFavorites, favoriteSections, setFavoriteSections,
           sectionNicknames, setSectionNicknames, fetchAndUpdateFavorites,
   } = useFavorites(currentUserId);
-  const openSections = favoriteSections.filter((favorite) => favorite.section.isOpen);
-  const closedSections = favoriteSections.filter((favorite) => !favorite.section.isOpen);  
+  const openSections = favoriteSections.filter((favorite) => favorite.isOpen);
+  const closedSections = favoriteSections.filter((favorite) => !favorite.isOpen);  
   const [markedForDeletion, setMarkedForDeletion] = useState<string[]>([]);
 
   useEffect(() => {
@@ -95,6 +95,7 @@ export const FavoritesScreen: React.FC = () => {
         updates[`nicknames.${key}`] = deleteField();
       });
     }
+    console.log(updates);
   
     // Handle nickname updates
     Object.keys(editableNicknames).forEach((key) => {
@@ -156,14 +157,13 @@ export const FavoritesScreen: React.FC = () => {
   const Favorites: React.FC<FavoritesProps> = React.memo(
     ({ sections }) => (
       <View style={modalStyles.listContainer}>
-        {sections.map(({ gym, section }, index) => (
+        {sections.map((section, index) => (
           <FavoriteModal
-          key={gym + "=" + section.key}
-          id={gym + "=" + section.key}
-          gym={gym}
+          key={section.gym + "=" + section.key}
+          fullID={section.gym + "=" + section.key}
           section={section}
           isEditMode={isEditMode}
-          isMarkedForDeletion={markedForDeletion.includes(gym + "=" + section.key)}
+          isMarkedForDeletion={markedForDeletion.includes(section.gym + "=" + section.key)}
           handleToggleMarkForDeletion={handleToggleMarkForDeletion}
           sectionNicknames={sectionNicknames}
           editableNicknames={editableNicknames}

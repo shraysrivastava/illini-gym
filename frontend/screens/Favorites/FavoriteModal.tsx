@@ -55,7 +55,7 @@ const FavoriteModal: React.FC<FavoriteModalProps> = ({
   const [isImagePopupVisible, setImagePopupVisible] = useState(false);
 
   const handleMapIconClick = async () => {
-    const url = await fetchImageFromFirebase('images/arc-baseimage-1.png');
+    const url = await fetchImageFromFirebase('test-images/arc-baseimage-1.png');
     setImageURL(url);
     setImagePopupVisible(true); // Show the popup when the image is fetched
   };

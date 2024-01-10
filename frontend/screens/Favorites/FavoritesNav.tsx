@@ -9,6 +9,7 @@ import { getCommonHeaderOptions } from "../CustomHeader";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import DisplayLargeMap from "../Reusables/DisplayLargeMap";
 
+
 export type FavoriteStackParamList = {
   FavoritesScreen: { isEditMode: boolean, action: string};
   FavoriteSettings: undefined;
@@ -140,7 +141,7 @@ export const FavoritesNav = () => {
         name="DisplayLargeMap"
         component={DisplayLargeMap}
         options={() => ({
-          headerTitle: "View Arc map",
+          headerTitle: "View Arc Map",
           headerTitleStyle: {
             fontSize: 20, 
           },

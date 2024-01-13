@@ -9,7 +9,6 @@ import { getCommonHeaderOptions } from "../CustomHeader";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import DisplayLargeMap from "../Reusables/DisplayLargeMap";
 
-
 export type FavoriteStackParamList = {
   FavoritesScreen: { isEditMode: boolean, action: string};
   FavoriteSettings: undefined;

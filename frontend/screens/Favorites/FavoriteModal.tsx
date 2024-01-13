@@ -14,6 +14,8 @@ import {
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import { Linking } from "react-native";
 import  fetchImageFromFirebase  from  "../../firebase/images";
+import ImageViewer from 'react-native-image-zoom-viewer';
+
 
 interface FavoriteModalProps {
   section: SectionDetails;
@@ -42,9 +44,14 @@ const FavoriteModal: React.FC<FavoriteModalProps> = ({ section, fullID, isEditMo
   const [isImagePopupVisible, setImagePopupVisible] = useState(false);
 
   const handleMapIconClick = async () => {
-    const url = await fetchImageFromFirebase('test-images/arc-baseimage-1.png');
-    setImageURL(url);
-    setImagePopupVisible(true); // Show the popup when the image is fetched
+    try {
+      const imagePath = `images/${section.gym}=${section.key}.png`;
+      const url = await fetchImageFromFirebase(imagePath);
+      setImageURL(url);
+      setImagePopupVisible(true);
+    } catch (error) {
+      console.error("Error fetching image:", error);
+    }
   };
 
   // Function to close the image popup
@@ -111,23 +118,26 @@ const FavoriteModal: React.FC<FavoriteModalProps> = ({ section, fullID, isEditMo
           onPress={handleMapIconClick}
         />
       </View>
-       <Modal
+      <Modal
         visible={isImagePopupVisible}
         transparent={true}
         onRequestClose={closeImagePopup}
       >
         <TouchableOpacity
-          style={styles.popupOverlay}
+          style={styles.fullScreenOverlay}
           activeOpacity={1}
           onPress={closeImagePopup}
         >
-            {imageURL && (
-              <Image
-                source={{ uri: imageURL }}
-                style={styles.popupImage}
-                resizeMode="contain"
+          {imageURL && (
+            <View style={styles.imageContainer}>
+              <ImageViewer
+                imageUrls={[{ url: imageURL }]}
+                backgroundColor="transparent"
+                enableSwipeDown={true}
+                onSwipeDown={closeImagePopup}
               />
-            )}
+            </View>
+          )}
         </TouchableOpacity>
       </Modal>
     </View>
@@ -144,15 +154,16 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: "white",
   },
-  popupOverlay: {
+  fullScreenOverlay: {
     flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.35)',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
-  popupImage: {
-    width: 300, // or your desired width
-    height: 300, // or your desired height
+  imageContainer: {
+    width: '90%', // or any other dimension
+    height: '50%', // or any other dimension
+    backgroundColor: 'transparent', // Optional: for additional styling
   },
 });
 

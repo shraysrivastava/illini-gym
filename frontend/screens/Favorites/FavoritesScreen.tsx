@@ -20,7 +20,7 @@ import FavoriteInstructions from "./FavoritesInstructions";
 import { StyleSheet } from "react-native";
 import {modalStyles,} from "../Maps/Gym/SectionModal";
 import { RemoveSingle } from "../Reusables/RemoveSingle";
-import { RemoveAll } from "../Reusables/RemoveAll";
+import { SpecialHours } from "../Reusables/SpecialHours";
 import { RouteProp, useFocusEffect, useRoute } from "@react-navigation/native";
 import CustomToast, { ToastProps } from "../Reusables/Toast";
 import FavoriteModal from "./FavoriteModal";
@@ -51,6 +51,10 @@ export const FavoritesScreen: React.FC = () => {
   const openSections = favoriteSections.filter((favorite) => favorite.isOpen);
   const closedSections = favoriteSections.filter((favorite) => !favorite.isOpen);  
   const [markedForDeletion, setMarkedForDeletion] = useState<string[]>([]);
+  const [order, setOrder] = useState({
+    favoritesCopy: [...favorites],
+    favoriteSectionsCopy: [...favoriteSections],
+  });
 
   useEffect(() => {
     fetchAndUpdateFavorites();
@@ -87,7 +91,8 @@ export const FavoritesScreen: React.FC = () => {
   const handleSave = useCallback(async () => {
     const userDocRef = doc(collection(db, "users"), currentUserId);
     const updates: Record<string, any> = {};
-  
+    
+    updates.favorites = favorites;
     // Handle deletions
     if (markedForDeletion.length > 0) {
       updates.favorites = favorites.filter(fav => !markedForDeletion.includes(fav));
@@ -95,7 +100,6 @@ export const FavoritesScreen: React.FC = () => {
         updates[`nicknames.${key}`] = deleteField();
       });
     }
-    console.log(updates);
   
     // Handle nickname updates
     Object.keys(editableNicknames).forEach((key) => {
@@ -133,12 +137,17 @@ export const FavoritesScreen: React.FC = () => {
         if (changesMade) {
           setToast({ message: "Changes Discarded", color: "red" });
         }
-        
+        setFavoriteSections(order.favoriteSectionsCopy);
+        setFavorites(order.favoritesCopy);
         setEditableNicknames({});
         setMarkedForDeletion([]); 
         break;
       case "editModeOn":
         // setToast({ message: "Edit Mode Enabled", color: Colors.uiucOrange });
+        setOrder({
+          favoritesCopy: [...favorites],
+          favoriteSectionsCopy: [...favoriteSections],
+        });
         break;
       default:
         // Handle any other cases or do nothing
@@ -154,6 +163,32 @@ export const FavoritesScreen: React.FC = () => {
   }, [editableNicknames]
   );
 
+  const handleReorder = (direction: "up" | "down", fullID: string) => {
+    // Reorder favorites
+    setFavorites(current => {
+      const index = current.findIndex(id => id === fullID);
+      if (index === -1) return current;
+  
+      let newIndex = direction === "up" ? index - 1 : index + 1;
+      if (newIndex < 0 || newIndex >= current.length) return current;
+  
+      [current[index], current[newIndex]] = [current[newIndex], current[index]];
+      return [...current];
+    });
+  
+    // Reorder favoriteSections
+    setFavoriteSections(current => {
+      const index = current.findIndex(section => section.gym + "=" + section.key === fullID);
+      if (index === -1) return current;
+  
+      let newIndex = direction === "up" ? index - 1 : index + 1;
+      if (newIndex < 0 || newIndex >= current.length) return current;
+  
+      [current[index], current[newIndex]] = [current[newIndex], current[index]];
+      return [...current];
+    });
+  };
+
   const Favorites: React.FC<FavoritesProps> = React.memo(
     ({ sections }) => (
       <View style={modalStyles.listContainer}>
@@ -168,6 +203,8 @@ export const FavoritesScreen: React.FC = () => {
           sectionNicknames={sectionNicknames}
           editableNicknames={editableNicknames}
           updateNickname={updateNickname}
+          handleReorder={handleReorder}
+          setToast={setToast}
         />
         ))}
       </View>

@@ -51,6 +51,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ count, capacity }) => {
       alignItems: "center",
       width: "55%",
       marginLeft: 5,
+      marginTop: 5,
     },
     progressBar: {
       width: "100%",

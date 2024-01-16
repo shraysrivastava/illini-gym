@@ -147,16 +147,19 @@ export const GymData: React.FC<GymDataProps> = ({ route }) => {
           sections={popularSectionsOpen}
           pressedSections={pressedSections}
           handleFavoritePress={handleFavoritePress}
+          setToast={setToast}
         />
         <SectionModals
           sections={normalSectionsOpen}
           pressedSections={pressedSections}
           handleFavoritePress={handleFavoritePress}
+          setToast={setToast}
         />
         <SectionModals
           sections={closedSectionsAll}
           pressedSections={pressedSections}
           handleFavoritePress={handleFavoritePress}
+          setToast={setToast}
         />
       </ScrollView>
       <CustomToast message={toast.message} color={toast.color} />

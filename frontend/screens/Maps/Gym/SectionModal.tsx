@@ -9,21 +9,25 @@ import { StyleSheet } from "react-native";
 import Colors from "../../../constants/Colors";
 import { getTimeDifference } from "../../Reusables/Utilities";
 import ProgressBar from "../../Reusables/ProgressBar";
+import MapIconWithModal from "../../Reusables/DisplaySmallMap";
+import { ToastProps } from "../../Reusables/Toast";
 
 interface SectionProps {
   section: DocumentData;
   handleFavoritePress: (key: string, name: string) => void;
   isFavorite: boolean;
+  setToast: (toast: ToastProps) => void;
 }
 
 interface SectionModalProps {
   sections: DocumentData[];
   pressedSections: Record<string, boolean>;
   handleFavoritePress: (key: string, name: string) => void;
+  setToast: (toast: ToastProps) => void;
 }
 
 export const SectionModals: React.FC<SectionModalProps> = React.memo(
-  ({ sections, pressedSections, handleFavoritePress }) => {
+  ({ sections, pressedSections, handleFavoritePress, setToast }) => {
     return (
       <View style={modalStyles.listContainer}>
         {sections.map((section) => (
@@ -32,6 +36,7 @@ export const SectionModals: React.FC<SectionModalProps> = React.memo(
             section={section}
             handleFavoritePress={handleFavoritePress}
             isFavorite={pressedSections[section.key]}
+            setToast={setToast}
           />
         ))}
       </View>
@@ -60,7 +65,7 @@ export const SectionInfo: React.FC<{ section: DocumentData }> = ({
 };
 
 const Section: React.FC<SectionProps> = React.memo(
-  ({ section, handleFavoritePress, isFavorite}) => {
+  ({ section, handleFavoritePress, isFavorite, setToast }) => {
     const timeDiff = getTimeDifference(section.lastUpdated);
     return (
       <View style={modalStyles.individualSectionContainer}>
@@ -86,14 +91,12 @@ const Section: React.FC<SectionProps> = React.memo(
 
         {/* Bottom Row: Either Progress Bar or 'Section Closed' Text */}
         <View style={modalStyles.row}>
-          <SectionInfo section={section} />
-          <MaterialIcons
-            name="map"
-            size={24}
-            color="white"
-            style={modalStyles.mapIcon}
-          />
-        </View>
+        <SectionInfo section={section} />
+        {/* <MapIconWithModal
+          section={section}
+          setToast={setToast}
+        /> */}
+      </View>
       </View>
     );
   }

@@ -9,7 +9,7 @@ import { StyleSheet } from "react-native";
 import Colors from "../../../constants/Colors";
 import { getTimeDifference } from "../../Reusables/Utilities";
 import ProgressBar from "../../Reusables/ProgressBar";
-import MapIconWithModal from "../../Reusables/DisplaySmallMap";
+import MapIconWithModalGym from "../../Reusables/DisplaySmallMapGym";
 import { ToastProps } from "../../Reusables/Toast";
 
 interface SectionProps {
@@ -92,10 +92,10 @@ const Section: React.FC<SectionProps> = React.memo(
         {/* Bottom Row: Either Progress Bar or 'Section Closed' Text */}
         <View style={modalStyles.row}>
         <SectionInfo section={section} />
-        {/* <MapIconWithModal
+        <MapIconWithModalGym
           section={section}
           setToast={setToast}
-        /> */}
+        />
       </View>
       </View>
     );

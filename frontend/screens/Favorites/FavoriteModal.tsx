@@ -9,7 +9,6 @@ import { SectionDetails } from "./useFavorites";
 import {SectionInfo, VisibilityIcon, modalStyles,} from "../Maps/Gym/SectionModal";
 import fetchImageFromFirebase from "../../firebase/images";
 import ImageViewer from "react-native-image-zoom-viewer";
-import Toast from "react-native-toast-message";
 import CustomToast, { ToastProps } from "../Reusables/Toast";
 
 interface FavoriteModalProps {

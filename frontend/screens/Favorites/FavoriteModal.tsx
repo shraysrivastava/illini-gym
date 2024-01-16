@@ -15,7 +15,8 @@ import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import { Linking } from "react-native";
 import  fetchImageFromFirebase  from  "../../firebase/images";
 import ImageViewer from 'react-native-image-zoom-viewer';
-
+import { ToastProps } from "../Reusables/Toast";
+import MapIconWithModal  from "../Reusables/DisplaySmallMap";
 
 interface FavoriteModalProps {
   section: SectionDetails;
@@ -26,15 +27,26 @@ interface FavoriteModalProps {
   sectionNicknames: { [key: string]: string };
   handleToggleMarkForDeletion: (id: string, sectionName:string, mark: boolean) => void;
   updateNickname: (id: string, newNickname: string) => void;
+  setToast: (toast: ToastProps) => void;
 }
 
-const FavoriteModal: React.FC<FavoriteModalProps> = ({ section, fullID, isEditMode,isMarkedForDeletion, sectionNicknames, editableNicknames, handleToggleMarkForDeletion, updateNickname }) => {
+const FavoriteModal: React.FC<FavoriteModalProps> = ({
+  section,
+  fullID,
+  isEditMode,
+  isMarkedForDeletion,
+  sectionNicknames,
+  editableNicknames,
+  handleToggleMarkForDeletion,
+  updateNickname,
+  setToast,
+}) => {
   const timeDiff = getTimeDifference(section.lastUpdated);
-  const initialNickname = editableNicknames[fullID] ?? sectionNicknames[fullID] ?? section.name;
+  const initialNickname =
+    editableNicknames[fullID] ?? sectionNicknames[fullID] ?? section.name;
   const [localNickname, setLocalNickname] = useState(initialNickname);
   const itemStyle = isMarkedForDeletion ? styles.markedForDeletion : null;
 
-  
   const resetNickname = () => {
     setLocalNickname(section.name);
     updateNickname(fullID, section.name);
@@ -43,28 +55,28 @@ const FavoriteModal: React.FC<FavoriteModalProps> = ({ section, fullID, isEditMo
   const [imageURL, setImageURL] = useState<string | null>(null);
   const [isImagePopupVisible, setImagePopupVisible] = useState(false);
 
-  const handleMapIconClick = async () => {
-    try {
-      const imagePath = `images/${section.gym}=${section.key}.png`;
-      const url = await fetchImageFromFirebase(imagePath);
-      setImageURL(url);
-      setImagePopupVisible(true);
-    } catch (error) {
-      console.error("Error fetching image:", error);
-    }
+  const mapIconClickProps = {
+    section,
+    setImageURL,
+    setImagePopupVisible,
+    setToast,
   };
-
   // Function to close the image popup
   const closeImagePopup = () => {
     setImagePopupVisible(false);
   };
-  
+
   return (
     <View style={[modalStyles.individualSectionContainer, itemStyle]}>
       {isEditMode ? (
         // Edit Mode UI
         <View style={[modalStyles.row]}>
-          <MaterialCommunityIcons name="restart" size={28} color={Colors.uiucOrange} onPress={resetNickname} />
+          <MaterialCommunityIcons
+            name="restart"
+            size={28}
+            color={Colors.uiucOrange}
+            onPress={resetNickname}
+          />
           <TextInput
             style={styles.editName}
             value={localNickname}
@@ -81,14 +93,18 @@ const FavoriteModal: React.FC<FavoriteModalProps> = ({ section, fullID, isEditMo
               size={28}
               color="green"
               opacity={1}
-              onPress={() => handleToggleMarkForDeletion(fullID,localNickname, false)}
+              onPress={() =>
+                handleToggleMarkForDeletion(fullID, localNickname, false)
+              }
             />
           ) : (
             <MaterialIcons
               name="remove-circle-outline"
               size={28}
               color="red"
-              onPress={() => handleToggleMarkForDeletion(fullID, localNickname, true)}
+              onPress={() =>
+                handleToggleMarkForDeletion(fullID, localNickname, true)
+              }
             />
           )}
         </View>
@@ -96,12 +112,10 @@ const FavoriteModal: React.FC<FavoriteModalProps> = ({ section, fullID, isEditMo
         // Regular Display UI
         <View style={modalStyles.row}>
           <VisibilityIcon isOpen={section.isOpen} />
-          <CustomText style={modalStyles.sectionName}>{localNickname}</CustomText>
-          <MaterialCommunityIcons
-            name="dumbbell"
-            size={28}
-            color="white"
-          />
+          <CustomText style={modalStyles.sectionName}>
+            {localNickname}
+          </CustomText>
+          <MaterialCommunityIcons name="dumbbell" size={28} color="white" />
         </View>
       )}
 
@@ -109,37 +123,12 @@ const FavoriteModal: React.FC<FavoriteModalProps> = ({ section, fullID, isEditMo
         Last Updated: {timeDiff}
       </CustomText>
       <View style={modalStyles.row}>
-      <SectionInfo section={section} />
-        <MaterialIcons
-          name="map"
-          size={24}
-          color="white"
-          style={modalStyles.mapIcon}
-          onPress={handleMapIconClick}
+        <SectionInfo section={section} />
+        <MapIconWithModal
+          section={section}
+          setToast={setToast}
         />
       </View>
-      <Modal
-        visible={isImagePopupVisible}
-        transparent={true}
-        onRequestClose={closeImagePopup}
-      >
-        <TouchableOpacity
-          style={styles.fullScreenOverlay}
-          activeOpacity={1}
-          onPress={closeImagePopup}
-        >
-          {imageURL && (
-            <View style={styles.imageContainer}>
-              <ImageViewer
-                imageUrls={[{ url: imageURL }]}
-                backgroundColor="transparent"
-                enableSwipeDown={true}
-                onSwipeDown={closeImagePopup}
-              />
-            </View>
-          )}
-        </TouchableOpacity>
-      </Modal>
     </View>
   );
 };
@@ -164,6 +153,9 @@ const styles = StyleSheet.create({
     width: '90%', // or any other dimension
     height: '50%', // or any other dimension
     backgroundColor: 'transparent', // Optional: for additional styling
+  },
+  markedForDeletion: {
+    opacity: 0.5, // Or use any other visual representation
   },
 });
 

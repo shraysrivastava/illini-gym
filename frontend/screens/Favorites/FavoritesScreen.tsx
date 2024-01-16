@@ -167,6 +167,7 @@ export const FavoritesScreen: React.FC = () => {
           sectionNicknames={sectionNicknames}
           editableNicknames={editableNicknames}
           updateNickname={updateNickname}
+          setToast={setToast}
         />
         ))}
       </View>

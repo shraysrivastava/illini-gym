@@ -9,7 +9,7 @@ import fetchImageFromFirebase from "../../firebase/images";
 import { SectionDetails } from "../Favorites/useFavorites";
 
 interface MapIconWithModalProps {
-  section: SectionDetails;
+  section: SectionDetails| any;
   setToast: (toast: ToastProps) => void;
 }
 

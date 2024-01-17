@@ -13,33 +13,44 @@ import { SetStateAction } from "react";
  interface EventData {
   date: string;
   description: string;
+  isClosed: boolean;
   sectionKey: string;
   time: string;
   title: string;
-  isClosed: boolean;
 }
-
-  interface ReportData {
-    room: string;
-    report: string;
+interface ReportData {
+  room: string;
+  report: string;
     timestamp: Date;
   }
   // Fetch all events
+  // Fetch all events from the 'calendar-events' collection
 export const fetchEvents = async (): Promise<EventData[]> => {
   try {
-    const querySnapshot = await getDocs(collection(db, 'calendar'));
-    return querySnapshot.docs.map(doc => doc.data() as EventData);
+    const querySnapshot = await getDocs(collection(db, 'calendar-events'));
+    return querySnapshot.docs.map(doc => {
+      const data = doc.data();
+      // Here, we are casting the data to EventData, assuming all fields are present
+      return {
+        date: data.date,
+        description: data.description,
+        isClosed: data.isClosed,
+        sectionKey: data.sectionKey,
+        time: data.time,
+        title: data.title,
+      } as EventData;
+    });
   } catch (error) {
     console.error('Error fetching events:', error);
     throw error;
   }
 };
 
-// Fetch events by date
+// Fetch events by date from the 'calendar-events' collection
 export const fetchEventsByDate = async (date: string): Promise<EventData[]> => {
   try {
     const eventsQuery = query(
-      collection(db, 'calendar'), 
+      collection(db, 'calendar-events'), 
       where('date', '==', date)
     );
     const querySnapshot = await getDocs(eventsQuery);
@@ -50,9 +61,9 @@ export const fetchEventsByDate = async (date: string): Promise<EventData[]> => {
   }
 };
 
-// Remaining functions like submitBugReport, submitFeedback, and fetchUserData remain the same
 
-  
+
+
   export const submitBugReport = async (reportData: ReportData) => {
     try {
       await addDoc(collection(db, "bug"), {

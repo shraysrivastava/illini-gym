@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import { StyleSheet, View, Text } from "react-native";
 import Colors from "../../constants/Colors";
 import { Agenda } from "react-native-calendars";
-import { fetchEvents } from "../../firebase/firestore";
+import { fetchEvents } from "../../firebase/firestore"; // Make sure this import points to the correct file
 
-const timeToString = (time: string | number | Date) => {
+const timeToString = (time) => {
   const date = new Date(time);
   return date.toISOString().split('T')[0];
 };
@@ -12,7 +12,7 @@ const timeToString = (time: string | number | Date) => {
 export const CalendarHome = () => {
   const [items, setItems] = useState({});
 
-  const loadItems = (day: { timestamp: number; }) => {
+  const loadItems = (day) => {
     const newItems = { ...items };
     for (let i = -15; i < 85; i++) {
       const time = day.timestamp + i * 24 * 60 * 60 * 1000;
@@ -23,15 +23,21 @@ export const CalendarHome = () => {
     }
     setItems(newItems);
   };
+
   useEffect(() => {
     fetchEvents().then(fetchedEvents => {
       const newItems = {};
       fetchedEvents.forEach(event => {
         const date = timeToString(event.date);
         newItems[date] = newItems[date] || [];
-        const eventName = event.isClosed ? `${event.sectionKey} is Closed` : `${event.description} at ${event.time}`;
-        const eventExists = newItems[date].some(item => item.name === eventName);
-        if (!eventExists) {
+        let eventName = event.title;
+        if (event.isClosed) {
+          eventName = `${event.sectionKey} is Closed`;
+        } else if (event.description && event.time) {
+          eventName = `${event.description} from ${event.time}`;
+        }
+        // Check if the event already exists to avoid duplicates
+        if (!newItems[date].some(item => item.name === eventName)) {
           newItems[date].push({
             name: eventName,
             height: 50
@@ -41,9 +47,8 @@ export const CalendarHome = () => {
       setItems(newItems);
     }).catch(error => console.error(error));
   }, []);
-  
 
-  const renderItem = (item: { name: string; }) => {
+  const renderItem = (item: { name: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; }) => {
     return (
       <View style={styles.item}>
         <Text style={styles.itemTitle}>{item.name}</Text>
@@ -54,32 +59,32 @@ export const CalendarHome = () => {
   return (
     <View style={styles.container}>
       <Agenda
-      items={items}
-      loadItemsForMonth={loadItems}
-      selected={timeToString(new Date())}
-      renderItem={renderItem}
-    />
+        items={items}
+        loadItemsForMonth={loadItems}
+        selected={timeToString(new Date())}
+        renderItem={renderItem}
+      />
     </View>
-    );
+  );
 };
 
 const styles = StyleSheet.create({
-container: {
-flex: 1,
-backgroundColor: Colors.white,
-},
-item: {
-borderRadius: 0,
-padding: 10,
-marginRight: 10,
-marginTop: 40,
-},
-itemTitle: {
-  fontSize: 16,
-  fontWeight: '500', // Change to 'normal' or any desired weight
-  color: '#333333', // Update the text color for better readability
-  marginLeft: 10, // Add margin to align the text properly within the item
-  marginBottom: -10,
-  marginTop: -10,
-},
+  container: {
+    flex: 1,
+    backgroundColor: Colors.white,
+  },
+  item: {
+    borderRadius: 0,
+    padding: 10,
+    marginRight: 10,
+    marginTop: 17,
+  },
+  itemTitle: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#333333',
+    marginLeft: 10,
+    marginBottom: 0,
+    marginTop: 17,
+  },
 });

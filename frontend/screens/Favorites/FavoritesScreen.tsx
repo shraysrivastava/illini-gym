@@ -53,12 +53,23 @@ export const FavoritesScreen: React.FC = () => {
 
   useEffect(() => {
     fetchAndUpdateFavorites();
-    if (toastTimeoutRef.current) {
-      clearTimeout(toastTimeoutRef.current);
-      // setToastMessage("");
-    }
     handleEditMode();
   }, [fetchAndUpdateFavorites, route.params]);
+  
+  // Separate useEffect for handling toast message reset
+  useEffect(() => {
+    if (toast.message !== "") {
+      toastTimeoutRef.current = setTimeout(() => {
+        setToast({ message: "", color: "" });
+      }, 2000);
+    }
+  
+    return () => {
+      if (toastTimeoutRef.current) {
+        clearTimeout(toastTimeoutRef.current);
+      }
+    };
+  }, [toast.message]);
 
   useFocusEffect(
     useCallback(() => {

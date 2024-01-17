@@ -94,10 +94,21 @@ export const GymData: React.FC<GymDataProps> = ({ route }) => {
       await loadFavorites();
     };
     loadData();
-    if (toastTimeoutRef.current) {
-      clearTimeout(toastTimeoutRef.current);
-    }
   }, [fetchGymData, loadFavorites]);
+
+  useEffect(() => {
+    if (toast.message !== "") {
+      toastTimeoutRef.current = setTimeout(() => {
+        setToast({ message: "", color: "" });
+      }, 2000);
+    }
+  
+    return () => {
+      if (toastTimeoutRef.current) {
+        clearTimeout(toastTimeoutRef.current);
+      }
+    };
+  }, [toast.message]);
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);

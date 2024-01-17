@@ -9,52 +9,51 @@ export interface ToastProps {
 
 
 const CustomToast: React.FC<ToastProps> = ({ message, color }) => {
-    const [isVisible, setIsVisible] = useState(false);
-    const opacity = useRef(new Animated.Value(0)).current;
-    const backgroundColor = color;
-    const textColor = message.includes('Changes') ? 'white' : 'white';
+  const [isVisible, setIsVisible] = useState(false);
+  const opacity = useRef(new Animated.Value(0)).current;
 
-    useEffect(() => {
-      if (message) {
-        setIsVisible(true);
-  
-        Animated.timing(opacity, {
-          toValue: 1,
-          duration: 500,
-          useNativeDriver: true,
-        }).start();
-  
-        const timeout = setTimeout(() => {
-          Animated.timing(opacity, {
-            toValue: 0,
-            duration: 500,
-            useNativeDriver: true,
-          }).start(() => setIsVisible(false));
-        }, 2000);
-  
-        return () => clearTimeout(timeout);
-      }
-    }, [message]);
-    
-    const closeToast = () => {
+  useEffect(() => {
+    if (message && message !== "") {  // Check if message is not empty
+      setIsVisible(true);
+      Animated.timing(opacity, {
+        toValue: 1,
+        duration: 500,
+        useNativeDriver: true,
+      }).start();
+
+      const timeout = setTimeout(() => {
         Animated.timing(opacity, {
           toValue: 0,
           duration: 500,
           useNativeDriver: true,
         }).start(() => setIsVisible(false));
-      };
-    
-    if (!isVisible) return null;
-  
-    return (
-      
-        <Animated.View style={[styles.toast, { opacity, backgroundColor }]}>
-          <TouchableOpacity onPress={closeToast} style={{width: '100%'}}>
-            <Text style={[styles.text, { color: textColor }]}>{message}</Text>
-          </TouchableOpacity>
-        </Animated.View>
-      );
+      }, 2000);
+
+      return () => clearTimeout(timeout);
+    } else {
+      setIsVisible(false);  // Hide the toast if message is empty
+    }
+  }, [message]);
+
+  const closeToast = () => {
+      Animated.timing(opacity, {
+        toValue: 0,
+        duration: 500,
+        useNativeDriver: true,
+      }).start(() => setIsVisible(false));
   };
+
+  if (!isVisible || message === "") return null;  // Do not render if message is empty
+
+  return (
+      <Animated.View style={[styles.toast, { opacity, backgroundColor: color }]}>
+        <TouchableOpacity onPress={closeToast} style={{width: '100%'}}>
+          <Text style={[styles.text, { color: 'white' }]}>{message}</Text>
+        </TouchableOpacity>
+      </Animated.View>
+  );
+};
+
   
 
 const styles = StyleSheet.create({

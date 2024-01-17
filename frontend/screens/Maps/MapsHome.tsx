@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import {
+  Alert, 
   StyleSheet,
   View,
   TouchableOpacity,
@@ -86,23 +87,28 @@ export const MapsHome: React.FC = () => {
 
   const navigateToGymData = () => {
     if (selectedGym) {
-      let gym;
-      switch (selectedGym.key) {
-        case "1":
-          gym = "arc";
-          break;
-        case "2":
-          gym = "crce";
-          break;
-        default:
-          gym = "dev"; // This is a default case if none of the keys match
+      if (selectedGym.key === "2") { // Assuming key "2" is for CRCE
+        // Show an alert or navigate to a Coming Soon screen
+        Alert.alert("Coming Soon", "This feature will be available soon.");
+      } else {
+        let gym;
+        switch (selectedGym.key) {
+          case "1":
+            gym = "arc";
+            break;
+          case "2":
+            gym = "crce";
+            break;
+          default:
+            gym = "dev";
+        }
+        navigation.navigate('GymData', { gym: gym, gymName: gym.toUpperCase() });
       }
-
-      navigation.navigate('GymData', { gym: gym, gymName: gym.toUpperCase() });
       setModalVisible(false);
       setNavigatedAway(true);
     }
   };
+  
 
   useFocusEffect(
     useCallback(() => {

@@ -7,11 +7,13 @@ import { MapsHome } from "./MapsHome";
 import { GymInfo } from "./Gym/GymInfo";
 import { GymData } from "./Gym/GymData";
 import { MapsSettings } from "../Settings/SettingsScreens/MapsSettings";
+import { MapsInfo } from "../Info/MapsInfo";
 export type MapsStackParamList = {
   MapsHome: undefined;
   MapsSettings: undefined;
   GymInfo: { gym?: string; gymName?: string };
   GymData: { gym?: string; gymName?: string };
+  MapsInfo: undefined;
 };
 
 const MapsStack = createStackNavigator<MapsStackParamList>();
@@ -66,6 +68,13 @@ export const MapsNav = () => {
         component={MapsSettings}
         options={({ navigation }) =>
           getCommonHeaderOptions(navigation, "Maps", "Settings")
+        }
+      />
+      <MapsStack.Screen
+        name="MapsInfo"
+        component={MapsInfo}
+        options={({ navigation }) =>
+          getCommonHeaderOptions(navigation, "Maps", "Information")
         }
       />
     </MapsStack.Navigator>

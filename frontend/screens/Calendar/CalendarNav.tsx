@@ -5,10 +5,12 @@ import Colors from "../../constants/Colors";
 import { CalendarSettings } from "../Settings/SettingsScreens/CalendarSettings";
 import { getCommonHeaderOptions } from "../CustomHeader";
 import { CalendarHome } from "./CalendarHome";
+import { CalendarInfo } from "../Info/CalendarInfo";
 
 export type CalendarStackParamList = {
   CalendarHome: undefined;
   CalendarSettings: undefined;
+  CalendarInfo: undefined;
 };
 
 const CalendarStack = createStackNavigator<CalendarStackParamList>();
@@ -40,6 +42,13 @@ export const CalendarNav = () => {
         component={CalendarSettings}
         options={({ navigation }) =>
           getCommonHeaderOptions(navigation, "Calendar", "Settings")
+        }
+      />
+      <CalendarStack.Screen
+        name="CalendarInfo"
+        component={CalendarInfo}
+        options={({ navigation }) =>
+          getCommonHeaderOptions(navigation, "Calendar", "Information")
         }
       />
     </CalendarStack.Navigator>

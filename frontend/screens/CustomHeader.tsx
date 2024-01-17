@@ -31,9 +31,9 @@ export const CustomHeader: React.FC<CustomHeaderProps> = ({
           color={Colors.uiucOrange}
         />
       </TouchableOpacity>
-      <TouchableOpacity style={{ marginRight: 10 }} onPress={onSettingsPress}>
+      {/* <TouchableOpacity style={{ marginRight: 10 }} onPress={onSettingsPress}>
         <MaterialIcons name="settings" size={28} color={Colors.uiucOrange} />
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   );
 };

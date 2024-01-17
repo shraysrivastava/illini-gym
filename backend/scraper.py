@@ -17,6 +17,12 @@ from datetime import datetime
 import pytz
 from selenium.webdriver.chrome.options import Options
 
+POPULAR_SECTIONS = set(["strength-and-conditioning-zone"])
+UPPER_LEVEL = set([])
+ENTRANCE_LEVEL = set(["gym-2", "gym-3", "mp-room-1", "mp-room-2", "gym-1", "mp-room-3", "mp-room-4", "mp-room-5", "mp-room-6"])
+CONCOURSE_LEVEL = set([])
+LOWER_LEVEL = set([])
+
 # Initialize Firebase Admin
 cred = credentials.Certificate("./firebase.json")
 firebase_admin.initialize_app(cred)
@@ -121,7 +127,7 @@ def scrape_and_update():
             text = element.text.split('\n')
 
         # Extract the relevant data from the text list
-            room_name = text[0].strip().lower().replace(" ", "-") if len(text) > 0 else None
+            section_key = text[0].strip().lower().replace(" ", "-") if len(text) > 0 else None
             status = text[1].strip("()") if len(text) > 1 else None
             last_count_data = text[2].split(' ') if len(text) > 2 else None
             last_count = last_count_data[2] if last_count_data and len(last_count_data) > 2 else None
@@ -131,19 +137,19 @@ def scrape_and_update():
         # Normalize the status to a boolean value
             is_open = True if status.lower() == "open" else False
 
-            if room_name:
-                data_[room_name] = {
-                    "name": room_name.replace("-", " ").title(),  # Convert back to title case for the name field
+            if section_key:
+                data_[section_key] = {
+                    "name": determine_room_name(section_key),  # Convert back to title case for the name field
                     "count": int(last_count),
                     "capacity": int(capacity),  # Added capacity
                     "isOpen": is_open,
                     "lastUpdated": last_updated,  # This should now hold the correct date and time
-                    "key": room_name,
+                    "key": section_key,
                     "gym": "arc",
-                    "isPopular": False,
-                    "level" : ""
+                    "isPopular": determine_popularity(section_key),
+                    "level" : determine_level(section_key)
                 }
-            print(f"Room Name: {room_name}")
+            print(f"Room Name: {section_key}")
             print(f"Status: {status}")
             print(f"Last Count: {last_count}")
             print(f"Capacity: {capacity}")
@@ -157,8 +163,8 @@ def scrape_and_update():
 
     # Update Firestore
     collection_id_one = "arc"
-    for room_name, room_data in data_.items():
-        doc_ref = db.collection(collection_id_one).document(room_name)
+    for section_key, room_data in data_.items():
+        doc_ref = db.collection(collection_id_one).document(section_key)
         doc_ref.set(room_data, merge=True)  # Use set with merge=True to create or update
     
     # Converting data to CSV format
@@ -181,7 +187,25 @@ def scrape_and_update():
     update_csv_data_in_firestore(new_csv_data)
     
 
+def determine_popularity(section_key) -> bool:
+    return bool(section_key in POPULAR_SECTIONS)
 
+def determine_room_name(section_key) -> str:
+    if section_key == "strength-and-conditioning-zone":
+        return "Strength & Conditioning"
+    else:
+        return section_key.replace("-", " ").title()
+def determine_level(section_key) -> str:
+    if section_key in UPPER_LEVEL:
+        return "Upper"
+    elif section_key in ENTRANCE_LEVEL:
+        return "Entrance"
+    elif section_key in CONCOURSE_LEVEL:
+        return "Concourse"
+    elif section_key in LOWER_LEVEL:
+        return "Lower"
+    else:
+        return "unknown"
 
 #THIS IS PHONY SHIT NOT REAL AT ALL FUCK CRCE
 #scrape_and_update() only used to test output of this

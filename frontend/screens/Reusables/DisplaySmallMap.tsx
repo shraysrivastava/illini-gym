@@ -82,7 +82,7 @@ const MapIconWithModal: React.FC<MapIconWithModalProps> = ({
                 renderIndicator={() => <></>}
               />
             )}
-            <Text style={styles.imageFooter}>{`${section.gym.charAt(0).toUpperCase()}${section.gym.slice(1)}`}</Text>
+            <Text style={styles.imageFooter}>{section.level} Level</Text>
           </View>
         </View>
       </Modal>

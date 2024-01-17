@@ -7,6 +7,7 @@ import firebase_admin
 from firebase_admin import credentials, firestore
 import threading
 import time
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -32,7 +33,8 @@ if __name__ == '__main__':
         try:
             scrape_and_update()  # Call the function to scrape and update Firebase
             # scrape_and_update_cerce()
-            print("Firestore updated. Waiting for the next update...")
+            current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            print(f"Firestore updated at {current_time}. Waiting for the next update...")
             time.sleep(1200)  # Sleep for 1 hour (adjust as needed)
         except Exception as e:
             print(f"Error updating Firestore: {str(e)}")

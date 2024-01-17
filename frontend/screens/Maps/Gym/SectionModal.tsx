@@ -99,7 +99,7 @@ const Section: React.FC<SectionProps> = React.memo(
           <MaterialIcons
             name={isFavorite ? "star" : "star-outline"}
             size={28}
-            color={isFavorite ? "green" : "gray"}
+            color={isFavorite ? "gold" : "gray"}
             style={modalStyles.starIcon}
             onPress={() => handleFavoritePress(section.key, section.name)}
           />
@@ -231,6 +231,7 @@ export const modalStyles = StyleSheet.create({
     color: "white", // Ensure the text is visible on the progress bar
   },
   closedText: {
+    marginLeft: 5,
     fontSize: 16,
     color: "#D9534F",
     alignSelf: "flex-start",

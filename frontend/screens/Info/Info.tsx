@@ -8,13 +8,7 @@ const InfoScreen = () => {
         <View style={styles.container}>
             <CustomText style={styles.heading}>Data Source Information</CustomText>
             <CustomText style={styles.text}>
-                Note: All data is sourced from
-            </CustomText>
-            <CustomText style={styles.sourceUrl}>
-                https://apps2.campusrec.illinois.edu/checkins/live
-            </CustomText>
-            <CustomText style={styles.text}>
-                and is updated periodically.
+                Note: All data is collected by Campus Recreation staff and is updated every 20 minutes.
             </CustomText>
         </View>
     );
@@ -23,7 +17,6 @@ const InfoScreen = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: Colors.midnightBlue,
         padding: 20,

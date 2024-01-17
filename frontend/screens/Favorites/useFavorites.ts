@@ -18,6 +18,7 @@ export interface SectionDetails {
   isPopular: boolean;
   key: string; // ie. gym-1, gym-2
   gym: string; // ie. arc, now integrated into each section
+  level: string;
 }
 
 export const useFavorites = (currentUserId: string | undefined) => {

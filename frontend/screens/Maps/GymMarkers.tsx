@@ -31,20 +31,4 @@ export const gymMarkers = [
       { day: 'Saturday-Sunday:', time: '11:00 AM - 3:00 PM' }
     ]
   },
-  {
-    key: '3',
-    title: 'DEV',
-    description: 'This is marker 3',
-    latitude: 40.110634, 
-    longitude: -88.229587,
-    address: 'poop lane, Urbana, IL 61801',
-    phone: '331-425-9141',
-    website: 'https://campusrec.illinois.edu/facilities/crce/',
-    imageUrl: 'https://campusrec.illinois.edu/sites/default/files/styles/big_button_image/public/paragraphs/big-buttons/UI-02-200712-105.jpg?h=41557373&itok=KEN2ur0H',
-    hours: [
-      { day: 'poop:', time: '7:00 AM - 10:00 PM' },
-      { day: 'Friday:', time: '7:00 AM - 9:00 PM' },
-      { day: 'Saturday-Sunday:', time: '11:00 AM - 3:00 PM' }
-    ]
-  }
 ];

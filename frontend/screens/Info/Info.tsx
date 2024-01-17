@@ -6,7 +6,7 @@ import CustomText from '../Reusables/CustomText';
 const InfoScreen = () => {
     return (
         <View style={styles.container}>
-            <CustomText style={styles.text}></CustomText>
+            <CustomText style={styles.text}>Note: all data is sourced from https://apps2.campusrec.illinois.edu/checkins/live and is updated periodically. </CustomText>
         </View>
     );
 };

@@ -47,9 +47,9 @@ export const FavoritesScreen: React.FC = () => {
   const { favorites, setFavorites, favoriteSections, setFavoriteSections,
           sectionNicknames, setSectionNicknames, fetchAndUpdateFavorites,
   } = useFavorites(currentUserId);
-  const openSections = favoriteSections.filter((favorite) => favorite.isOpen);
-  const closedSections = favoriteSections.filter((favorite) => !favorite.isOpen);  
   const [markedForDeletion, setMarkedForDeletion] = useState<string[]>([]);
+  const [originalFavorites, setOriginalFavorites] = useState<string[]>([]);
+  const [originalFavoriteSections, setOriginalFavoriteSections] = useState<SectionDetails[]>([]);
 
   useEffect(() => {
     fetchAndUpdateFavorites();
@@ -86,7 +86,8 @@ export const FavoritesScreen: React.FC = () => {
   const handleSave = useCallback(async () => {
     const userDocRef = doc(collection(db, "users"), currentUserId);
     const updates: Record<string, any> = {};
-  
+    
+    updates.favorites = favorites;
     // Handle deletions
     if (markedForDeletion.length > 0) {
       updates.favorites = favorites.filter(fav => !markedForDeletion.includes(fav));
@@ -132,12 +133,16 @@ export const FavoritesScreen: React.FC = () => {
         if (changesMade) {
           setToast({ message: "Changes Discarded", color: "red" });
         }
-        
+        setFavorites(originalFavorites);
+        setFavoriteSections(originalFavoriteSections);
         setEditableNicknames({});
         setMarkedForDeletion([]); 
         break;
       case "editModeOn":
         // setToast({ message: "Edit Mode Enabled", color: Colors.uiucOrange });
+        setOriginalFavorites([...favorites]);
+        setOriginalFavoriteSections([...favoriteSections]);
+
         break;
       default:
         // Handle any other cases or do nothing
@@ -152,6 +157,22 @@ export const FavoritesScreen: React.FC = () => {
     });
   }, [editableNicknames]
   );
+
+  const moveSection = (id: string, direction: "up" | "down"): void => {
+    const index = favorites.indexOf(id);
+    if (index < 0) return;
+  
+    const newIndex = direction === "up" ? index - 1 : index + 1;
+    if (newIndex < 0 || newIndex >= favorites.length) return;
+  
+    const newFavorites = [...favorites];
+    [newFavorites[index], newFavorites[newIndex]] = [newFavorites[newIndex], newFavorites[index]];
+    setFavorites(newFavorites);
+  
+    const newSections = [...favoriteSections];
+    [newSections[index], newSections[newIndex]] = [newSections[newIndex], newSections[index]];
+    setFavoriteSections(newSections);
+  };
 
   const Favorites: React.FC<FavoritesProps> = React.memo(
     ({ sections }) => (
@@ -168,6 +189,7 @@ export const FavoritesScreen: React.FC = () => {
           editableNicknames={editableNicknames}
           updateNickname={updateNickname}
           setToast={setToast}
+          moveSection={moveSection}
         />
         ))}
       </View>
@@ -190,11 +212,7 @@ export const FavoritesScreen: React.FC = () => {
         }
       >
         {favorites.length !== 0 ? (
-          <View>
-            <Favorites sections={openSections} />
-            <Favorites sections={closedSections} />
-          </View>
-
+            <Favorites sections={favoriteSections} />
         ) : (
           <FavoriteInstructions />
         )}

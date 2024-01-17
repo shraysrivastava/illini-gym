@@ -28,6 +28,7 @@ interface FavoriteModalProps {
   handleToggleMarkForDeletion: (id: string, sectionName:string, mark: boolean) => void;
   updateNickname: (id: string, newNickname: string) => void;
   setToast: (toast: ToastProps) => void;
+  moveSection: (id: string, direction: "up" | "down") => void;
 }
 
 const FavoriteModal: React.FC<FavoriteModalProps> = ({
@@ -40,6 +41,7 @@ const FavoriteModal: React.FC<FavoriteModalProps> = ({
   handleToggleMarkForDeletion,
   updateNickname,
   setToast,
+  moveSection
 }) => {
   const timeDiff = getTimeDifference(section.lastUpdated);
   const initialNickname =
@@ -115,20 +117,37 @@ const FavoriteModal: React.FC<FavoriteModalProps> = ({
           <CustomText style={modalStyles.sectionName}>
             {localNickname}
           </CustomText>
-          <MaterialCommunityIcons name="dumbbell" size={28} color="white" />
         </View>
       )}
 
-      <CustomText style={modalStyles.lastUpdated}>
-        Last Updated: {timeDiff}
-      </CustomText>
-      <View style={modalStyles.row}>
-        <SectionInfo section={section} />
-        <MapIconWithModal
-          section={section}
-          setToast={setToast}
-        />
-      </View>
+      {isEditMode ? (
+        <View style={modalStyles.row}>
+          <MaterialIcons
+            name="arrow-upward"
+            style={styles.icon}
+            size={32}
+            color="white"
+            onPress={() => moveSection(fullID, "up")}
+          />
+          <MaterialIcons
+            name="arrow-downward"
+            size={32}
+            color="white"
+            onPress={() => moveSection(fullID, "down")}
+          />
+        </View>
+      ) : (
+        <CustomText style={modalStyles.lastUpdated}>
+          Last Updated: {timeDiff}
+        </CustomText>
+      )}
+
+      
+        <View style={modalStyles.row}>
+          <SectionInfo section={section} />
+          <MapIconWithModal section={section} setToast={setToast} />
+        </View>
+      
     </View>
   );
 };
@@ -139,9 +158,13 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     fontSize: 20,
     fontWeight: "bold",
-    flex: 1, // Ensures name takes up the available space
-    borderBottomWidth: 1,
-    borderBottomColor: "white",
+    flex: 1,
+    borderBottomWidth: 2,
+    borderBottomColor: Colors.uiucOrange, // Highlight color
+    backgroundColor: "rgba(255, 255, 255, 0.1)", // Subtle background
+    paddingHorizontal: 5,
+    paddingVertical: 3,
+    borderRadius: 4, // Optional: rounded corners
   },
   fullScreenOverlay: {
     flex: 1,
@@ -157,6 +180,9 @@ const styles = StyleSheet.create({
   markedForDeletion: {
     opacity: 0.5, // Or use any other visual representation
   },
+icon: {
+  marginVertical: 5,
+}
 });
 
 export default React.memo(FavoriteModal);

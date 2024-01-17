@@ -1,16 +1,14 @@
-import React from "react";
-import { View, Dimensions } from "react-native";
-import * as Progress from "react-native-progress";
+import React, { useState } from "react";
+import { View, Modal, TouchableOpacity, Text, StyleSheet } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { DocumentData } from "firebase/firestore";
-// import { dataStyles } from "../../Reusables/ModalStyles";
 import CustomText from "../../Reusables/CustomText";
-import { StyleSheet } from "react-native";
 import Colors from "../../../constants/Colors";
 import { getTimeDifference } from "../../Reusables/Utilities";
 import ProgressBar from "../../Reusables/ProgressBar";
-import MapIconWithModalGym from "../../Reusables/DisplaySmallMapGym";
 import { ToastProps } from "../../Reusables/Toast";
+import fetchImageFromFirebase from "../../../firebase/images";
+import ImageViewer from "react-native-image-zoom-viewer";
 
 interface SectionProps {
   section: DocumentData;
@@ -66,7 +64,30 @@ export const SectionInfo: React.FC<{ section: DocumentData }> = ({
 
 const Section: React.FC<SectionProps> = React.memo(
   ({ section, handleFavoritePress, isFavorite, setToast }) => {
+    const [imageURL, setImageURL] = useState<string | null>(null);
+    const [isImagePopupVisible, setImagePopupVisible] = useState(false);
+
+    const handleMapIconClick = async () => {
+      try {
+        const imagePath = `images/${section.gym}=${section.key}.png`;
+        const url = await fetchImageFromFirebase(imagePath);
+        if (url) {
+          setImageURL(url);
+          setImagePopupVisible(true);
+        } else {
+          setToast({ message: "Image not found", color: "red" });
+        }
+      } catch (error) {
+        setToast({ message: "Error loading map", color: "red" });
+      }
+    };
+
+    const closeImagePopup = () => {
+      setImagePopupVisible(false);
+    };
+
     const timeDiff = getTimeDifference(section.lastUpdated);
+
     return (
       <View style={modalStyles.individualSectionContainer}>
         {/* Top Row: Visibility Icon, Section Name, and Star Icon */}
@@ -83,7 +104,6 @@ const Section: React.FC<SectionProps> = React.memo(
             onPress={() => handleFavoritePress(section.key, section.name)}
           />
         </View>
-
         {/* Middle Row: Last Updated */}
         <CustomText style={modalStyles.lastUpdated}>
           Last Updated: {timeDiff}
@@ -91,12 +111,49 @@ const Section: React.FC<SectionProps> = React.memo(
 
         {/* Bottom Row: Either Progress Bar or 'Section Closed' Text */}
         <View style={modalStyles.row}>
-        <SectionInfo section={section} />
-        <MapIconWithModalGym
-          section={section}
-          setToast={setToast}
-        />
-      </View>
+          <SectionInfo section={section} />
+          <MaterialIcons
+            name="map"
+            size={24}
+            color="white"
+            style={modalStyles.mapIcon}
+            onPress={handleMapIconClick}
+          />
+        </View>
+
+        <Modal
+          visible={isImagePopupVisible}
+          transparent={true}
+          onRequestClose={closeImagePopup}
+        >
+          <View style={modalStyles.fullScreenOverlay}>
+            <View style={modalStyles.modalContent}>
+              <View style={modalStyles.modalHeader}>
+                <Text style={modalStyles.imageHeader}>
+                  {`${section.gym}: ${section.name}`}
+                </Text>
+                <TouchableOpacity
+                  style={modalStyles.closeButton}
+                  onPress={closeImagePopup}
+                >
+                  <MaterialIcons name="close" size={30} color="red" />
+                </TouchableOpacity>
+              </View>
+
+              {imageURL && (
+                <ImageViewer
+                  imageUrls={[{ url: imageURL }]}
+                  backgroundColor="transparent"
+                  enableSwipeDown={true}
+                  onSwipeDown={closeImagePopup}
+                  style={modalStyles.imageViewerContainer}
+                  renderIndicator={() => <></>}
+                />
+              )}
+              <Text style={modalStyles.imageFooter}>{`${section.gym}`}</Text>
+            </View>
+          </View>
+        </Modal>
       </View>
     );
   }
@@ -177,6 +234,48 @@ export const modalStyles = StyleSheet.create({
     fontSize: 16,
     color: "#D9534F",
     alignSelf: "flex-start",
+  },
+  fullScreenOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.85)",
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "column",
+  },
+  imageViewerContainer: {
+    width: "100%",
+    flex: 1,
+  },
+  modalContent: {
+    width: "90%",
+    height: "40%",
+    backgroundColor: "white",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: 15,
+    borderRadius: 10,
+  },
+  modalHeader: {
+    alignItems: "center",
+    alignSelf: "stretch",
+  },
+  imageHeader: {
+    color: Colors.uiucOrange,
+    fontSize: 18,
+    fontWeight: "bold",
+    maxWidth: "85%", // Adjust the percentage as needed
+    textAlign: "center", // Align text in the center
+  },
+  closeButton: {
+    position: "absolute",
+    top: 0,
+    right: 0,
+    zIndex: 1,
+  },
+  imageFooter: {
+    color: Colors.uiucOrange,
+    fontSize: 20,
+    fontWeight: "bold",
   },
   // ... other styles ...
 });

@@ -33,6 +33,6 @@ if __name__ == '__main__':
             scrape_and_update()  # Call the function to scrape and update Firebase
             # scrape_and_update_cerce()
             print("Firestore updated. Waiting for the next update...")
-            time.sleep(3600/3)  # Sleep for 1 hour (adjust as needed)
+            time.sleep(1200)  # Sleep for 1 hour (adjust as needed)
         except Exception as e:
             print(f"Error updating Firestore: {str(e)}")

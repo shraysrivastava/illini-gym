@@ -30,10 +30,10 @@ def scrape_and_update():
     chrome_options.add_argument("--disable-gpu")  # Applicable to Windows OS only
     chrome_options.add_argument("--disable-dev-shm-usage")  # Overcome limited resource problems
     chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument('headless')  # Run Chrome in headless mode
     driver = webdriver.Chrome(options=chrome_options)
     url = 'https://apps2.campusrec.illinois.edu/checkins/live'
     options = webdriver.ChromeOptions()
-    options.add_argument('headless')  # Run Chrome in headless mode
     browser = webdriver.Chrome(options=options)
     browser.get(url)
 
@@ -239,3 +239,7 @@ def update_csv_data_in_firestore(new_csv_data):
         print("CSV data updated in Firestore.")
     except Exception as e:
         print(f"Error updating Firestore: {e}")
+
+
+    
+    

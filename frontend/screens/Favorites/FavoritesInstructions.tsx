@@ -65,6 +65,7 @@ const FavoriteInstructions = () => {
         sections={demoSections}
         pressedSections={{}}
         handleFavoritePress={() => {}}
+        setToast={() => {}} 
       />
     </View>
   );

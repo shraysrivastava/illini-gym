@@ -4,6 +4,8 @@ import {
   RefreshControl,
   View,
   Keyboard,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 
 import { db, auth } from "../../firebase/firebaseConfig";
@@ -26,6 +28,8 @@ import FavoriteModal from "./FavoriteModal";
 import { FavoriteStackParamList } from "./FavoritesNav";
 import { useNavigation } from '@react-navigation/native';
 import { useFavorites, SectionDetails } from './useFavorites';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+
 
 interface FavoritesProps {
   sections: SectionDetails[];
@@ -208,29 +212,32 @@ export const FavoritesScreen: React.FC = () => {
   );
 
   return (
+    <KeyboardAwareScrollView
+    style={styles.scrollView}
+    contentContainerStyle={styles.contentContainer}
+      resetScrollToCoords={{ x: 0, y: 0 }}
+      scrollEnabled={true}
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+          colors={[Colors.beige]} // for Android
+          tintColor={Colors.beige} // Color for the spinner (iOS)
+          progressBackgroundColor="#ffffff"
+        />
+      }
+    >
     <View style={styles.container}>
-      <ScrollView
-        style={styles.scrollView}
-        contentContainerStyle={styles.contentContainer}
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={onRefresh}
-            colors={[Colors.beige]} // for Android
-            tintColor={Colors.beige} // Color for the spinner (iOS)
-            progressBackgroundColor="#ffffff"
-          />
-        }
-      >
+      
         {favorites.length !== 0 ? (
             <Favorites sections={favoriteSections} />
         ) : (
           <FavoriteInstructions />
         )}
-      </ScrollView>
 
       <CustomToast message={toast.message} color={toast.color} />
     </View>
+    </KeyboardAwareScrollView>
   );
 };
 
@@ -242,6 +249,7 @@ const styles = StyleSheet.create({
   scrollView: {
     flex: 1,
     width: "100%",
+    backgroundColor: Colors.midnightBlue,
   },
   contentContainer: {
     paddingBottom: 15,

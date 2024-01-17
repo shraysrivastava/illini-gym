@@ -6,7 +6,7 @@ import CustomText from '../Reusables/CustomText';
 const InfoScreen = () => {
     return (
         <View style={styles.container}>
-            <CustomText style={styles.text}>put disclaimer here</CustomText>
+            <CustomText style={styles.text}></CustomText>
         </View>
     );
 };

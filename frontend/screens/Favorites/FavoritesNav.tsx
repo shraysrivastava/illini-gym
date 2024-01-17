@@ -57,12 +57,12 @@ export const FavoritesNav = () => {
       </View>
     ) : (
       <View style={{ flexDirection: "row" }}>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           onPress={() => navigation.navigate("FavoriteSettings")}
           style={{ marginLeft: 10 }}
         >
           <MaterialIcons name="settings" size={32} color={Colors.uiucOrange} />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <TouchableOpacity
           onPress={() => navigation.navigate("DisplayLargeMap")}
           style={{ marginLeft: 10 }}

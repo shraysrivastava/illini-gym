@@ -18,10 +18,10 @@ import pytz
 from selenium.webdriver.chrome.options import Options
 
 POPULAR_SECTIONS = set(["strength-and-conditioning-zone"])
-UPPER_LEVEL = set([])
-ENTRANCE_LEVEL = set(["gym-2", "gym-3", "mp-room-1", "mp-room-2", "gym-1", "mp-room-3", "mp-room-4", "mp-room-5", "mp-room-6"])
-CONCOURSE_LEVEL = set([])
-LOWER_LEVEL = set([])
+UPPER_LEVEL = set(["upper-level",])
+ENTRANCE_LEVEL = set(["gym-2", "gym-3", "mp-room-1", "mp-room-2", "gym-1", "mp-room-3", "mp-room-4", "mp-room-5", "mp-room-6","combat-room","entrance-level-fitness-area"])
+CONCOURSE_LEVEL = set(["strength-and-conditioning-zone","sauna","rock-wall","mp-room-7","meeting-room-2","meeting-room-3","instructional-kitchen","indoor-pool",])
+LOWER_LEVEL = set(["squash-courts","raquetball-courts","power-pod","olympic-pod","lower-level","hiit-pod"])
 
 # Initialize Firebase Admin
 cred = credentials.Certificate("./firebase.json")

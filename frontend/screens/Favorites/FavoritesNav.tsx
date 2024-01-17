@@ -8,11 +8,14 @@ import { FavoritesScreen } from "./FavoritesScreen";
 import { getCommonHeaderOptions } from "../CustomHeader";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import DisplayLargeMap from "../Reusables/DisplayLargeMap";
+import InfoScreen from "../Info/Info";
+import { FavoritesInfo } from "../Info/FavoritesInfo";
 
 export type FavoriteStackParamList = {
   FavoritesScreen: { isEditMode: boolean, action: string};
   FavoriteSettings: undefined;
   DisplayLargeMap: undefined;
+  Info: undefined;
 };
 
 const FavoritesStack = createStackNavigator<FavoriteStackParamList>();
@@ -86,13 +89,19 @@ export const FavoritesNav = () => {
       </TouchableOpacity>
     ) : (
       <View style={{ flexDirection: "row" }}>
-        
+        <TouchableOpacity
+          onPress={() => navigation.navigate("Info")}
+          style={{ marginRight: 10 }}
+        >
+          <MaterialIcons name="info-outline" size={32} color={Colors.uiucOrange} />
+        </TouchableOpacity>
         <TouchableOpacity
           onPress={() => enableEditMode(navigation)}
           style={{ marginRight: 10 }}
         >
           <MaterialIcons name="edit" size={32} color={Colors.uiucOrange} />
         </TouchableOpacity>
+        
       </View>
     );
 
@@ -141,6 +150,17 @@ export const FavoritesNav = () => {
         component={DisplayLargeMap}
         options={() => ({
           headerTitle: "View Arc Map",
+          headerTitleStyle: {
+            fontSize: 20, 
+          },
+        })}
+        
+      />
+      <FavoritesStack.Screen
+        name="Info"
+        component={FavoritesInfo}
+        options={() => ({
+          headerTitle: "Information",
           headerTitleStyle: {
             fontSize: 20, 
           },

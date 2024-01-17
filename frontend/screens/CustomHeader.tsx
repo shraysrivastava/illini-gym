@@ -68,7 +68,15 @@ export const getCommonHeaderOptions = (navigation: any, stackName: string, title
       }}
       onInformationsPress={() => {
         // This is where notification page goes
-        console.log("Information icon pressed.");
+        if (stackName === "Favorites") {
+          navigation.navigate("FavoritesInfo");
+        }else if (stackName === "Calendar") {
+          navigation.navigate("CalendarInfo");
+        } else if (stackName === "Maps") {
+          navigation.navigate("MapsInfo");
+        } else {
+          console.log("Settings icon pressed.");
+        }
       }}
     />
   ),

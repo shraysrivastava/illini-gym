@@ -145,7 +145,8 @@ const FavoriteModal: React.FC<FavoriteModalProps> = ({
       
         <View style={modalStyles.row}>
           <SectionInfo section={section} />
-          <MapIconWithModal section={section} setToast={setToast} />
+          <MapIconWithModal section={section} setToast={setToast}  localNickname={localNickname}
+ />
         </View>
       
     </View>

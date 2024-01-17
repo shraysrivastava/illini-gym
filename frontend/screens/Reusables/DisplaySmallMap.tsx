@@ -11,11 +11,13 @@ import { SectionDetails } from "../Favorites/useFavorites";
 interface MapIconWithModalProps {
   section: SectionDetails;
   setToast: (toast: ToastProps) => void;
+  localNickname: string;
 }
 
 const MapIconWithModal: React.FC<MapIconWithModalProps> = ({
   section,
   setToast,
+  localNickname,
 }) => {
   const [imageURL, setImageURL] = useState<string | null>(null);
   const [isImagePopupVisible, setImagePopupVisible] = useState(false);
@@ -28,7 +30,7 @@ const MapIconWithModal: React.FC<MapIconWithModalProps> = ({
         setImageURL(url);
         setImagePopupVisible(true);
       } else {
-        setToast({ message: "Image not found", color: "red" });
+        setToast({ message: localNickname + " Image not found", color: "red" });
       }
     } catch (error) {
       setTimeout(

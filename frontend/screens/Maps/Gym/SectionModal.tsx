@@ -75,7 +75,7 @@ const Section: React.FC<SectionProps> = React.memo(
           setImageURL(url);
           setImagePopupVisible(true);
         } else {
-          setToast({ message: "Image not found", color: "red" });
+          setToast({ message: section.name +  " Image not found", color: "red" });
         }
       } catch (error) {
         setToast({ message: "Error loading map", color: "red" });

@@ -2,3 +2,6 @@
 firebase.json
 __pycache__
 ```
+cron.yaml
+requirements.txt
+.gcloudignore

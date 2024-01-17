@@ -15,6 +15,7 @@ from faker import Faker
 import random
 from datetime import datetime
 import pytz
+from selenium.webdriver.chrome.options import Options
 
 # Initialize Firebase Admin
 cred = credentials.Certificate("./firebase.json")
@@ -22,6 +23,14 @@ firebase_admin.initialize_app(cred)
 db = firestore.client()
 
 def scrape_and_update():
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.add_argument("start-maximized")  # Open the browser in maximized mode
+    chrome_options.add_argument("disable-infobars")  # Disable infobars
+    chrome_options.add_argument("--disable-extensions")  # Disable extensions
+    chrome_options.add_argument("--disable-gpu")  # Applicable to Windows OS only
+    chrome_options.add_argument("--disable-dev-shm-usage")  # Overcome limited resource problems
+    chrome_options.add_argument("--no-sandbox")
+    driver = webdriver.Chrome(options=chrome_options)
     url = 'https://apps2.campusrec.illinois.edu/checkins/live'
     options = webdriver.ChromeOptions()
     options.add_argument('headless')  # Run Chrome in headless mode
@@ -66,11 +75,44 @@ def scrape_and_update():
     '/html/body/div/div/div[2]/div[34]/div/div[2]',
     '/html/body/div/div/div[2]/div[35]/div/div[2]',
     '/html/body/div/div/div[2]/div[36]/div/div[2]',
+    '/html/body/div/div/div[4]/div[1]',
+    '/html/body/div/div/div[4]/div[2]',
+    '/html/body/div/div/div[4]/div[3]',
+    '/html/body/div/div/div[4]/div[4]',
+    '/html/body/div/div/div[4]/div[5]',
+    '/html/body/div/div/div[4]/div[6]',
+    '/html/body/div/div/div[4]/div[7]',
+    '/html/body/div/div/div[4]/div[8]',
+    '/html/body/div/div/div[4]/div[10]',
+    '/html/body/div/div/div[4]/div[11]',
+    '/html/body/div/div/div[4]/div[12]',
+    '/html/body/div/div/div[4]/div[13]',
+    '/html/body/div/div/div[4]/div[14]',
+    '/html/body/div/div/div[4]/div[15]',
+    '/html/body/div/div/div[4]/div[16]',
+    '/html/body/div/div/div[4]/div[17]',
+    '/html/body/div/div/div[4]/div[18]',
+    '/html/body/div/div/div[4]/div[19]',
+    '/html/body/div/div/div[4]/div[20]',
+    '/html/body/div/div/div[4]/div[21]',
+    '/html/body/div/div/div[4]/div[22]',
+    '/html/body/div/div/div[4]/div[23]',
+    '/html/body/div/div/div[4]/div[24]',
+    '/html/body/div/div/div[4]/div[25]',
+    '/html/body/div/div/div[4]/div[26]',
+    '/html/body/div/div/div[4]/div[27]',
+    '/html/body/div/div/div[4]/div[28]',
+    '/html/body/div/div/div[4]/div[29]',
+    '/html/body/div/div/div[4]/div[30]',
+    '/html/body/div/div/div[4]/div[31]',
+    '/html/body/div/div/div[4]/div[32]',
+    '/html/body/div/div/div[4]/div[33]',
+    '/html/body/div/div/div[4]/div[34]',
+    '/html/body/div/div/div[4]/div[35]',
+    '/html/body/div/div/div[4]/div[36]',
     ]
 
     data_ = {}
-    # Your scraping logic goes here
-    # ...
     for path in xpaths:
         try:
             element = WebDriverWait(browser, 0).until(
@@ -98,7 +140,8 @@ def scrape_and_update():
                     "lastUpdated": last_updated,  # This should now hold the correct date and time
                     "key": room_name,
                     "gym": "arc",
-                    "isPopular": False
+                    "isPopular": False,
+                    "level" : ""
                 }
             print(f"Room Name: {room_name}")
             print(f"Status: {status}")

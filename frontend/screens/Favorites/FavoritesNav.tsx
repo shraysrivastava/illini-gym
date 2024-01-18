@@ -52,7 +52,7 @@ export const FavoritesNav = () => {
           }}
           style={{ marginLeft: 10 }}
         >
-          <MaterialIcons name="close" size={28} color="red" />
+          <MaterialIcons name="close" size={32} color="red" />
         </TouchableOpacity>
       </View>
     ) : (
@@ -67,7 +67,7 @@ export const FavoritesNav = () => {
           onPress={() => navigation.navigate("DisplayLargeMap")}
           style={{ marginLeft: 10 }}
         >
-          <MaterialIcons name="map" size={32} color={Colors.uiucOrange} />
+          <MaterialIcons name="map" size={32} color={Colors.beige} />
         </TouchableOpacity>
       </View>
     );
@@ -93,7 +93,7 @@ export const FavoritesNav = () => {
           onPress={() => navigation.navigate("Info")}
           style={{ marginRight: 10 }}
         >
-          <MaterialIcons name="info-outline" size={32} color={Colors.uiucOrange} />
+          <MaterialIcons name="info-outline" size={32} color={Colors.beige} />
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => enableEditMode(navigation)}

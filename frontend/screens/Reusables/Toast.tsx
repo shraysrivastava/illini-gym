@@ -27,7 +27,7 @@ const CustomToast: React.FC<ToastProps> = ({ message, color }) => {
           duration: 500,
           useNativeDriver: true,
         }).start(() => setIsVisible(false));
-      }, 2000);
+      }, 2500);
 
       return () => clearTimeout(timeout);
     } else {

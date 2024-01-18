@@ -21,6 +21,7 @@ import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { MapsStackParamList } from "./MapsNav";
 import Colors from "../../constants/Colors";
 import { Linking, Platform } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 
 const INITIAL_REGION = {
   latitude: 40.10385157161382,
@@ -298,7 +299,7 @@ export const MapsHome: React.FC = () => {
                   style={styles.button}
                   onPress={navigateToGymData}
                 >
-                  <Text style={styles.buttonText}>Gym Data</Text>
+                  <Text style={styles.buttonText}>Section Data</Text>
                 </TouchableOpacity>
               </View>
             </View>

@@ -38,7 +38,7 @@ export const BottomNav = (props: NavProps) => {
             borderTopWidth: 2,
           },
           tabBarActiveTintColor: Colors.uiucOrange,
-          tabBarInactiveTintColor: Colors.gray,
+          tabBarInactiveTintColor: Colors.uiucBlue,
           tabBarHideOnKeyboard: true,
         }}
       >

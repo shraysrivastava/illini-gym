@@ -27,25 +27,25 @@ export const CustomHeader: React.FC<CustomHeaderProps> = ({
     >
       {title === "ARC Section Data" && (
         <TouchableOpacity
-        style={{ marginRight: 15 }}
+        style={{ marginRight: 10 }}
         onPress={onMapsPress}
       >
         <MaterialIcons
           name="map"
-          size={28}
+          size={32}
           color={Colors.uiucOrange}
         />
       </TouchableOpacity>
       )}
       {title !== "View Arc Map" && title !== "Information" && (
         <TouchableOpacity
-        style={{ marginRight: 15 }}
+        style={{ marginRight: 10 }}
         onPress={onInformationsPress}
       >
         <MaterialIcons
           name="info-outline"
-          size={28}
-          color={Colors.uiucOrange}
+          size={32}
+          color={Colors.beige}
         />
       </TouchableOpacity>
         )}

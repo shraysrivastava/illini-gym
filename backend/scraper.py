@@ -22,6 +22,12 @@ UPPER_LEVEL = set(["upper-level",])
 ENTRANCE_LEVEL = set(["gym-2", "gym-3", "mp-room-1", "mp-room-2", "gym-1", "mp-room-3", "mp-room-4", "mp-room-5", "mp-room-6","combat-room","entrance-level-fitness-area"])
 CONCOURSE_LEVEL = set(["strength-and-conditioning-zone","sauna","rock-wall","mp-room-7","meeting-room-2","meeting-room-3","instructional-kitchen","indoor-pool",])
 LOWER_LEVEL = set(["squash-courts","raquetball-courts","power-pod","olympic-pod","lower-level","hiit-pod"])
+EDIT_ROOM_NAMES = {
+    "strength-and-conditioning-zone": "Strength & Conditioning",
+}
+EDIT_CAPACITY = {
+    "strength-and-conditioning-zone": 250,
+}
 
 # Initialize Firebase Admin
 cred = credentials.Certificate("./firebase.json")
@@ -141,7 +147,7 @@ def scrape_and_update():
                 data_[section_key] = {
                     "name": determine_room_name(section_key),  # Convert back to title case for the name field
                     "count": int(last_count),
-                    "capacity": int(capacity),  # Added capacity
+                    "capacity": determine_capacity(section_key, int(capacity)),  # Added capacity
                     "isOpen": is_open,
                     "lastUpdated": last_updated,  # This should now hold the correct date and time
                     "key": section_key,
@@ -191,10 +197,17 @@ def determine_popularity(section_key) -> bool:
     return bool(section_key in POPULAR_SECTIONS)
 
 def determine_room_name(section_key) -> str:
-    if section_key == "strength-and-conditioning-zone":
-        return "Strength & Conditioning"
+    if section_key in EDIT_ROOM_NAMES:
+        return EDIT_ROOM_NAMES[section_key]
     else:
         return section_key.replace("-", " ").title()
+    
+def determine_capacity(section_key, capacity) -> int:
+    if section_key in EDIT_CAPACITY:
+        return EDIT_CAPACITY[section_key]
+    else:
+        return capacity
+
 def determine_level(section_key) -> str:
     if section_key in UPPER_LEVEL:
         return "Upper"

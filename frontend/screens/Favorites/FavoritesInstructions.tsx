@@ -41,7 +41,7 @@ const FavoriteInstructions: React.FC = () => {
             Select Your Gym
           </CustomText>
           <CustomText style={styles.instructionText}>
-            Choose a gym and click on Gym Data to view its sections.
+            Choose a gym and click on "Section Data" to view its sections.
           </CustomText>
         </View>
       </View>
@@ -83,7 +83,8 @@ const FavoriteInstructions: React.FC = () => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
+    paddingTop: 20,
+    paddingHorizontal: 10,
     backgroundColor: Colors.midnightBlue, // Assuming this is your dark blue color
   },
   instructionContainer: {

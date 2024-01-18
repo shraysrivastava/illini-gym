@@ -34,12 +34,15 @@ const InfoScreen = () => {
     };
 
     const handleCancel = () => {
+        // setToast({ message: "Username not updated", color: "red" });
         setIsEditing(false);
     };
 
     const handleSave = async () => {
         if (currentUserId) {
-            setToast({ message: "Username updated successfully", color: "green" });
+            if (tempName !== ''){
+                setToast({ message: "Username updated successfully", color: "green" });
+            }
             const userDocRef = doc(db, "users", currentUserId);
             await updateDoc(userDocRef, { username: tempName });
             setUserName(tempName);
@@ -48,46 +51,56 @@ const InfoScreen = () => {
     };
     return (
       <ScrollView style={styles.container}>
-        {/* <CustomText style={styles.heading}>Using the App</CustomText> */}
         <CustomText style={styles.text}>
-                Here’s a quick reminder on how to make the most of the app:
-            </CustomText>
-            {isEditing ? (
-                <View style={styles.editContainer}>
-                    <TextInput
-                        style={styles.editNameInput}
-                        value={tempName}
-                        onChangeText={setTempName}
-                        placeholder="Set Username (optional)"
-                        placeholderTextColor="white"
-                        autoFocus={true}
-                        maxLength={15}
-                    />
-                    <View style={styles.buttonContainer}>
-                        <TouchableOpacity style={styles.cancelButton} onPress={handleCancel}>
-                            <Text style={styles.buttonText}>Cancel</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-                            <Text style={styles.buttonText}>Save</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-            ) : (
-                <TouchableOpacity style={styles.nameDisplayContainer} onPress={handleEdit}>
-                <View style={styles.nameContainer}>
-                    <Text style={styles.nameLabel}>Username: </Text>
-                    <CustomText style={styles.userName}>
-                        {userName || "Tap to set username"}
-                    </CustomText>
-                </View>
-                <MaterialIcons name="edit" size={28} color={Colors.uiucOrange} />
-            </TouchableOpacity>
-            )}
-        <FavoriteInstructions />
-        <CustomText style={styles.disclaimer}>
-          Note: Data is updated every 20 minutes by Campus Recreation staff. We
-          strive for accuracy but are not responsible for any discrepancies.
+          Maximize your gym visits with these helpful tips:
         </CustomText>
+
+        {isEditing ? (
+          <View style={styles.editContainer}>
+            <TextInput
+              style={styles.editNameInput}
+              value={tempName}
+              onChangeText={setTempName}
+              placeholder=" Enter Username (optional)"
+              placeholderTextColor="rgba(255, 255, 255, 0.6)"
+              autoFocus={true}
+              maxLength={15}
+            />
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity
+                style={styles.cancelButton}
+                onPress={handleCancel}
+              >
+                <Text style={styles.buttonText}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
+                <Text style={styles.buttonText}>Save</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        ) : (
+          <TouchableOpacity
+            style={styles.nameDisplayContainer}
+            onPress={handleEdit}
+          >
+            <View style={styles.nameContainer}>
+              <Text style={styles.nameLabel}>Username: </Text>
+              <CustomText style={styles.userName}>
+                {userName || "Tap to set"}
+              </CustomText>
+            </View>
+            {/* <MaterialIcons name="edit" size={28} color={Colors.uiucOrange} /> */}
+          </TouchableOpacity>
+        )}
+
+        <FavoriteInstructions />
+
+        <CustomText style={styles.disclaimer}>
+          Data is provided by Campus Recreation staff and reflects usable space
+          occupancy, not maximum capacity. Accuracy depends on timely updates
+          from staff.
+        </CustomText>
+
         <CustomToast message={toast.message} color={toast.color} />
       </ScrollView>
     );
@@ -121,6 +134,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         marginTop: 20,
         marginBottom: 20,
+        paddingBottom: 20,
         fontStyle: 'italic',
     },
     editContainer: {
@@ -128,7 +142,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 15,
     },
     editNameInput: {
-        backgroundColor: "rgba(255, 255, 255, 0.3)", // Slightly more visibility
+        backgroundColor: "rgba(255, 255, 255, 0.15)", // Slightly more visibility
         color: "white",
         fontSize: 18,
         fontWeight: "bold",
@@ -182,6 +196,11 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 16,
         fontWeight: 'bold',
+    },
+    editPrompt: {
+        fontSize: 18,
+        color: 'white',
+        marginBottom: 10,
     },
 });
 

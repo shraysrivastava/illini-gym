@@ -195,7 +195,7 @@ export const modalStyles = StyleSheet.create({
     // Removed absolute positioning
   },
   lastUpdated: {
-    fontSize: 16,
+    fontSize: 15,
     color: "gray",
     alignSelf: "flex-start",
     marginVertical: 5,

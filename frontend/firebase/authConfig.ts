@@ -29,9 +29,9 @@ export const signInAnonymouslyUser = (setError: React.Dispatch<React.SetStateAct
 export const createNewAccount = async () => {
     try {
         await AsyncStorage.clear();
-        console.log('AsyncStorage has been cleared');
+        // console.log('AsyncStorage has been cleared');
       } catch (error) {
-        console.error('Error clearing AsyncStorage:', error);
+        // console.error('Error clearing AsyncStorage:', error);
       }
 };
 
@@ -67,9 +67,9 @@ export const signOutUser = async (setError: React.Dispatch<React.SetStateAction<
     signOut(auth).catch((error: FirebaseError) => authError(error, setError));
     try {
         await AsyncStorage.clear();
-        console.log('AsyncStorage has been cleared');
+        // console.log('AsyncStorage has been cleared');
       } catch (error) {
-        console.error('Error clearing AsyncStorage:', error);
+        // console.error('Error clearing AsyncStorage:', error);
       }
 };
 

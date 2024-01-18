@@ -51,7 +51,7 @@ export const useFavorites = (currentUserId: string | undefined) => {
       const validSections: SectionDetails[] = fetchedSections.filter((section): section is SectionDetails => section !== null);
       setFavoriteSections(validSections);
     } catch (error) {
-      console.error("Error fetching documents:", error);
+      // console.error("Error fetching documents:", error);
     }
   }, [currentUserId]);
 

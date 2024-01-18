@@ -5,7 +5,7 @@ export const getTimeDifference = (lastUpdated: string): string => {
   const now = moment();
 
   if (!lastUpdatedMoment.isValid()) {
-    console.error('Invalid date format');
+    // console.error('Invalid date format');
     return 'Date format error';
   }
 

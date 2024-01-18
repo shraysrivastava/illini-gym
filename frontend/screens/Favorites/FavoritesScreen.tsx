@@ -145,7 +145,7 @@ export const FavoritesScreen: React.FC = () => {
         await fetchAndUpdateFavorites();
         setIsLoading(false);
       } catch (error) {
-        console.error("Error updating data:", error);
+        // console.error("Error updating data:", error);
         setToast({ message: "Error updating data", color: "red" });
       }
     }

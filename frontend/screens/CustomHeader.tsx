@@ -82,7 +82,7 @@ export const getCommonHeaderOptions = (navigation: any, stackName: string, title
         } else if (stackName === "Maps") {
           navigation.navigate("MapsSettings");
         } else {
-          console.log("Settings icon pressed.");
+          // console.log("Settings icon pressed.");
         }
       }}
       onInformationsPress={() => {
@@ -94,7 +94,7 @@ export const getCommonHeaderOptions = (navigation: any, stackName: string, title
         } else if (stackName === "Maps") {
           navigation.navigate("MapsInfo");
         } else {
-          console.log("Settings icon pressed.");
+          // console.log("Settings icon pressed.");
         }
       }}
       onMapsPress={() => {

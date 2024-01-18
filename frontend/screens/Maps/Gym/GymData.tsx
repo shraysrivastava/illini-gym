@@ -59,7 +59,7 @@ export const GymData: React.FC<GymDataProps> = ({ route }) => {
         setGymData(fetchedData);
       })
       .catch((err: FirestoreError) => {
-        console.error("Error fetching {gym} data: ", err.message);
+        // console.error("Error fetching {gym} data: ", err.message);
       });
   }, [gym]);
 
@@ -70,7 +70,7 @@ export const GymData: React.FC<GymDataProps> = ({ route }) => {
       if (docSnap.exists()) {
         const userData = docSnap.data();
         const favorites = userData.favorites || [];
-        console.log(favorites);
+        // console.log(favorites);
         // Filter favorites for the current gym and update pressedSections
         const updatedPressedSections: { [key: string]: boolean } = {};
         favorites.forEach((favoriteKey: string) => {
@@ -81,10 +81,10 @@ export const GymData: React.FC<GymDataProps> = ({ route }) => {
         });
         setPressedSections(updatedPressedSections);
       } else {
-        console.log("No such document!");
+        // console.log("No such document!");
       }
     } catch (error) {
-      console.error("Error fetching user data: ", error);
+      // console.error("Error fetching user data: ", error);
     }
   }, [db, currentUserId, gym]);
 

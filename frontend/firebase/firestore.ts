@@ -41,7 +41,7 @@ export const fetchEvents = async (): Promise<EventData[]> => {
       } as EventData;
     });
   } catch (error) {
-    console.error('Error fetching events:', error);
+    // console.error('Error fetching events:', error);
     throw error;
   }
 };
@@ -56,7 +56,7 @@ export const fetchEventsByDate = async (date: string): Promise<EventData[]> => {
     const querySnapshot = await getDocs(eventsQuery);
     return querySnapshot.docs.map(doc => doc.data() as EventData);
   } catch (error) {
-    console.error('Error fetching events:', error);
+    // console.error('Error fetching events:', error);
     throw error;
   }
 };
@@ -70,9 +70,9 @@ export const fetchEventsByDate = async (date: string): Promise<EventData[]> => {
         ...reportData,
         timestamp: new Date() 
       });
-      console.log("Bug report submitted successfully");
+      // console.log("Bug report submitted successfully");
     } catch (error) {
-      console.error("Error submitting bug report:", error);
+      // console.error("Error submitting bug report:", error);
     }
   };
   
@@ -82,9 +82,9 @@ export const fetchEventsByDate = async (date: string): Promise<EventData[]> => {
         report: reportText,
         timestamp: new Date()
       });
-      console.log("Feedback submitted successfully");
+      // console.log("Feedback submitted successfully");
     } catch (error) {
-      console.error("Error submitting report:", error);
+      // console.error("Error submitting report:", error);
     }
   };
   
@@ -92,7 +92,7 @@ export const fetchEventsByDate = async (date: string): Promise<EventData[]> => {
     const userRef = doc(db, 'users', user.uid);
     getDoc(userRef).then((userData: DocumentData) => {
       setUserData(userData.data());
-      console.log(userData.data());
+      // console.log(userData.data());
     }).catch((error: FirebaseError) => {
       handleError(error);
     });
@@ -101,5 +101,5 @@ export const fetchEventsByDate = async (date: string): Promise<EventData[]> => {
 const handleError = (error: FirebaseError) => {
   const errorCode: string = error.code;
   const errorMessage = error.message;
-  console.log(errorCode, errorMessage);
+  // console.log(errorCode, errorMessage);
 }

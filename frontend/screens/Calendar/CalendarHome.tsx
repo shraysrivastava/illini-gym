@@ -45,7 +45,9 @@ export const CalendarHome = () => {
         }
       });
       setItems(newItems);
-    }).catch(error => console.error(error));
+    }).catch(error => {
+      // console.error(error);
+    });
   }, []);
 
   const renderItem = (item: { name: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; }) => {

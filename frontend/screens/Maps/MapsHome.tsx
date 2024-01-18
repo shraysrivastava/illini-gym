@@ -50,18 +50,22 @@ const openMapsApp = (latitude: number, longitude: number) => {
   const destination = encodeURIComponent(`${latitude},${longitude}`);
   const url = `http://maps.google.com/maps?daddr=${destination}`;
 
-  Linking.openURL(url).catch((err) => console.error("An error occurred", err));
+  Linking.openURL(url).catch((err) => {
+    // console.error("An error occurred", err);
+  });
 };
 
 const openWebsite = (url: string) => {
-  Linking.openURL(url).catch((err) => console.error("An error occurred", err));
+  Linking.openURL(url).catch((err) => {
+    // console.error("An error occurred", err);
+  });
 };
 
 const makeCall = (phoneNumber: string) => {
   const url = `tel:${phoneNumber}`;
-  Linking.openURL(url).catch((err) =>
-    console.error("An error occurred trying to call", err)
-  );
+  Linking.openURL(url).catch((err) =>{
+    // console.error("An error occurred trying to call", err)
+});
 };
 
 export const MapsHome: React.FC = () => {

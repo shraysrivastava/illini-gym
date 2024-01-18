@@ -18,10 +18,10 @@ export default function App() {
       const items = await AsyncStorage.multiGet(keys);
       
       items.forEach(([key, value]) => {
-        console.log(key, value);
+        // console.log(key, value);
       });
     } catch (error) {
-      console.error('Error inspecting AsyncStorage:', error);
+      // console.error('Error inspecting AsyncStorage:', error);
     }
   };
   
@@ -31,17 +31,17 @@ export default function App() {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       inspectAsyncStorage();
       if (currentUser) {
-        console.log("User is signed in (or restored)");
+        // console.log("User is signed in (or restored)");
         setUser(currentUser);
       } else {
-        console.log("No user signed in, attempting anonymous sign-in");
+        // console.log("No user signed in, attempting anonymous sign-in");
         signInAnonymouslyUser(() => {})
           .then((userCredential) => {
-            console.log("Anonymously signed in");
+            // console.log("Anonymously signed in");
             setUser(userCredential.user);
           })
           .catch((error) => {
-            console.error("Anonymous auth error:", error);
+            // console.error("Anonymous auth error:", error);
           });
       }
     });

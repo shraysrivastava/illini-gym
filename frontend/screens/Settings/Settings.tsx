@@ -34,7 +34,7 @@ export const Settings = () => {
           .then(() => {
           })
           .catch((error) => {
-            console.error("Error submitting bug report:", error);
+            // console.error("Error submitting bug report:", error);
           });
       } else if (submissionType === 'feedback') {
         submitFeedback(reportText)
@@ -42,7 +42,7 @@ export const Settings = () => {
             // Handle success for feedback
           })
           .catch((error) => {
-            console.error("Error submitting feedback:", error);
+            // console.error("Error submitting feedback:", error);
           });
       }
   
@@ -52,7 +52,7 @@ export const Settings = () => {
       setModalVisible(false);
       setSubmissionType(null);
     } else {
-      console.error("Incomplete report details");
+      // console.error("Incomplete report details");
     }
   };
   
@@ -73,9 +73,9 @@ export const Settings = () => {
       });
   
       await batch.commit();
-      console.log("Users collection cleared");
+      // console.log("Users collection cleared");
     } catch (error) {
-      console.error("Error clearing users collection:", error);
+      // console.error("Error clearing users collection:", error);
     }
     signOutUser(setError);
   };

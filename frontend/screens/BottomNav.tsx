@@ -72,7 +72,7 @@ export const BottomNav = (props: NavProps) => {
             ),
           })}
         /> */}
-        <Tab.Screen
+        {/* <Tab.Screen
           name="Settings"
           component={Settings}
           options={({ navigation }) => ({
@@ -81,7 +81,7 @@ export const BottomNav = (props: NavProps) => {
               <MaterialIcons name="settings" color={color} size={size} />
             ),
           })}
-        />
+        /> */}
       </Tab.Navigator>
     </NavigationContainer>
   );

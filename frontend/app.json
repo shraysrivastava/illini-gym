@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Illini Gym Tracker",
-    "slug": "Illini Gym Tracker",
+    "slug": "illini-gym-tracker",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -15,8 +15,7 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.shray3420.illini-gym-tracker"
+      "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
@@ -29,7 +28,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": "8b20791b-1b25-4f19-902b-6b1b68197981"
+        "projectId": "1fee65e8-008f-4e85-90db-7c29843e7283"
       }
     }
   }

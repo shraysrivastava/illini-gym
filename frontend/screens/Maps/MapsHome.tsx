@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import {
-  Alert, 
+  Alert,
   StyleSheet,
   View,
   TouchableOpacity,
@@ -64,9 +64,9 @@ const openWebsite = (url: string) => {
 
 const makeCall = (phoneNumber: string) => {
   const url = `tel:${phoneNumber}`;
-  Linking.openURL(url).catch((err) =>{
+  Linking.openURL(url).catch((err) => {
     // console.error("An error occurred trying to call", err)
-});
+  });
 };
 
 export const MapsHome: React.FC = () => {
@@ -92,7 +92,8 @@ export const MapsHome: React.FC = () => {
 
   const navigateToGymData = () => {
     if (selectedGym) {
-      if (selectedGym.key === "2") { // Assuming key "2" is for CRCE
+      if (selectedGym.key === "2") {
+        // Assuming key "2" is for CRCE
         // Show an alert or navigate to a Coming Soon screen
         Alert.alert("Coming Soon", "This feature will be available soon.");
       } else {
@@ -107,19 +108,21 @@ export const MapsHome: React.FC = () => {
           default:
             gym = "dev";
         }
-        navigation.navigate('GymData', { gym: gym, gymName: gym.toUpperCase() });
+        navigation.navigate("GymData", {
+          gym: gym,
+          gymName: gym.toUpperCase(),
+        });
       }
       setModalVisible(false);
       setNavigatedAway(true);
     }
   };
-  
 
   useFocusEffect(
     useCallback(() => {
       if (navigatedAway && selectedGym) {
         setModalVisible(true);
-        setNavigatedAway(false); 
+        setNavigatedAway(false);
       }
     }, [navigatedAway, selectedGym])
   );
@@ -132,9 +135,7 @@ export const MapsHome: React.FC = () => {
     }, [])
   );
 
-  useEffect(() => {
-
-  }, []);
+  useEffect(() => {}, []);
 
   const resetMapToInitialRegion = () => {
     mapRef.current?.animateToRegion(INITIAL_REGION, 1000);
@@ -194,15 +195,15 @@ export const MapsHome: React.FC = () => {
         }}
       >
         <View style={styles.fullScreenButton}>
-        <TouchableOpacity
-          style={styles.modalBackground}
-          activeOpacity={1}
-          onPressOut={() => {
-            setDisplayBasicInfo(false);
-            setModalVisible(false);
-            setSelectedMarkerKey(null);
-          }}
-        />
+          <TouchableOpacity
+            style={styles.modalBackground}
+            activeOpacity={1}
+            onPressOut={() => {
+              setDisplayBasicInfo(false);
+              setModalVisible(false);
+              setSelectedMarkerKey(null);
+            }}
+          />
           {displayBasicInfo && selectedGym ? (
             <View style={styles.modalView}>
               <TouchableOpacity
@@ -253,21 +254,8 @@ export const MapsHome: React.FC = () => {
                   <View style={styles.separator} />
                   <View style={styles.contactSection}>
                     <View style={styles.addressContainer}>
-                      <View
-                        style={{ flexDirection: "row", alignItems: "center" }}
-                      >
-                        <Text style={styles.infoText}>Address:</Text>
-                        <Text
-                          style={[
-                            styles.infoText,
-                            { marginLeft: 5, flexShrink: 1 },
-                          ]}
-                        >
-                          {selectedGym.address}
-                        </Text>
-                      </View>
+                      <Text style={styles.infoText}>Address:</Text>
                       <TouchableOpacity
-                        style={styles.directionsIcon}
                         onPress={() =>
                           openMapsApp(
                             selectedGym.latitude,
@@ -275,11 +263,14 @@ export const MapsHome: React.FC = () => {
                           )
                         }
                       >
-                        <MaterialIcons
-                          name="directions"
-                          size={24}
-                          color="white"
-                        />
+                        <Text
+                          style={[
+                            styles.linkText, // Reuse the linkText style for underline and color
+                            { marginTop: 5 }, // Add margin for separation, adjust as needed
+                          ]}
+                        >
+                          {selectedGym.address}
+                        </Text>
                       </TouchableOpacity>
                     </View>
                   </View>
@@ -351,56 +342,34 @@ const styles = StyleSheet.create({
     height: "100%",
   },
 
-  centeredView: {
+  modalView: {
     position: "absolute",
     bottom: 0,
     width: "100%",
-    alignItems: "center",
-  },
-
-  modalView: {
-    position: "absolute",
-    bottom: Platform.OS === 'ios' ? 75 : 44, 
-    width: "100%",
-    height: Platform.OS === 'ios' ? "52%" : "56%",
+    height: "85%",
     backgroundColor: Colors.midnightBlue,
-    padding: 10,
+    padding: "5%",
     alignItems: "center",
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     elevation: 5,
-    justifyContent: "space-between",
     flexDirection: "column",
     flex: 1,
   },
 
   gymDataModalView: {
     position: "absolute",
-    bottom: Platform.OS === 'ios' ? 75 : 44, 
+    bottom: 0,
     width: "100%",
     height: "10%",
     backgroundColor: Colors.midnightBlue,
     padding: 15,
     alignItems: "center",
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
+    borderRadius: 20,
     elevation: 5,
     justifyContent: "center",
     flexDirection: "column",
     flex: 1,
-  },
-
-  modalText: {
-    marginBottom: 15,
-    textAlign: "center",
-  },
-
-  buttonContainer: {
-    backgroundColor: Colors.midnightBlue,
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-    width: "100%",
   },
 
   buttonRow: {
@@ -431,27 +400,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
 
-  modalImage: {
-    borderRadius: 10,
-    width: "80%",
-    height: 140,
-    resizeMode: "cover",
-    alignSelf: "center",
-    marginBottom: 0,
-    marginHorizontal: 20,
-  },
-
-  modalContent: {
-    backgroundColor: Colors.midnightBlue,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    padding: 15,
-    alignItems: "center",
-    justifyContent: "space-around",
-    width: "100%",
-    height: "50%", 
-  },
-
   hoursSection: {
     width: "100%",
     alignItems: "flex-start",
@@ -467,8 +415,7 @@ const styles = StyleSheet.create({
   },
 
   addressContainer: {
-    flexDirection: "row",
-    alignItems: "center",
+    alignItems: "flex-start", // Align items to the start of the container
     marginBottom: 0,
   },
 
@@ -479,11 +426,10 @@ const styles = StyleSheet.create({
     marginVertical: 5,
   },
 
-  directionsIcon: {
-    padding: 8,
-    backgroundColor: Colors.uiucOrange,
-    borderRadius: 25,
+  directionsText: {
     marginLeft: 10,
+    textDecorationLine: "underline",
+    color: "white",
   },
 
   button: {
@@ -517,19 +463,19 @@ const styles = StyleSheet.create({
   hourRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    width: "100%", 
+    width: "100%",
     marginBottom: 5,
   },
 
   dayText: {
-    flex: 1, 
+    flex: 1,
     fontSize: 14,
     color: "white",
     textAlign: "left",
   },
 
   timeText: {
-    flex: 1, 
+    flex: 1,
     fontSize: 14,
     color: "white",
     textAlign: "right",
@@ -554,13 +500,12 @@ const styles = StyleSheet.create({
     color: Colors.uiucOrange,
   },
   modalBackground: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     bottom: 0,
     left: 0,
     right: 0,
   },
-  
 });
 
 export default MapsHome;

@@ -8,6 +8,7 @@ import Colors from "../constants/Colors";
 import { FavoritesNav } from "./Favorites/FavoritesNav";
 import { CalendarNav } from "./Calendar/CalendarNav";
 import { MapsNav } from "./Maps/MapsNav";
+import { Settings } from "./Settings/Settings";
 
 
 export type NavProps = {
@@ -71,6 +72,16 @@ export const BottomNav = (props: NavProps) => {
             ),
           })}
         /> */}
+        <Tab.Screen
+          name="Settings"
+          component={Settings}
+          options={({ navigation }) => ({
+            // ...getCommonHeaderOptions(navigation, "Calendar"),
+            tabBarIcon: ({ color, size }) => (
+              <MaterialIcons name="settings" color={color} size={size} />
+            ),
+          })}
+        />
       </Tab.Navigator>
     </NavigationContainer>
   );

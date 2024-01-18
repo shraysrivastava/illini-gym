@@ -84,14 +84,14 @@ export const Settings = () => {
       <CustomText style={styles.text}>Reusable Settings</CustomText>
       {/* Just for demonstration, display the userId and userEmail */}
       <CustomText style={styles.infoText}>User ID: {userId}</CustomText>
-      <TouchableOpacity
+      {/* <TouchableOpacity
         onPress={clearUsersCollection}
         style={styles.signoutButton}
       >
         <CustomText style={styles.buttonText}>Clear All User Data</CustomText>
 
 
-      </TouchableOpacity>
+      </TouchableOpacity> */}
 
 
       <TouchableOpacity

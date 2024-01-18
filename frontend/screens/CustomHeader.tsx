@@ -1,5 +1,5 @@
 
-import { MaterialIcons } from "@expo/vector-icons";
+import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 import React from "react";
 
 import Colors from "../constants/Colors";
@@ -7,11 +7,15 @@ import { View, TouchableOpacity } from "react-native";
 type CustomHeaderProps = {
   onSettingsPress: () => void;
   onInformationsPress: () => void;
+  onMapsPress: () => void;
+  title: string;
 };
 
 export const CustomHeader: React.FC<CustomHeaderProps> = ({
   onSettingsPress,
   onInformationsPress,
+  onMapsPress,
+  title,
 }) => {
   return (
     <View
@@ -21,7 +25,20 @@ export const CustomHeader: React.FC<CustomHeaderProps> = ({
         paddingRight: 10,
       }}
     >
-      <TouchableOpacity
+      {title === "ARC Section Data" && (
+        <TouchableOpacity
+        style={{ marginRight: 15 }}
+        onPress={onMapsPress}
+      >
+        <MaterialIcons
+          name="map"
+          size={28}
+          color={Colors.uiucOrange}
+        />
+      </TouchableOpacity>
+      )}
+      {title !== "View Arc Map" && title !== "Information" && (
+        <TouchableOpacity
         style={{ marginRight: 15 }}
         onPress={onInformationsPress}
       >
@@ -31,6 +48,8 @@ export const CustomHeader: React.FC<CustomHeaderProps> = ({
           color={Colors.uiucOrange}
         />
       </TouchableOpacity>
+        )}
+      
       {/* <TouchableOpacity style={{ marginRight: 10 }} onPress={onSettingsPress}>
         <MaterialIcons name="settings" size={28} color={Colors.uiucOrange} />
       </TouchableOpacity> */}
@@ -78,6 +97,10 @@ export const getCommonHeaderOptions = (navigation: any, stackName: string, title
           console.log("Settings icon pressed.");
         }
       }}
+      onMapsPress={() => {
+        navigation.navigate("MapsLargeMap");}
+      }
+      title={title}
     />
   ),
 });

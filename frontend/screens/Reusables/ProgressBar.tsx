@@ -13,10 +13,10 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ count, capacity }) => {
     const percentage = Math.round(clampedProgress * 100);
     let progressBarColor = '#4CAF50'; // Default to green
   
-    if (percentage > 80) {
+    if (percentage > 70) {
       progressBarColor = '#FF6B6B'; // Red for more than 80%
     } 
-    else if (percentage > 60) {
+    else if (percentage > 40) {
       progressBarColor = '#FFA726'; // Orange for 50-80%
     }
   

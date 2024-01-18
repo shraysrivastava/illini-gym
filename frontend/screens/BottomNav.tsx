@@ -61,7 +61,7 @@ export const BottomNav = (props: NavProps) => {
             ),
           })}
         />
-        <Tab.Screen
+        {/* <Tab.Screen
           name="Calendar"
           component={CalendarNav}
           options={({ navigation }) => ({
@@ -70,7 +70,7 @@ export const BottomNav = (props: NavProps) => {
               <MaterialIcons name="event" color={color} size={size} />
             ),
           })}
-        />
+        /> */}
       </Tab.Navigator>
     </NavigationContainer>
   );

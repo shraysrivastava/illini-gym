@@ -30,7 +30,7 @@ const MapIconWithModal: React.FC<MapIconWithModalProps> = ({
         setImageURL(url);
         setImagePopupVisible(true);
       } else {
-        setToast({ message: localNickname + " Image not found", color: "red" });
+        setToast({ message: localNickname + " image not available", color: "red" });
       }
     } catch (error) {
       setTimeout(
@@ -62,7 +62,7 @@ const MapIconWithModal: React.FC<MapIconWithModalProps> = ({
           <View style={styles.modalContent}>
             <View style={styles.modalHeader}>
               <Text style={styles.imageHeader}>
-              {`${section.gym.charAt(0).toUpperCase()}${section.gym.slice(1)}: ${section.name}`}
+              {`${section.gym.toUpperCase()}: ${section.name}`}
               </Text>
               <TouchableOpacity
                 style={styles.closeButton}
@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
     color: Colors.uiucOrange,
     fontSize: 18,
     fontWeight: "bold",
-    maxWidth: "85%", // Adjust the percentage as needed
+    maxWidth: "80%", // Adjust the percentage as needed
     textAlign: "center", // Align text in the center
   },
   closeButton: {

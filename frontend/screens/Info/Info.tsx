@@ -1,45 +1,52 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, ScrollView } from 'react-native';
 import Colors from '../../constants/Colors';
 import CustomText from '../Reusables/CustomText';
+import FavoriteInstructions from '../Favorites/FavoritesInstructions';
 
 const InfoScreen = () => {
     return (
-        <View style={styles.container}>
-            <CustomText style={styles.heading}>Data Source Information</CustomText>
+        <ScrollView style={styles.container}>
+            {/* <CustomText style={styles.heading}>Using the App</CustomText> */}
             <CustomText style={styles.text}>
-                Note: All data is collected by Campus Recreation staff and is updated every 20 minutes.
+            Enhance your gym experience with these easy steps:            </CustomText>
+            <FavoriteInstructions />
+            <CustomText style={styles.disclaimer}>
+                Note: Data is updated every 20 minutes by Campus Recreation staff. We strive for accuracy but are not responsible for any discrepancies.
             </CustomText>
-        </View>
+        </ScrollView>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: 'center',
         backgroundColor: Colors.midnightBlue,
-        padding: 20,
+        padding: 15,
     },
     heading: {
-        fontSize: 24,
+        fontSize: 22,
         fontWeight: 'bold',
-        marginBottom: 15,
         color: Colors.uiucOrange,
+        textAlign: 'center',
+        marginTop: 20,
+        marginBottom: 10,
     },
     text: {
-        fontSize: 18,
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: Colors.uiucOrange,
+        textAlign: 'center',
+        marginBottom: 15,
+        lineHeight: 24, // Improves readability
+    },
+    disclaimer: {
+        fontSize: 16,
         color: 'white',
         textAlign: 'center',
-        marginBottom: 10,
-    },
-    sourceUrl: {
-        fontSize: 18,
-        color: Colors.uiucOrange,
-        marginBottom: 10,
-        justifyContent: 'center',
-        alignItems: 'center',
-        textAlign: 'center',
+        marginTop: 20,
+        marginBottom: 20,
+        fontStyle: 'italic',
     },
 });
 

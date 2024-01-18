@@ -75,7 +75,7 @@ const Section: React.FC<SectionProps> = React.memo(
           setImageURL(url);
           setImagePopupVisible(true);
         } else {
-          setToast({ message: section.name +  " Image not found", color: "red" });
+          setToast({ message: section.name +  " image not available", color: "red" });
         }
       } catch (error) {
         setToast({ message: "Error loading map", color: "red" });
@@ -130,7 +130,7 @@ const Section: React.FC<SectionProps> = React.memo(
             <View style={modalStyles.modalContent}>
               <View style={modalStyles.modalHeader}>
                 <Text style={modalStyles.imageHeader}>
-                  {`${section.gym}: ${section.name}`}
+                  {`${section.name}`}
                 </Text>
                 <TouchableOpacity
                   style={modalStyles.closeButton}
@@ -150,7 +150,7 @@ const Section: React.FC<SectionProps> = React.memo(
                   renderIndicator={() => <></>}
                 />
               )}
-              <Text style={modalStyles.imageFooter}>{`${section.gym}`}</Text>
+              <Text style={modalStyles.imageFooter}>{`${section.level}`} Level</Text>
             </View>
           </View>
         </Modal>

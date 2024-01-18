@@ -6,6 +6,7 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   Platform,
+  ActivityIndicator,
 } from "react-native";
 
 import { db, auth } from "../../firebase/firebaseConfig";
@@ -29,6 +30,7 @@ import { FavoriteStackParamList } from "./FavoritesNav";
 import { useNavigation } from '@react-navigation/native';
 import { useFavorites, SectionDetails } from './useFavorites';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import CustomText from "../Reusables/CustomText";
 
 
 interface FavoritesProps {
@@ -54,9 +56,15 @@ export const FavoritesScreen: React.FC = () => {
   const [markedForDeletion, setMarkedForDeletion] = useState<string[]>([]);
   const [originalFavorites, setOriginalFavorites] = useState<string[]>([]);
   const [originalFavoriteSections, setOriginalFavoriteSections] = useState<SectionDetails[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    fetchAndUpdateFavorites();
+    const fetchData = async () => {
+      await fetchAndUpdateFavorites();
+      setIsLoading(false); // Set loading to false once data is fetched
+    };
+
+    fetchData();
     handleEditMode();
   }, [fetchAndUpdateFavorites, route.params]);
   
@@ -211,6 +219,14 @@ export const FavoritesScreen: React.FC = () => {
     )
   );
 
+  if (isLoading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color={Colors.uiucOrange} />
+      </View>
+    );
+  }
+
   return (
     <KeyboardAwareScrollView
     style={styles.scrollView}
@@ -232,7 +248,10 @@ export const FavoritesScreen: React.FC = () => {
         {favorites.length !== 0 ? (
             <Favorites sections={favoriteSections} />
         ) : (
+          <View>
+          <CustomText style={styles.headerText}>Enhance Your Gym Experience</CustomText>
           <FavoriteInstructions />
+          </View>
         )}
 
       <CustomToast message={toast.message} color={toast.color} />
@@ -246,9 +265,23 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.midnightBlue,
   },
+  headerText: {
+    fontSize: 28,
+    fontWeight: "bold",
+    color: Colors.uiucOrange, // A lighter color for contrast
+    textAlign: "center",
+    marginTop: 30,
+    marginBottom: 10,
+  },
   scrollView: {
     flex: 1,
     width: "100%",
+    backgroundColor: Colors.midnightBlue,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: Colors.midnightBlue,
   },
   contentContainer: {

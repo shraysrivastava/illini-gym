@@ -57,6 +57,7 @@ export const FavoritesScreen: React.FC = () => {
   const [originalFavorites, setOriginalFavorites] = useState<string[]>([]);
   const [originalFavoriteSections, setOriginalFavoriteSections] = useState<SectionDetails[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isUpdating, setIsUpdating] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -107,10 +108,17 @@ export const FavoritesScreen: React.FC = () => {
   }, [fetchAndUpdateFavorites]);
   
   const handleSave = useCallback(async () => {
+    if (favorites.length === 0) {
+      setToast({ message: "No Favorites to Save", color: "red" });
+      return;
+    }
     const userDocRef = doc(collection(db, "users"), currentUserId);
     const updates: Record<string, any> = {};
     
-    updates.favorites = favorites;
+    if (favorites !== originalFavorites) {
+      updates.favorites = favorites;
+    }
+    
     // Handle deletions
     if (markedForDeletion.length > 0) {
       updates.favorites = favorites.filter(fav => !markedForDeletion.includes(fav));
@@ -118,7 +126,6 @@ export const FavoritesScreen: React.FC = () => {
         updates[`nicknames.${key}`] = deleteField();
       });
     }
-    console.log(updates);
   
     // Handle nickname updates
     Object.keys(editableNicknames).forEach((key) => {
@@ -126,13 +133,17 @@ export const FavoritesScreen: React.FC = () => {
         updates[`nicknames.${key}`] = editableNicknames[key];
       }
     });
-  
+    
+    
+
     // Check if there are updates to be made
     if (Object.keys(updates).length > 0) {
       try {
+        setIsLoading(true);
         setToast({ message: "Changes Successfully Saved", color: "green" });
         await updateDoc(userDocRef, updates);
-        fetchAndUpdateFavorites();
+        await fetchAndUpdateFavorites();
+        setIsLoading(false);
       } catch (error) {
         console.error("Error updating data:", error);
         setToast({ message: "Error updating data", color: "red" });
@@ -229,8 +240,8 @@ export const FavoritesScreen: React.FC = () => {
 
   return (
     <KeyboardAwareScrollView
-    style={styles.scrollView}
-    contentContainerStyle={styles.contentContainer}
+      style={styles.scrollView}
+      contentContainerStyle={styles.contentContainer}
       resetScrollToCoords={{ x: 0, y: 0 }}
       scrollEnabled={true}
       refreshControl={
@@ -243,19 +254,22 @@ export const FavoritesScreen: React.FC = () => {
         />
       }
     >
-    <View style={styles.container}>
-      
-        {favorites.length !== 0 ? (
-            <Favorites sections={favoriteSections} />
+      <View style={styles.container}>
+        {isUpdating ? (
+          <ActivityIndicator size="large" color={Colors.uiucOrange} />
+        ) : favorites.length !== 0 ? (
+          <Favorites sections={favoriteSections} />
         ) : (
           <View>
-          <CustomText style={styles.headerText}>Enhance Your Gym Experience</CustomText>
-          <FavoriteInstructions />
+            <CustomText style={styles.headerText}>
+              Enhance Your Gym Experience
+            </CustomText>
+            <FavoriteInstructions />
           </View>
         )}
 
-      <CustomToast message={toast.message} color={toast.color} />
-    </View>
+        <CustomToast message={toast.message} color={toast.color} />
+      </View>
     </KeyboardAwareScrollView>
   );
 };
@@ -270,7 +284,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: Colors.uiucOrange, // A lighter color for contrast
     textAlign: "center",
-    marginTop: 30,
+    marginTop: 10,
     marginBottom: 10,
   },
   scrollView: {

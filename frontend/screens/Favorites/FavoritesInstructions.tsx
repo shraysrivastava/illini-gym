@@ -13,10 +13,13 @@ interface InstructionItemProps {
 const FavoriteInstructions: React.FC = () => {
   return (
     <Animated.ScrollView style={styles.container}>
-      
-
       <View style={styles.instructionContainer}>
-        <MaterialIcons name="map" size={40} color={Colors.gray} style={styles.icon} />
+        <MaterialIcons
+          name="map"
+          size={40}
+          color={Colors.gray}
+          style={styles.icon}
+        />
         <View style={styles.textContainer}>
           <CustomText style={styles.instructionTitle}>Discover Gyms</CustomText>
           <CustomText style={styles.instructionText}>
@@ -27,9 +30,16 @@ const FavoriteInstructions: React.FC = () => {
 
       {/* Using MaterialCommunityIcons for this item */}
       <View style={styles.instructionContainer}>
-        <MaterialCommunityIcons name="map-marker-radius" size={40} color={Colors.uiucOrange} style={styles.icon} />
+        <MaterialCommunityIcons
+          name="map-marker-radius"
+          size={40}
+          color={Colors.uiucOrange}
+          style={styles.icon}
+        />
         <View style={styles.textContainer}>
-          <CustomText style={styles.instructionTitle}>Select Your Gym</CustomText>
+          <CustomText style={styles.instructionTitle}>
+            Select Your Gym
+          </CustomText>
           <CustomText style={styles.instructionText}>
             Choose a gym and click on Gym Data to view its sections.
           </CustomText>
@@ -39,9 +49,29 @@ const FavoriteInstructions: React.FC = () => {
       <View style={styles.instructionContainer}>
         <MaterialIcons name="star" size={40} color="gold" style={styles.icon} />
         <View style={styles.textContainer}>
-          <CustomText style={styles.instructionTitle}>Favorite Sections</CustomText>
+          <CustomText style={styles.instructionTitle}>
+            Favorite Sections
+          </CustomText>
           <CustomText style={styles.instructionText}>
             Click the star icon to add a section to your favorites.
+          </CustomText>
+        </View>
+      </View>
+
+      <View style={styles.instructionContainer}>
+        <MaterialIcons
+          name="edit"
+          size={40}
+          color={Colors.uiucOrange}
+          style={styles.icon}
+        />
+        <View style={styles.textContainer}>
+          <CustomText style={styles.instructionTitle}>
+            Edit Favorites
+          </CustomText>
+          <CustomText style={styles.instructionText}>
+            After adding favorites, you can rename and reorder them using the
+            edit icon.
           </CustomText>
         </View>
       </View>

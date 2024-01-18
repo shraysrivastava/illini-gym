@@ -67,9 +67,9 @@ const makeCall = (phoneNumber: string) => {
 export const MapsHome: React.FC = () => {
   const navigation =
     useNavigation<StackNavigationProp<MapsStackParamList, "GymInfo">>();
-  const [currentLocation, setCurrentLocation] = useState<LocationCoords | null>(
-    null
-  );
+  // const [currentLocation, setCurrentLocation] = useState<LocationCoords | null>(
+  //   null
+  // );
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedGym, setSelectedGym] = useState<MarkerData | null>(null);
   const mapRef = useRef<MapView>(null);
@@ -128,19 +128,7 @@ export const MapsHome: React.FC = () => {
   );
 
   useEffect(() => {
-    (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        console.error("Permission to access location was denied");
-        return;
-      }
 
-      let location = await Location.getCurrentPositionAsync({});
-      setCurrentLocation({
-        latitude: location.coords.latitude,
-        longitude: location.coords.longitude,
-      });
-    })();
   }, []);
 
   const resetMapToInitialRegion = () => {
@@ -153,7 +141,7 @@ export const MapsHome: React.FC = () => {
         ref={mapRef}
         style={styles.map}
         initialRegion={INITIAL_REGION}
-        showsUserLocation={true}
+        showsUserLocation={false}
       >
         {gymMarkers.map((marker) => (
           <Marker
@@ -183,14 +171,6 @@ export const MapsHome: React.FC = () => {
             </View>
           </Marker>
         ))}
-        {currentLocation && (
-          <Circle
-            center={currentLocation}
-            radius={1000}
-            fillColor="rgba(255, 0, 0, 0.2)"
-            strokeColor="rgba(255, 0, 0, 0.2)"
-          />
-        )}
       </MapView>
       <TouchableOpacity
         style={styles.recenterButton}

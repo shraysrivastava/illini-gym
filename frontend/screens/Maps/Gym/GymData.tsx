@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { RouteProp, useNavigation } from "@react-navigation/native";
+import { RouteProp, useFocusEffect, useNavigation } from "@react-navigation/native";
 import { ScrollView, View, RefreshControl } from "react-native";
 import { db, auth } from "../../../firebase/firebaseConfig";
 import {
@@ -110,6 +110,12 @@ export const GymData: React.FC<GymDataProps> = ({ route }) => {
     };
   }, [toast.message]);
 
+  useFocusEffect(
+    useCallback(() => {
+      
+      loadFavorites();
+    }, [loadFavorites])
+  );
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     await fetchGymData();

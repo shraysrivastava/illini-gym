@@ -206,76 +206,86 @@ export const MapsHome: React.FC = () => {
           />
           {displayBasicInfo && selectedGym ? (
             <View style={styles.modalView}>
-              <TouchableOpacity
-                style={styles.closeButton}
-                onPress={() => {
-                  setDisplayBasicInfo(false);
-                  setModalVisible(true);
-                }}
+              <ScrollView
+                style={{ flex: 1, width: "100%" }}
+                contentContainerStyle={{ alignItems: "stretch" }}
+                showsVerticalScrollIndicator={true}
               >
-                <MaterialIcons name="close" size={24} color="white" />
-              </TouchableOpacity>
-              <Text style={styles.modalTitle}>{selectedGym.title}</Text>
-              <View style={styles.gymContainer}>
-                <View style={styles.headerContainer}>
-                  <Text style={styles.sectionHeader}>Hours</Text>
-                </View>
-                <View style={styles.hoursSection}>
-                  {selectedGym.hours.map((hour, index) => (
-                    <View key={index} style={styles.hourRow}>
-                      <Text style={styles.dayText}>{hour.day}</Text>
-                      <Text style={styles.timeText}>{hour.time}</Text>
-                    </View>
-                  ))}
-                </View>
-              </View>
-              <View style={styles.gymContainer}>
-                <View style={styles.headerContainer}>
-                  <Text style={styles.sectionHeader}>Contact Information</Text>
-                </View>
-                <View style={styles.contactSection}>
-                  <View style={styles.contactSection}>
-                    <Text style={styles.infoText}>Phone:</Text>
-                    <TouchableOpacity
-                      onPress={() => makeCall(selectedGym.phone)}
-                    >
-                      <Text style={styles.callText}>{selectedGym.phone}</Text>
-                    </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.closeButton}
+                  onPress={() => {
+                    setDisplayBasicInfo(false);
+                    setModalVisible(true);
+                  }}
+                >
+                  <MaterialIcons name="close" size={24} color="white" />
+                </TouchableOpacity>
+                <Text style={styles.modalTitle}>{selectedGym.title}</Text>
+                <View style={styles.gymContainer}>
+                  <View style={styles.headerContainer}>
+                    <Text style={styles.sectionHeader}>Hours</Text>
                   </View>
-                  <View style={styles.separator} />
-                  <View style={styles.contactSection}>
-                    <Text style={styles.infoText}>Website:</Text>
-                    <TouchableOpacity
-                      onPress={() => openWebsite(selectedGym.website)}
-                    >
-                      <Text style={styles.linkText}>{selectedGym.website}</Text>
-                    </TouchableOpacity>
+                  <View style={styles.hoursSection}>
+                    {selectedGym.hours.map((hour, index) => (
+                      <View key={index} style={styles.hourRow}>
+                        <Text style={styles.dayText}>{hour.day}</Text>
+                        <Text style={styles.timeText}>{hour.time}</Text>
+                      </View>
+                    ))}
                   </View>
-                  <View style={styles.separator} />
+                </View>
+                <View style={styles.gymContainer}>
+                  <View style={styles.headerContainer}>
+                    <Text style={styles.sectionHeader}>
+                      Contact Information
+                    </Text>
+                  </View>
                   <View style={styles.contactSection}>
-                    <View style={styles.addressContainer}>
-                      <Text style={styles.infoText}>Address:</Text>
+                    <View style={styles.contactSection}>
+                      <Text style={styles.infoText}>Phone:</Text>
                       <TouchableOpacity
-                        onPress={() =>
-                          openMapsApp(
-                            selectedGym.latitude,
-                            selectedGym.longitude
-                          )
-                        }
+                        onPress={() => makeCall(selectedGym.phone)}
                       >
-                        <Text
-                          style={[
-                            styles.linkText, // Reuse the linkText style for underline and color
-                            { marginTop: 5 }, // Add margin for separation, adjust as needed
-                          ]}
-                        >
-                          {selectedGym.address}
+                        <Text style={styles.callText}>{selectedGym.phone}</Text>
+                      </TouchableOpacity>
+                    </View>
+                    <View style={styles.separator} />
+                    <View style={styles.contactSection}>
+                      <Text style={styles.infoText}>Website:</Text>
+                      <TouchableOpacity
+                        onPress={() => openWebsite(selectedGym.website)}
+                      >
+                        <Text style={styles.linkText}>
+                          {selectedGym.website}
                         </Text>
                       </TouchableOpacity>
                     </View>
+                    <View style={styles.separator} />
+                    <View style={styles.contactSection}>
+                      <View style={styles.addressContainer}>
+                        <Text style={styles.infoText}>Address:</Text>
+                        <TouchableOpacity
+                          onPress={() =>
+                            openMapsApp(
+                              selectedGym.latitude,
+                              selectedGym.longitude
+                            )
+                          }
+                        >
+                          <Text
+                            style={[
+                              styles.linkText, // Reuse the linkText style for underline and color
+                              { marginTop: 5 }, // Add margin for separation, adjust as needed
+                            ]}
+                          >
+                            {selectedGym.address}
+                          </Text>
+                        </TouchableOpacity>
+                      </View>
+                    </View>
                   </View>
                 </View>
-              </View>
+              </ScrollView>
             </View>
           ) : (
             <View style={styles.gymDataModalView}>
@@ -346,7 +356,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 0,
     width: "100%",
-    height: "85%",
+    height: "60%",
     backgroundColor: Colors.midnightBlue,
     padding: "5%",
     alignItems: "center",
@@ -387,9 +397,9 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     position: "absolute",
-    top: 10,
-    left: 10,
-    padding: 10,
+    top: 0,
+    left: 0,
+    // padding: 10,
     zIndex: 1000,
   },
 
@@ -398,6 +408,8 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 10,
+    textAlign: "center",
+    
   },
 
   hoursSection: {
@@ -443,7 +455,7 @@ const styles = StyleSheet.create({
   },
 
   gymContainer: {
-    margin: 10,
+    marginBottom: 20,
     padding: 10,
     backgroundColor: Colors.subtleWhite,
     borderColor: Colors.subtleWhite,

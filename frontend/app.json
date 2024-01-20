@@ -4,7 +4,7 @@
     "slug": "illini-gym-tracker",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/illini-dumbbell.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
@@ -15,7 +15,9 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.shray3420.illinigymtracker",
+      "googleServicesFile": "./GoogleService-Info.plist"
     },
     "android": {
       "adaptiveIcon": {
@@ -28,8 +30,19 @@
     },
     "extra": {
       "eas": {
-        "projectId": "1fee65e8-008f-4e85-90db-7c29843e7283"
+        "projectId": "7a9e37bc-a207-44d5-8f5e-70d2c9d945c4"
       }
-    }
+    },
+    "plugins": [
+      "@react-native-firebase/app",
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "useFrameworks": "static"
+          }
+        }
+      ]
+    ]
   }
 }

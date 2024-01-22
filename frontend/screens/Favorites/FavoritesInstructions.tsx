@@ -23,7 +23,7 @@ const FavoriteInstructions: React.FC = () => {
         <View style={styles.textContainer}>
           <CustomText style={styles.instructionTitle}>Discover Gyms</CustomText>
           <CustomText style={styles.instructionText}>
-            Explore the map to find gyms near you.
+            Click on the map icon in the bottom navigation to find gyms near you.
           </CustomText>
         </View>
       </View>
@@ -41,7 +41,7 @@ const FavoriteInstructions: React.FC = () => {
             Select Your Gym
           </CustomText>
           <CustomText style={styles.instructionText}>
-            Choose a gym and click on "Section Data" to view its sections.
+            Select a gym marker and click on "Section Data" to view its sections.
           </CustomText>
         </View>
       </View>
@@ -53,7 +53,7 @@ const FavoriteInstructions: React.FC = () => {
             Favorite Sections
           </CustomText>
           <CustomText style={styles.instructionText}>
-            Click the star icon to add a section to your favorites.
+            Click the star icon to add a section to your Favorites. Return to the favorites screen to view your newly added favorited sections.
           </CustomText>
         </View>
       </View>
@@ -71,7 +71,7 @@ const FavoriteInstructions: React.FC = () => {
           </CustomText>
           <CustomText style={styles.instructionText}>
             After adding favorites, you can rename and reorder them using the
-            edit icon.
+            pencil icon in the header.
           </CustomText>
         </View>
       </View>

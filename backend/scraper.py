@@ -27,6 +27,7 @@ EDIT_ROOM_NAMES = {
 }
 EDIT_CAPACITY = {
     "strength-and-conditioning-zone": 250,
+    "gym-1": 400,
 }
 
 # Initialize Firebase Admin

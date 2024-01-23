@@ -60,12 +60,7 @@ export const FavoritesNav = () => {
       </View>
     ) : (
       <View style={{ flexDirection: "row" }}>
-        <TouchableOpacity
-          onPress={() => navigation.navigate("DisplayLargeMap")}
-          style={{ marginLeft: 10 }}
-        >
-          <MaterialIcons name="map" size={32} color={Colors.uiucOrange} />
-        </TouchableOpacity>
+        
         <TouchableOpacity
           onPress={() => enableEditMode(navigation)}
           style={{ marginLeft: 10 }}
@@ -92,12 +87,12 @@ export const FavoritesNav = () => {
       </TouchableOpacity>
     ) : (
       <View style={{ flexDirection: "row" }}>
-        {/* <TouchableOpacity
-          onPress={() => navigation.navigate("Information")}
+        <TouchableOpacity
+          onPress={() => navigation.navigate("DisplayLargeMap")}
           style={{ marginRight: 10 }}
         >
-          <Feather name="help-circle" size={32} color={Colors.uiucOrange} />
-        </TouchableOpacity> */}
+          <MaterialIcons name="map" size={32} color={Colors.uiucOrange} />
+        </TouchableOpacity>
         <TouchableOpacity
           onPress={() => navigation.navigate("Information")}
           style={{ marginRight: 10 }}

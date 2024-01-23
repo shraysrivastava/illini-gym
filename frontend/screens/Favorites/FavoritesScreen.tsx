@@ -31,6 +31,8 @@ import { useNavigation } from '@react-navigation/native';
 import { useFavorites, SectionDetails } from './useFavorites';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import CustomText from "../Reusables/CustomText";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 
 interface FavoritesProps {
@@ -42,7 +44,7 @@ interface EditableNicknames {
 
 
 export const FavoritesScreen: React.FC = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<StackNavigationProp<FavoriteStackParamList, "FavoritesScreen">>();
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const currentUserId = auth.currentUser?.uid;
   const route = useRoute<RouteProp<FavoriteStackParamList, 'FavoritesScreen'>>();
@@ -264,8 +266,12 @@ export const FavoritesScreen: React.FC = () => {
         ) : favorites.length !== 0 ? (
           <Favorites sections={favoriteSections} />
         ) : (
-            
+            <>
             <FavoriteInstructions />
+            
+            </>
+            
+
         )}
 
         <CustomToast message={toast.message} color={toast.color} />

@@ -53,4 +53,4 @@ if __name__ == '__main__':
             next_check_time = current_time + timedelta(minutes=20)
             print(f"[{current_time.strftime('%Y-%m-%d %H:%M:%S')}] Gym is closed. Next check at {next_check_time.strftime('%Y-%m-%d %H:%M:%S')}.")
         
-        time.sleep(1200)  # Sleep for 20 minutes
+        time.sleep(900)  # Sleep for 20 minutes

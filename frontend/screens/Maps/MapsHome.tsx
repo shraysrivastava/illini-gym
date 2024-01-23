@@ -12,7 +12,6 @@ import {
   Image,
 } from "react-native";
 import MapView, { Marker, Polyline, Circle, Region } from "react-native-maps";
-import * as Location from "expo-location";
 import { gymMarkers } from "./GymMarkers";
 import { MaterialIcons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";

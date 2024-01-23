@@ -43,7 +43,7 @@ const FavoriteInstructions: React.FC = () => {
 
       <FadeInView style={styles.textBlock}>
         <Text style={styles.boldText}>Your Favorites, One Tap Away</Text>
-        <Text style={styles.normalText}>Star sections in "Section Data" for quick access to your favorite gym areas.</Text>
+        <Text style={styles.normalText}>Quickly access your favorite gym sections.</Text>
       </FadeInView>
       <FadeInView style={styles.textBlock}>
       <Text style={styles.boldText}>Need More Help?</Text>

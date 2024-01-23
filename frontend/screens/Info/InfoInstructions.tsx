@@ -41,7 +41,7 @@ const InfoInstructions: React.FC = () => {
             Select Your Gym
           </CustomText>
           <CustomText style={styles.instructionText}>
-            Select a gym marker and click on "Section Data" to view its
+            Select a gym marker and click on "Add to Favorites" to view its
             sections.
           </CustomText>
         </View>

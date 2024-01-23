@@ -45,7 +45,7 @@ export const CustomHeader: React.FC<CustomHeaderProps> = ({
         <Ionicons
           name="information-circle-outline"
           size={32}
-          color={Colors.beige}
+          color={Colors.uiucOrange}
         />
       </TouchableOpacity>
       

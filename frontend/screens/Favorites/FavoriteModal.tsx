@@ -11,10 +11,6 @@ import {
   VisibilityIcon,
   modalStyles,
 } from "../Maps/Gym/SectionModal";
-import { getStorage, ref, getDownloadURL } from "firebase/storage";
-import { Linking } from "react-native";
-import  fetchImageFromFirebase  from  "../../firebase/images";
-import ImageViewer from 'react-native-image-zoom-viewer';
 import { ToastProps } from "../Reusables/Toast";
 import MapIconWithModal  from "../Reusables/DisplaySmallMap";
 

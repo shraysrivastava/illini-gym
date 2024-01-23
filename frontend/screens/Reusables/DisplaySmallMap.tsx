@@ -25,7 +25,7 @@ const MapIconWithModal: React.FC<MapIconWithModalProps> = ({
   const handleMapIconClick = async () => {
     try {
       const imagePath = `images/${section.gym}=${section.key}.png`;
-      const url = await fetchImageFromFirebase(imagePath);
+      const url = (`../../assets/maps${imagePath}`);
       if (url) {
         setImageURL(url);
         setImagePopupVisible(true);

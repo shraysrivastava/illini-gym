@@ -47,7 +47,7 @@ const MapIconWithModal: React.FC<MapIconWithModalProps> = ({
   return (
     <>
       <MaterialIcons
-        name="map"
+        name="image"
         size={24}
         color="white"
         style={modalStyles.mapIcon}

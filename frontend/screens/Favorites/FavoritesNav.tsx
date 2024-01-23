@@ -1,7 +1,7 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import React, { useEffect, useState } from "react";
 import { TouchableOpacity, View, TouchableWithoutFeedback, Keyboard } from "react-native";
-import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialIcons, AntDesign } from '@expo/vector-icons';
 import Colors from "../../constants/Colors";
 import { FavoriteSettings } from "../Settings/SettingsScreens/FavoriteSettings";
 import { FavoritesScreen } from "./FavoritesScreen";
@@ -67,7 +67,7 @@ export const FavoritesNav = () => {
           onPress={() => navigation.navigate("DisplayLargeMap")}
           style={{ marginLeft: 10 }}
         >
-          <MaterialIcons name="map" size={32} color={Colors.beige} />
+          <MaterialIcons name="map" size={32} color={Colors.uiucOrange} />
         </TouchableOpacity>
       </View>
     );
@@ -90,16 +90,16 @@ export const FavoritesNav = () => {
     ) : (
       <View style={{ flexDirection: "row" }}>
         <TouchableOpacity
-          onPress={() => navigation.navigate("Info")}
-          style={{ marginRight: 10 }}
-        >
-          <MaterialIcons name="info-outline" size={32} color={Colors.beige} />
-        </TouchableOpacity>
-        <TouchableOpacity
           onPress={() => enableEditMode(navigation)}
           style={{ marginRight: 10 }}
         >
           <MaterialIcons name="edit" size={32} color={Colors.uiucOrange} />
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("Info")}
+          style={{ marginRight: 10 }}
+        >
+          <AntDesign name="user" size={32} color={Colors.uiucOrange} />
         </TouchableOpacity>
         
       </View>

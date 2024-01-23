@@ -261,9 +261,9 @@ export const FavoritesScreen: React.FC = () => {
           <Favorites sections={favoriteSections} />
         ) : (
           <View>
-            <CustomText style={styles.headerText}>
-              Enhance Your Gym Experience With These Following Steps:
-            </CustomText>
+            {/* <CustomText style={styles.headerText}>
+              Enhance Your Gym Experience!
+            </CustomText> */}
             <FavoriteInstructions />
           </View>
         )}

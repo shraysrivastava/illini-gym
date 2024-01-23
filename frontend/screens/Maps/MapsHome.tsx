@@ -294,13 +294,13 @@ export const MapsHome: React.FC = () => {
                   style={styles.button}
                   onPress={() => setDisplayBasicInfo(true)}
                 >
-                  <Text style={styles.buttonText}>Basic Info</Text>
+                  <Text style={styles.buttonText}>About</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={styles.button}
                   onPress={navigateToGymData}
                 >
-                  <Text style={styles.buttonText}>Section Data</Text>
+                  <Text style={styles.buttonText}>Add to Favorites</Text>
                 </TouchableOpacity>
               </View>
             </View>

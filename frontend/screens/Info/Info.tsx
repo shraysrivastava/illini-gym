@@ -5,8 +5,10 @@ import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { MaterialIcons } from '@expo/vector-icons';
 import Colors from '../../constants/Colors';
 import CustomText from '../Reusables/CustomText';
-import FavoriteInstructions from '../Favorites/FavoritesInstructions';
+// import FavoriteInstructions from '../Favorites/FavoritesInstructions';
+import InfoInstructions from '../Info/InfoInstructions';
 import CustomToast, { ToastProps } from '../Reusables/Toast';
+import ContactUs from './ContactUs';
 
 const InfoScreen = () => {
     const [userName, setUserName] = useState('');
@@ -93,7 +95,8 @@ const InfoScreen = () => {
           </TouchableOpacity>
         )}
 
-        <FavoriteInstructions />
+        <InfoInstructions />
+        <ContactUs />
 
         <CustomText style={styles.disclaimer}>
           Data is provided by Campus Recreation staff and reflects usable space

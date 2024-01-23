@@ -113,7 +113,7 @@ const Section: React.FC<SectionProps> = React.memo(
         <View style={modalStyles.row}>
           <SectionInfo section={section} />
           <MaterialIcons
-            name="map"
+            name="image"
             size={24}
             color="white"
             style={modalStyles.mapIcon}

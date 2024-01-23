@@ -61,7 +61,7 @@ export const MapsNav = () => {
           getCommonHeaderOptions(
             navigation,
             "Maps",
-            route.params.gymName + " Section Data"
+            route.params.gymName ?? ''
           )
         }
       />

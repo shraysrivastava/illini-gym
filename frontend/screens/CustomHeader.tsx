@@ -1,5 +1,5 @@
 
-import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { MaterialIcons, AntDesign } from "@expo/vector-icons";
 import React from "react";
 
 import Colors from "../constants/Colors";
@@ -42,8 +42,8 @@ export const CustomHeader: React.FC<CustomHeaderProps> = ({
         style={{ marginRight: 10 }}
         onPress={onInformationsPress}
       >
-        <MaterialIcons
-          name="info-outline"
+        <AntDesign
+          name="user"
           size={32}
           color={Colors.beige}
         />

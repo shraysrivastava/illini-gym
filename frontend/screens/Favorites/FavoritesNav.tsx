@@ -11,13 +11,18 @@ import { FavoriteSettings } from "../Settings/SettingsScreens/FavoriteSettings";
 import { FavoritesScreen } from "./FavoritesScreen";
 import { RouteProp, useRoute } from "@react-navigation/native";
 import DisplayLargeMap from "../Reusables/DisplayLargeMap";
-import { FavoritesInfo } from "../Info/InfoScreens/FavoritesInfo";
+import Information from "../Info/Information";
+import { InfoNav } from "../Info/InfoNav";
+import { GymData } from "../Maps/Gym/GymData";
+import { getCommonHeaderOptions } from "../CustomHeader";
+import MapsHome from "../Maps/MapsHome";
 
 export type FavoriteStackParamList = {
   FavoritesScreen: { isEditMode: boolean; action: string };
   FavoriteSettings: undefined;
   DisplayLargeMap: undefined;
   Information: undefined;
+  GymData: { gym?: string; gymName?: string };
 };
 
 const FavoritesStack = createStackNavigator<FavoriteStackParamList>();
@@ -149,14 +154,19 @@ export const FavoritesNav = () => {
       />
       <FavoritesStack.Screen
         name="Information"
-        component={FavoritesInfo}
+        component={InfoNav}
         options={() => ({
-          headerTitle: "Information",
-          headerTitleStyle: {
-            fontSize: 20,
-          },
+          headerShown: false,
+          
         })}
       />
+      {/* <FavoritesStack.Screen
+        name="GymData"
+        component={MapsHome}
+        options={({ navigation, route }) =>
+          getCommonHeaderOptions(navigation, "Maps", route.params.gymName ?? "")
+        }
+      /> */}
     </FavoritesStack.Navigator>
   );
 };

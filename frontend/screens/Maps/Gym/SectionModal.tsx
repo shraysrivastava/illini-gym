@@ -92,7 +92,7 @@ const Section: React.FC<SectionProps> = React.memo(
       <View style={modalStyles.individualSectionContainer}>
         {/* Top Row: Visibility Icon, Section Name, and Star Icon */}
         <View style={modalStyles.row}>
-          <VisibilityIcon isOpen={section.isOpen} />
+          {/* <VisibilityIcon isOpen={section.isOpen} /> */}
           <CustomText style={modalStyles.sectionName}>
             {section.name}
           </CustomText>
@@ -115,7 +115,7 @@ const Section: React.FC<SectionProps> = React.memo(
           <MaterialIcons
             name="image"
             size={24}
-            color="white"
+            color={Colors.uiucOrange}
             style={modalStyles.mapIcon}
             onPress={handleMapIconClick}
           />

@@ -1,7 +1,8 @@
 // ContactUs.js
 import React from 'react';
-import { View, StyleSheet, Button, Linking, Text, TouchableOpacity } from 'react-native'; // Import the Text component
+import { View, StyleSheet, Button, Linking, Text, TouchableOpacity, ScrollView, Image } from 'react-native'; // Import the Text component
 import Colors from '../../constants/Colors';
+import CustomText from '../Reusables/CustomText';
 
 const ContactUs = () => {
     const openGoogleForm = () => {
@@ -18,47 +19,76 @@ const ContactUs = () => {
     };
     
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>Contact Us</Text> 
-            <View style={styles.buttonContainer}>
-                <TouchableOpacity style={styles.button} onPress={openGoogleForm}>
-                    <Text style={styles.buttonText}>Feedback Form</Text>
+        <ScrollView style={styles.container}>
+            <View style={styles.content}>
+                {/* Optional: Uncomment if you want to use the title */}
+                {/* <Text style={styles.title}>Contact Us</Text> */}
+
+                <TouchableOpacity style={styles.feedbackButton} onPress={openGoogleForm}>
+                    {/* <Image 
+                        source={require('../../assets/google-form.jpg')} // Replace with actual logo path
+                        style={styles.logo}
+                    /> */}
+                    <Text style={styles.feedbackButtonText}>Feedback Form</Text>
                 </TouchableOpacity>
+
                 <TouchableOpacity style={styles.button} onPress={sendEmail}>
-                    <Text style={styles.buttonText}>Email Us</Text>
+                    <Text style={styles.buttonText}>Send Email</Text>
                 </TouchableOpacity>
             </View>
-        </View>
+
+            
+        </ScrollView>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
-        padding: 20,
+        flex: 1,
+        backgroundColor: Colors.midnightBlue,
+    },
+    content: {
+        flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+        padding: 20,
     },
-    title: {
-        fontSize: 24,
+    feedbackButton: {
+        backgroundColor: Colors.googleFormsPurple, // Define this color in your Colors file
+        paddingVertical: 15,
+        paddingHorizontal: 20,
+        borderRadius: 10,
+        marginVertical: 10,
+        elevation: 3,
+        width: '80%',
+    },
+    feedbackButtonText: {
+        color: "white",
         fontWeight: 'bold',
-        color: Colors.uiucOrange,
-        marginBottom: 20,
-    },
-    buttonContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        width: '100%',
+        textAlign: 'center',
+        marginLeft: 10, // Space between logo and text
     },
     button: {
-        backgroundColor: Colors.uiucOrange, // Button color
-        padding: 10,
+        backgroundColor: Colors.uiucOrange,
+        paddingVertical: 15,
+        paddingHorizontal: 20,
         borderRadius: 10,
-        marginHorizontal: 5, // Adjust as needed
+        marginVertical: 10,
+        elevation: 3,
+        width: '80%', // Adjust width as needed
     },
     buttonText: {
-        color: "white", // Text color
+        color: "white",
         fontWeight: 'bold',
+        textAlign: 'center',
+    },
+    
+    logo: {
+        width: 20, // Adjust as needed
+        height: 20, // Adjust as needed
     },
 });
+
+
 
 export default ContactUs;

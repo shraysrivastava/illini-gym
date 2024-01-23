@@ -1,5 +1,5 @@
 
-import { MaterialIcons, AntDesign } from "@expo/vector-icons";
+import { MaterialIcons, Ionicons, FontAwesome6 } from "@expo/vector-icons";
 import React from "react";
 
 import Colors from "../constants/Colors";
@@ -25,7 +25,7 @@ export const CustomHeader: React.FC<CustomHeaderProps> = ({
         paddingRight: 10,
       }}
     >
-      {title === "ARC Section Data" && (
+      {title !== "Maps" && (
         <TouchableOpacity
         style={{ marginRight: 10 }}
         onPress={onMapsPress}
@@ -36,19 +36,18 @@ export const CustomHeader: React.FC<CustomHeaderProps> = ({
           color={Colors.uiucOrange}
         />
       </TouchableOpacity>
-      )}
-      {title !== "View Arc Map" && title !== "Information" && (
+        )}
+      
         <TouchableOpacity
         style={{ marginRight: 10 }}
         onPress={onInformationsPress}
       >
-        <AntDesign
-          name="user"
+        <Ionicons
+          name="information-circle-outline"
           size={32}
           color={Colors.beige}
         />
       </TouchableOpacity>
-        )}
       
       {/* <TouchableOpacity style={{ marginRight: 10 }} onPress={onSettingsPress}>
         <MaterialIcons name="settings" size={28} color={Colors.uiucOrange} />

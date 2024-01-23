@@ -5,7 +5,7 @@ import Colors from "../../constants/Colors";
 import { CalendarSettings } from "../Settings/SettingsScreens/CalendarSettings";
 import { getCommonHeaderOptions } from "../CustomHeader";
 import { CalendarHome } from "./CalendarHome";
-import { CalendarInfo } from "../Info/CalendarInfo";
+import { CalendarInfo } from "../Info/ReusableProfile/CalendarProfile";
 
 export type CalendarStackParamList = {
   CalendarHome: undefined;

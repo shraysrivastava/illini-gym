@@ -6,7 +6,7 @@ import {
   MaterialIcons,
   Entypo,
 } from "@expo/vector-icons";
-import CustomText from "../Reusables/CustomText";
+import CustomText from "./CustomText";
 import Colors from "../../constants/Colors";
 
 const InfoInstructions: React.FC = () => {
@@ -33,7 +33,7 @@ const InfoInstructions: React.FC = () => {
         <MaterialCommunityIcons
           name="map-marker-radius"
           size={40}
-          color={Colors.uiucOrange}
+          color={"white"}
           style={styles.icon}
         />
         <View style={styles.textContainer}>
@@ -41,14 +41,14 @@ const InfoInstructions: React.FC = () => {
             Select Your Gym
           </CustomText>
           <CustomText style={styles.instructionText}>
-            Select a gym marker and click on "Section Data" to view its
+            Select a gym marker and click on "Add to Favorites" to view its
             sections.
           </CustomText>
         </View>
       </View>
 
       <View style={styles.instructionContainer}>
-        <MaterialIcons name="star" size={40} color="gold" style={styles.icon} />
+        <MaterialIcons name="star" size={40} color="white" style={styles.icon} />
         <View style={styles.textContainer}>
           <CustomText style={styles.instructionTitle}>
             Favorite Sections
@@ -64,7 +64,7 @@ const InfoInstructions: React.FC = () => {
         <MaterialIcons
           name="edit"
           size={40}
-          color={Colors.uiucOrange}
+          color={"white"}
           style={styles.icon}
         />
         <View style={styles.textContainer}>

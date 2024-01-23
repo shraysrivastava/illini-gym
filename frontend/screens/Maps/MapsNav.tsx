@@ -7,8 +7,8 @@ import { MapsHome } from "./MapsHome";
 import { GymInfo } from "./Gym/GymInfo";
 import { GymData } from "./Gym/GymData";
 import { MapsSettings } from "../Settings/SettingsScreens/MapsSettings";
-import { MapsInfo } from "../Info/MapsInfo";
 import DisplayLargeMap from "../Reusables/DisplayLargeMap";
+import { MapsInfo } from "../Info/InfoScreens/MapsInfo";
 export type MapsStackParamList = {
   MapsHome: undefined;
   MapsSettings: undefined;
@@ -58,11 +58,7 @@ export const MapsNav = () => {
         name="GymData"
         component={GymData}
         options={({ navigation, route }) =>
-          getCommonHeaderOptions(
-            navigation,
-            "Maps",
-            route.params.gymName ?? ''
-          )
+          getCommonHeaderOptions(navigation, "Maps", route.params.gymName ?? "")
         }
       />
       <MapsStack.Screen
@@ -75,16 +71,22 @@ export const MapsNav = () => {
       <MapsStack.Screen
         name="MapsInfo"
         component={MapsInfo}
-        options={({ navigation }) =>
-          getCommonHeaderOptions(navigation, "Maps", "Information")
-        }
+        options={() => ({
+          headerTitle: "Information",
+          headerTitleStyle: {
+            fontSize: 20,
+          },
+        })}
       />
       <MapsStack.Screen
         name="MapsLargeMap"
         component={DisplayLargeMap}
-        options={({ navigation }) =>
-          getCommonHeaderOptions(navigation, "Maps", "View Arc Map")
-        }
+        options={() => ({
+          headerTitle: "View ARC Map",
+          headerTitleStyle: {
+            fontSize: 20,
+          },
+        })}
       />
     </MapsStack.Navigator>
   );

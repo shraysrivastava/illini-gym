@@ -1,17 +1,16 @@
 import React, { useState } from "react";
-import ProfileScreen from "../ProfileScreen";
 import ContactUs from "../ContactUs";
 import { View, StyleSheet } from "react-native";
 import CustomText  from "../../Reusables/CustomText";
 import Colors from "../../../constants/Colors";
 
-export const CalendarProfile = () => {
+export const FavoritesInfo = () => {
   return (
     <>
       <ContactUs />
       <View style={styles.footer}>
         <CustomText style={styles.disclaimer}>
-          Data is provided by Campus Recreation staff and is meant to reflect usable space
+          Data is provided by Campus Recreation staff and reflects usable space
           occupancy, not maximum capacity. Accuracy depends on timely updates
           from staff.
         </CustomText>

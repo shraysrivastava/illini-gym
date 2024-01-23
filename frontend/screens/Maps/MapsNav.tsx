@@ -7,15 +7,13 @@ import { MapsHome } from "./MapsHome";
 import { GymInfo } from "./Gym/GymInfo";
 import { GymData } from "./Gym/GymData";
 import { MapsSettings } from "../Settings/SettingsScreens/MapsSettings";
-import { MapsProfile } from "../Profile/ReusableProfile/MapsProfile";
 import DisplayLargeMap from "../Reusables/DisplayLargeMap";
-import { MapsInfo } from "../Info/ReusableInfo/MapsInfo";
+import { MapsInfo } from "../Info/InfoScreens/MapsInfo";
 export type MapsStackParamList = {
   MapsHome: undefined;
   MapsSettings: undefined;
   GymInfo: { gym?: string; gymName?: string };
   GymData: { gym?: string; gymName?: string };
-  MapsProfile: undefined;
   MapsInfo: undefined;
   MapsLargeMap: undefined;
 };
@@ -71,20 +69,10 @@ export const MapsNav = () => {
         }
       />
       <MapsStack.Screen
-        name="MapsProfile"
-        component={MapsProfile}
-        options={() => ({
-          headerTitle: "Information",
-          headerTitleStyle: {
-            fontSize: 20,
-          },
-        })}
-      />
-      <MapsStack.Screen
         name="MapsInfo"
         component={MapsInfo}
         options={() => ({
-          headerTitle: "Instructions",
+          headerTitle: "Information",
           headerTitleStyle: {
             fontSize: 20,
           },

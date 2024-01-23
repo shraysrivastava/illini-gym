@@ -1,11 +1,10 @@
 import React, { useState } from "react";
-import ProfileScreen from "../ProfileScreen";
 import ContactUs from "../ContactUs";
 import { View, StyleSheet } from "react-native";
 import CustomText  from "../../Reusables/CustomText";
 import Colors from "../../../constants/Colors";
 
-export const MapsProfile = () => {
+export const MapsInfo = () => {
   return (
     <>
       <ContactUs />

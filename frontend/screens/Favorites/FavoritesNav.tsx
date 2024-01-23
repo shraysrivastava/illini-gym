@@ -11,14 +11,12 @@ import { FavoriteSettings } from "../Settings/SettingsScreens/FavoriteSettings";
 import { FavoritesScreen } from "./FavoritesScreen";
 import { RouteProp, useRoute } from "@react-navigation/native";
 import DisplayLargeMap from "../Reusables/DisplayLargeMap";
-import { FavoritesProfile } from "../Profile/ReusableProfile/FavoritesProfile";
-import { FavoritesInfo } from "../Info/ReusableInfo/FavoritesInfo";
+import { FavoritesInfo } from "../Info/InfoScreens/FavoritesInfo";
 
 export type FavoriteStackParamList = {
   FavoritesScreen: { isEditMode: boolean; action: string };
   FavoriteSettings: undefined;
   DisplayLargeMap: undefined;
-  Profile: undefined;
   Information: undefined;
 };
 
@@ -101,7 +99,7 @@ export const FavoritesNav = () => {
           <Feather name="help-circle" size={32} color={Colors.uiucOrange} />
         </TouchableOpacity> */}
         <TouchableOpacity
-          onPress={() => navigation.navigate("Profile")}
+          onPress={() => navigation.navigate("Information")}
           style={{ marginRight: 10 }}
         >
           <Ionicons name="information-circle-outline" size={32} color={Colors.uiucOrange} />
@@ -155,20 +153,10 @@ export const FavoritesNav = () => {
         })}
       />
       <FavoritesStack.Screen
-        name="Profile"
-        component={FavoritesProfile}
-        options={() => ({
-          headerTitle: "Information",
-          headerTitleStyle: {
-            fontSize: 20,
-          },
-        })}
-      />
-      <FavoritesStack.Screen
         name="Information"
         component={FavoritesInfo}
         options={() => ({
-          headerTitle: "Instructions",
+          headerTitle: "Information",
           headerTitleStyle: {
             fontSize: 20,
           },

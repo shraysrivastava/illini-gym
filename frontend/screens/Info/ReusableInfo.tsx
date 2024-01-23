@@ -17,7 +17,7 @@ import InfoInstructions from "./InfoInstructions";
 import CustomToast, { ToastProps } from "../Reusables/Toast";
 import ContactUs from "./ContactUs";
 
-const ProfileScreen = () => {
+const ReusableInfo = () => {
   const [userName, setUserName] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [tempName, setTempName] = useState("");
@@ -213,4 +213,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ProfileScreen;
+export default ReusableInfo;

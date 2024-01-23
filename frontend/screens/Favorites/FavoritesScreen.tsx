@@ -109,7 +109,7 @@ export const FavoritesScreen: React.FC = () => {
   
   const handleSave = useCallback(async () => {
     if (favorites.length === 0) {
-      setToast({ message: "No Favorites to Save", color: "red" });
+      // setToast({ message: "No Favorites to Save", color: "red" });
       return;
     }
     const userDocRef = doc(collection(db, "users"), currentUserId);
@@ -173,10 +173,14 @@ export const FavoritesScreen: React.FC = () => {
         setMarkedForDeletion([]); 
         break;
       case "editModeOn":
-        // setToast({ message: "Edit Mode Enabled", color: Colors.uiucOrange });
+        if (favorites.length === 0) {
+          setToast({ message: "Edit Mode Enabled, No favorites to edit", color: "red" });
+        } else {
+          setToast({ message: "Edit Mode Enabled", color: Colors.uiucOrange });
+        }
+
         setOriginalFavorites([...favorites]);
         setOriginalFavoriteSections([...favoriteSections]);
-
         break;
       default:
         // Handle any other cases or do nothing
@@ -260,12 +264,8 @@ export const FavoritesScreen: React.FC = () => {
         ) : favorites.length !== 0 ? (
           <Favorites sections={favoriteSections} />
         ) : (
-          <View>
-            {/* <CustomText style={styles.headerText}>
-              Enhance Your Gym Experience!
-            </CustomText> */}
+            
             <FavoriteInstructions />
-          </View>
         )}
 
         <CustomToast message={toast.message} color={toast.color} />

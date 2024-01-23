@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import  Info from "./Info"
-import InfoScreen from "./Info";
+import InfoScreen from "../InfoScreen";
 
 export const MapsInfo = () => {
   return <InfoScreen />;

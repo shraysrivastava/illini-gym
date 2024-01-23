@@ -10,6 +10,7 @@ const Colors = {
     lighterBlue: '#0054A4',
     lightBlue: '#6699CC',
     paleBlue: '#AACCFF',
+    googleFormsPurple: '#673AB7',
 
     // Variations of Orange
     darkOrange: '#CC5200',

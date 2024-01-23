@@ -1,27 +1,32 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import React, { useEffect, useState } from "react";
-import { TouchableOpacity, View, TouchableWithoutFeedback, Keyboard } from "react-native";
-import { MaterialIcons, AntDesign } from '@expo/vector-icons';
+import {
+  TouchableOpacity,
+  View,
+  Keyboard,
+} from "react-native";
+import { MaterialIcons, FontAwesome6, Ionicons } from "@expo/vector-icons";
 import Colors from "../../constants/Colors";
 import { FavoriteSettings } from "../Settings/SettingsScreens/FavoriteSettings";
 import { FavoritesScreen } from "./FavoritesScreen";
-import { getCommonHeaderOptions } from "../CustomHeader";
-import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
+import { RouteProp, useRoute } from "@react-navigation/native";
 import DisplayLargeMap from "../Reusables/DisplayLargeMap";
-import InfoScreen from "../Info/Info";
-import { FavoritesInfo } from "../Info/FavoritesInfo";
+import { FavoritesProfile } from "../Profile/ReusableProfile/FavoritesProfile";
+import { FavoritesInfo } from "../Info/ReusableInfo/FavoritesInfo";
 
 export type FavoriteStackParamList = {
-  FavoritesScreen: { isEditMode: boolean, action: string};
+  FavoritesScreen: { isEditMode: boolean; action: string };
   FavoriteSettings: undefined;
   DisplayLargeMap: undefined;
-  Info: undefined;
+  Profile: undefined;
+  Information: undefined;
 };
 
 const FavoritesStack = createStackNavigator<FavoriteStackParamList>();
 
 export const FavoritesNav = () => {
-  const route = useRoute<RouteProp<FavoriteStackParamList, 'FavoritesScreen'>>();
+  const route =
+    useRoute<RouteProp<FavoriteStackParamList, "FavoritesScreen">>();
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const [title, setTitle] = useState<string>("Favorites");
 
@@ -32,11 +37,11 @@ export const FavoritesNav = () => {
       setTitle("Favorites");
     }
   }, [isEditMode]);
-  
-  const enableEditMode = (navigation: any ) => {
+
+  const enableEditMode = (navigation: any) => {
     setIsEditMode(true);
     // setTitle("Edit Favorites");
-    navigation.setParams({ isEditMode: true, action: 'editModeOn'});
+    navigation.setParams({ isEditMode: true, action: "editModeOn" });
   };
 
   const renderHeaderLeft = (navigation: any) =>
@@ -57,17 +62,17 @@ export const FavoritesNav = () => {
       </View>
     ) : (
       <View style={{ flexDirection: "row" }}>
-        {/* <TouchableOpacity
-          onPress={() => navigation.navigate("FavoriteSettings")}
-          style={{ marginLeft: 10 }}
-        >
-          <MaterialIcons name="settings" size={32} color={Colors.uiucOrange} />
-        </TouchableOpacity> */}
         <TouchableOpacity
           onPress={() => navigation.navigate("DisplayLargeMap")}
           style={{ marginLeft: 10 }}
         >
           <MaterialIcons name="map" size={32} color={Colors.uiucOrange} />
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => enableEditMode(navigation)}
+          style={{ marginLeft: 10 }}
+        >
+          <MaterialIcons name="edit" size={32} color={Colors.uiucOrange} />
         </TouchableOpacity>
       </View>
     );
@@ -89,24 +94,22 @@ export const FavoritesNav = () => {
       </TouchableOpacity>
     ) : (
       <View style={{ flexDirection: "row" }}>
-        <TouchableOpacity
-          onPress={() => enableEditMode(navigation)}
+        {/* <TouchableOpacity
+          onPress={() => navigation.navigate("Information")}
           style={{ marginRight: 10 }}
         >
-          <MaterialIcons name="edit" size={32} color={Colors.uiucOrange} />
-        </TouchableOpacity>
+          <Feather name="help-circle" size={32} color={Colors.uiucOrange} />
+        </TouchableOpacity> */}
         <TouchableOpacity
-          onPress={() => navigation.navigate("Info")}
+          onPress={() => navigation.navigate("Profile")}
           style={{ marginRight: 10 }}
         >
-          <AntDesign name="user" size={32} color={Colors.uiucOrange} />
+          <Ionicons name="information-circle-outline" size={32} color={Colors.uiucOrange} />
         </TouchableOpacity>
-        
       </View>
     );
 
   return (
-
     <FavoritesStack.Navigator
       initialRouteName="FavoritesScreen"
       screenOptions={{
@@ -121,18 +124,15 @@ export const FavoritesNav = () => {
       <FavoritesStack.Screen
         name="FavoritesScreen"
         component={FavoritesScreen}
-        initialParams={{ isEditMode: isEditMode}}
+        initialParams={{ isEditMode: isEditMode }}
         options={({ navigation }) => ({
           headerLeft: () => renderHeaderLeft(navigation),
           headerRight: () => renderHeaderRight(navigation),
           headerTitle: title,
           headerTitleStyle: {
-            fontSize: 20, 
+            fontSize: 20,
           },
-          
-          
         })}
-        
       />
       <FavoritesStack.Screen
         name="FavoriteSettings"
@@ -140,10 +140,9 @@ export const FavoritesNav = () => {
         options={() => ({
           headerTitle: "Settings",
           headerTitleStyle: {
-            fontSize: 20, 
+            fontSize: 20,
           },
         })}
-        
       />
       <FavoritesStack.Screen
         name="DisplayLargeMap"
@@ -151,23 +150,30 @@ export const FavoritesNav = () => {
         options={() => ({
           headerTitle: "View Arc Map",
           headerTitleStyle: {
-            fontSize: 20, 
+            fontSize: 20,
           },
         })}
-        
       />
       <FavoritesStack.Screen
-        name="Info"
-        component={FavoritesInfo}
+        name="Profile"
+        component={FavoritesProfile}
         options={() => ({
           headerTitle: "Information",
           headerTitleStyle: {
-            fontSize: 20, 
+            fontSize: 20,
           },
         })}
-        
       />
-      
+      <FavoritesStack.Screen
+        name="Information"
+        component={FavoritesInfo}
+        options={() => ({
+          headerTitle: "Instructions",
+          headerTitleStyle: {
+            fontSize: 20,
+          },
+        })}
+      />
     </FavoritesStack.Navigator>
   );
 };

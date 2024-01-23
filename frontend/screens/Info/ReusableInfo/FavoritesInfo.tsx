@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import  Info from "./Info"
-import InfoScreen from "./Info";
+import InfoScreen from "../InfoScreen";
 
 export const FavoritesInfo = () => {
   return <InfoScreen />;

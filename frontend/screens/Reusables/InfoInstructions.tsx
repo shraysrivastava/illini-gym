@@ -6,7 +6,7 @@ import {
   MaterialIcons,
   Entypo,
 } from "@expo/vector-icons";
-import CustomText from "../Reusables/CustomText";
+import CustomText from "./CustomText";
 import Colors from "../../constants/Colors";
 
 const InfoInstructions: React.FC = () => {

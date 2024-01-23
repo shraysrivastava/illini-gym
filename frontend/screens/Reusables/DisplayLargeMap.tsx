@@ -13,7 +13,6 @@ const DisplayLargeMap: React.FC = () => {
     );
 };
 
-const styles = StyleSheet.create({
-});
+
 
 export default DisplayLargeMap;

@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Illini Gym Tracker",
-    "slug": "illini-gym-tracker",
+    "name": "Illini Gym",
+    "slug": "illini-gym",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/illini-dumbbell.png",

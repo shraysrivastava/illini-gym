@@ -32,8 +32,8 @@ const FavoriteInstructions: React.FC = () => {
   return (
     <View style={styles.container}>
       <FadeInView style={styles.textBlock}>
-        <Text style={styles.mainText}>Welcome to Illini Gym Tracker</Text>
-        <Text style={styles.subText}>Discover and Train Smarter</Text>
+        <Text style={styles.mainText}>Welcome to Illini Gym</Text>
+        <Text style={styles.subText}>Train Smarter</Text>
       </FadeInView>
       
       <FadeInView style={styles.textBlock}>

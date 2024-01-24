@@ -5,6 +5,7 @@ import ImageViewer from "react-native-image-zoom-viewer";
 import { modalStyles } from "../Maps/Gym/SectionModal";
 import Colors from "../../constants/Colors";
 import { ToastProps } from "../Reusables/Toast";
+import fetchImageFromFirebase from "../../firebase/images";
 import { SectionDetails } from "../Favorites/useFavorites";
 
 interface MapIconWithModalProps {
@@ -24,7 +25,7 @@ const MapIconWithModal: React.FC<MapIconWithModalProps> = ({
   const handleMapIconClick = async () => {
     try {
       const imagePath = `images/${section.gym}=${section.key}.png`;
-      const url = (`../../assets/maps${imagePath}`);
+      const url = await fetchImageFromFirebase(imagePath);
       if (url) {
         setImageURL(url);
         setImagePopupVisible(true);
@@ -46,9 +47,9 @@ const MapIconWithModal: React.FC<MapIconWithModalProps> = ({
   return (
     <>
       <MaterialIcons
-        name="image"
+        name="map"
         size={24}
-        color={Colors.uiucOrange}
+        color="white"
         style={modalStyles.mapIcon}
         onPress={handleMapIconClick}
       />

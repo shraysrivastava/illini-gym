@@ -8,8 +8,6 @@ const FavoriteInstructions: React.FC = () => {
     <View style={styles.container}>
       <Text style={styles.mainText}>Welcome to Illini Gym</Text>
       <Text style={styles.subText}>Know Before You Go</Text>
-      <Text style={styles.subText2}>Train Smarter.</Text>
-
       <Text style={styles.normalText}>📍 Find Gyms Nearby 📍</Text>
       <Text style={styles.normalText}>⭐ Add to Favorites ⭐</Text>
       <View style={styles.helpTextWrapper}>
@@ -41,15 +39,10 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: Colors.uiucOrange,
     textAlign: 'center',
-    marginBottom: 15,
+    marginBottom: 55,
+    fontWeight: 'bold',
   },
-  subText2: {
-    fontSize: 16,
-    color: Colors.uiucOrange,
-    textAlign: 'center',
-    marginBottom: 25,
-    fontWeight: 'bold'
-  },
+
   normalText: {
     fontSize: 20,
     color: "white",

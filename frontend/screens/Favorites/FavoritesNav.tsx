@@ -23,6 +23,7 @@ export type FavoriteStackParamList = {
   DisplayLargeMap: undefined;
   Information: undefined;
   GymData: { gym?: string; gymName?: string };
+  FavoritesInfo: undefined;
 };
 
 const FavoritesStack = createStackNavigator<FavoriteStackParamList>();
@@ -154,6 +155,14 @@ export const FavoritesNav = () => {
       />
       <FavoritesStack.Screen
         name="Information"
+        component={InfoNav}
+        options={() => ({
+          headerShown: false,
+          
+        })}
+      />
+      <FavoritesStack.Screen
+        name="FavoritesInfo"
         component={InfoNav}
         options={() => ({
           headerShown: false,

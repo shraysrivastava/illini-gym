@@ -2,19 +2,28 @@ import React from "react";
 import { View, StyleSheet, Text } from "react-native";
 import Colors from "../../constants/Colors";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
-const FavoriteInstructions: React.FC = () => {
+
+type FavoriteInstructionsProps = {
+  onPress: () => void;
+};
+
+const FavoriteInstructions: React.FC<FavoriteInstructionsProps> = ({ onPress }) => {
   return (
     <View style={styles.container}>
+      <View>
       <Text style={styles.mainText}>Welcome to Illini Gym</Text>
       <Text style={styles.subText}>Know Before You Go</Text>
-      <Text style={styles.normalText}>📍 Find Gyms Nearby 📍</Text>
+      
+      <Text style={styles.normalText}>📍 Explore the Map 📍</Text>
+      <Text style={styles.normalText}>🔍 View Sections 🔍</Text>
       <Text style={styles.normalText}>⭐ Add to Favorites ⭐</Text>
-      <View style={styles.helpTextWrapper}>
-        <MaterialIcons name="info-outline" size={24} color={Colors.uiucOrange} />
-        <Text style={styles.helpText}>Need Help? Tap Info  </Text>
-        <MaterialIcons name="info-outline" size={24} color={Colors.uiucOrange} />
       </View>
+      
+      <TouchableOpacity style={styles.helpTextWrapper} onPress={onPress}>
+        <Text style={styles.helpText}>Need Help?  </Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -22,10 +31,10 @@ const FavoriteInstructions: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'flex-start',
+    justifyContent: 'space-between',
     alignItems: 'center',
     paddingTop: 20,
-    paddingHorizontal: 25,
+    paddingHorizontal: 20,
     backgroundColor: Colors.midnightBlue,
   },
   mainText: {
@@ -33,13 +42,15 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: "white",
     textAlign: 'center',
-    marginBottom: 25,
+    marginBottom: 20,
   },
   subText: {
-    fontSize: 18,
+    fontSize: 20,
     color: Colors.uiucOrange,
+    
+    fontStyle: 'italic',
     textAlign: 'center',
-    marginBottom: 55,
+    marginBottom: 45,
     fontWeight: 'bold',
   },
 
@@ -53,6 +64,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 20,
+    marginTop: 20,
+    backgroundColor: Colors.uiucBlue,
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    borderRadius: 15,
+    
   },
   helpText: {
     fontSize: 20,

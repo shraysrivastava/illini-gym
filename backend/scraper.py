@@ -29,13 +29,13 @@ EDIT_CAPACITY = {
     "strength-and-conditioning-zone": 250,
     "gym-1": 400,
 }
-
+KEYS_TO_REMOVE = set(["meeting-room-1", "meeting-room-2", "meeting-room-3", "instructional-kitchen"])
 # Initialize Firebase Admin
 cred = credentials.Certificate("./firebase.json")
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 
-def scrape_and_update():
+def scrape_and_update(collection_id):
     chrome_options = webdriver.ChromeOptions()
     chrome_options.add_argument("start-maximized")  # Open the browser in maximized mode
     chrome_options.add_argument("disable-infobars")  # Disable infobars
@@ -169,9 +169,11 @@ def scrape_and_update():
     browser.quit()
 
     # Update Firestore
-    collection_id_one = "arc"
+    
     for section_key, room_data in data_.items():
-        doc_ref = db.collection(collection_id_one).document(section_key)
+        if section_key in KEYS_TO_REMOVE:
+            continue
+        doc_ref = db.collection(collection_id).document(section_key)
         doc_ref.set(room_data, merge=True)  # Use set with merge=True to create or update
     
     # Converting data to CSV format

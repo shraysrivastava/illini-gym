@@ -45,7 +45,7 @@ if __name__ == '__main__':
         current_time = datetime.now()
         if is_gym_open(current_time):
             try:
-                scrape_and_update()  # Call the function to scrape and update Firebase
+                scrape_and_update("arc")  # Call the function to scrape and update Firebase
                 print(f"[{current_time.strftime('%Y-%m-%d %H:%M:%S')}] Firestore successfully updated.")
             except Exception as e:
                 print(f"[{current_time.strftime('%Y-%m-%d %H:%M:%S')}] Error updating Firestore: {e}")

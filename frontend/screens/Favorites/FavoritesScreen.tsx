@@ -248,6 +248,7 @@ export const FavoritesScreen: React.FC = () => {
       contentContainerStyle={styles.contentContainer}
       resetScrollToCoords={{ x: 0, y: 0 }}
       scrollEnabled={true}
+      indicatorStyle="white"
       refreshControl={
         <RefreshControl
           refreshing={refreshing}
@@ -258,22 +259,22 @@ export const FavoritesScreen: React.FC = () => {
         />
       }
     >
-      <View style={styles.container}>
-        {isUpdating ? (
+      {isLoading ? (
+        <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={Colors.uiucOrange} />
-        ) : favorites.length !== 0 ? (
+        </View>
+      ) : favorites.length === 0 ? (
+        <View style={styles.noFavoritesContent}>
+          <FavoriteInstructions onPress={() => navigation.navigate("FavoritesInfo")} />
+        </View>
+      ) : (
+        <View>
           <Favorites sections={favoriteSections} />
-        ) : (
-            <>
-            <FavoriteInstructions />
-            
-            </>
-            
-
-        )}
+        </View>
+      )}
 
         <CustomToast message={toast.message} color={toast.color} />
-      </View>
+      
     </KeyboardAwareScrollView>
   );
 };
@@ -282,6 +283,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.midnightBlue,
+  },
+  noFavoritesContent: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   headerText: {
     fontSize: 28,
@@ -305,6 +311,7 @@ const styles = StyleSheet.create({
   contentContainer: {
     paddingBottom: 15,
     margin: 5,
+    flexGrow: 1,
   },
   editModeContainer: {
     flexDirection: 'row',

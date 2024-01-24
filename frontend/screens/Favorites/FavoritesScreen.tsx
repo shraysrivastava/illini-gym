@@ -177,8 +177,6 @@ export const FavoritesScreen: React.FC = () => {
       case "editModeOn":
         if (favorites.length === 0) {
           setToast({ message: "Edit Mode Enabled, No favorites to edit", color: "red" });
-        } else {
-          setToast({ message: "Edit Mode Enabled", color: Colors.uiucOrange });
         }
 
         setOriginalFavorites([...favorites]);

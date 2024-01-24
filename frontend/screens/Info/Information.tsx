@@ -20,7 +20,6 @@ const Information = () => {
   const navigation =
     useNavigation<StackNavigationProp<InfoStackParamList, "Information">>();
 
-
   const sendEmail = () => {
     const email = "uiucillinigym@gmail.com";
     const subject = encodeURIComponent("Feedback/Query");
@@ -34,53 +33,58 @@ const Information = () => {
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.content}>
-        {/* Optional: Uncomment if you want to use the title */}
-        {/* <Text style={styles.title}>Contact Us</Text> */}
+    <View style={styles.wrapper}>
+      <ScrollView style={styles.container}>
+        <View style={styles.content}>
+          {/* Optional: Uncomment if you want to use the title */}
+          {/* <Text style={styles.title}>Contact Us</Text> */}
 
-        <TouchableOpacity
-          style={styles.feedbackButton}
-          onPress={() => navigation.navigate("GoogleForm")}
-        >
-          {/* <Image 
+          <TouchableOpacity
+            style={[
+              styles.feedbackButton,
+              { backgroundColor: Colors.uiucOrange },
+            ]}
+            onPress={() => navigation.navigate("Instructions")}
+          >
+            {/* <Image 
                         source={require('../../assets/google-form.jpg')} // Replace with actual logo path
                         style={styles.logo}
                     /> */}
-          <Text style={styles.feedbackButtonText}>Feedback Form</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.button} onPress={sendEmail}>
-          <Text style={styles.buttonText}>Send Email</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={[
-            styles.feedbackButton,
-            { backgroundColor: Colors.uiucOrange },
-          ]}
-          onPress={() => navigation.navigate("Instructions")}
-        >
-          {/* <Image 
+            <Text style={styles.feedbackButtonText}>Instructions</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.feedbackButton}
+            onPress={() => navigation.navigate("GoogleForm")}
+          >
+            {/* <Image 
                         source={require('../../assets/google-form.jpg')} // Replace with actual logo path
                         style={styles.logo}
                     /> */}
-          <Text style={styles.feedbackButtonText}>Instructions</Text>
-        </TouchableOpacity>
-        <View style={styles.footer}>
-          <CustomText style={styles.disclaimer}>
-            Data is provided by Campus Recreation staff and is meant to reflect
-            usable space occupancy, not maximum capacity. Accuracy depends on
-            timely updates from staff.
-          </CustomText>
+            <Text style={styles.feedbackButtonText}>Feedback Form</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.button} onPress={sendEmail}>
+            <Text style={styles.buttonText}>Send Email</Text>
+          </TouchableOpacity>
         </View>
+      </ScrollView>
+      <View style={styles.footer}>
+        <CustomText style={styles.disclaimer}>
+          Please be aware that the accuracy and timeliness of this information
+          is contingent upon the updates we receive from Campus Recreation
+          staff.
+        </CustomText>
       </View>
-    </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+    backgroundColor: Colors.midnightBlue,
+  },
+  wrapper: {
     flex: 1,
     backgroundColor: Colors.midnightBlue,
   },

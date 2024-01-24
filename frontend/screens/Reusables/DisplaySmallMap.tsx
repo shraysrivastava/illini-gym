@@ -5,7 +5,6 @@ import ImageViewer from "react-native-image-zoom-viewer";
 import { modalStyles } from "../Maps/Gym/SectionModal";
 import Colors from "../../constants/Colors";
 import { ToastProps } from "../Reusables/Toast";
-import fetchImageFromFirebase from "../../firebase/images";
 import { SectionDetails } from "../Favorites/useFavorites";
 
 interface MapIconWithModalProps {
@@ -49,7 +48,7 @@ const MapIconWithModal: React.FC<MapIconWithModalProps> = ({
       <MaterialIcons
         name="image"
         size={24}
-        color="white"
+        color={Colors.uiucOrange}
         style={modalStyles.mapIcon}
         onPress={handleMapIconClick}
       />

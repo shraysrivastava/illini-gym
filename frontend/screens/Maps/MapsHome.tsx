@@ -299,7 +299,7 @@ export const MapsHome: React.FC = () => {
                   style={styles.button}
                   onPress={navigateToGymData}
                 >
-                  <Text style={styles.buttonText}>Add to Favorites</Text>
+                  <Text style={styles.buttonText}>View Sections</Text>
                 </TouchableOpacity>
               </View>
             </View>

@@ -64,7 +64,7 @@ const Information = () => {
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.button} onPress={sendEmail}>
-            <Text style={styles.buttonText}>Send Email</Text>
+            <Text style={styles.buttonText}>Email Us</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>

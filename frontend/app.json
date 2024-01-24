@@ -2,7 +2,7 @@
   "expo": {
     "name": "Illini Gym",
     "slug": "illini-gym",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/illini-dumbbell.png",
     "userInterfaceStyle": "light",
@@ -17,7 +17,8 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.shray3420.illinigymtracker",
-      "googleServicesFile": "./GoogleService-Info.plist"
+      "googleServicesFile": "./GoogleService-Info.plist",
+      "buildNumber": "1"
     },
     "android": {
       "adaptiveIcon": {

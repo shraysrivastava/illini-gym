@@ -24,8 +24,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-start',
     alignItems: 'center',
-    paddingTop: 50,
-    paddingHorizontal: 25,
+    paddingTop: 10,
+    paddingHorizontal: 0,
     backgroundColor: Colors.midnightBlue,
   },
   mainText: {

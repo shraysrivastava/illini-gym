@@ -50,20 +50,6 @@ const FavoriteModal: React.FC<FavoriteModalProps> = ({
     updateNickname(fullID, section.name);
   };
 
-  const [imageURL, setImageURL] = useState<string | null>(null);
-  const [isImagePopupVisible, setImagePopupVisible] = useState(false);
-
-  const mapIconClickProps = {
-    section,
-    setImageURL,
-    setImagePopupVisible,
-    setToast,
-  };
-  // Function to close the image popup
-  const closeImagePopup = () => {
-    setImagePopupVisible(false);
-  };
-
   return (
     <View style={[modalStyles.individualSectionContainer, itemStyle]}>
       {isEditMode ? (

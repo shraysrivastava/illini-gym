@@ -13,88 +13,58 @@ const InfoInstructions: React.FC = () => {
   return (
     <Animated.ScrollView style={styles.container}>
       <View style={styles.instructionContainer}>
-        {/* <MaterialIcons
-          name="map"
-          size={40}
-          color={Colors.white}
-          style={styles.icon}
-        /> */}
+        
         <View style={styles.textContainer}>
           <CustomText style={styles.instructionTitle}>Discover Gyms</CustomText>
           <CustomText style={styles.instructionText}>
-            Click on the map icon in the bottom navigation to find gyms near
-            you.
+            Use the map icon to find nearby gyms.
           </CustomText>
         </View>
       </View>
 
-      {/* Using MaterialCommunityIcons for this item */}
+      
       <View style={styles.instructionContainer}>
-        {/* <MaterialCommunityIcons
-          name="map-marker-radius"
-          size={40}
-          color={Colors.uiucOrange}
-          style={styles.icon}
-        /> */}
         <View style={styles.textContainer}>
           <CustomText style={styles.instructionTitle}>
             Select Your Gym
           </CustomText>
           <CustomText style={styles.instructionText}>
-            Select a gym marker and click on "Section Data" to view its
-            sections.
+            Select a gym marker and click on "View Sections".
           </CustomText>
         </View>
       </View>
 
       <View style={styles.instructionContainer}>
-        {/* <MaterialIcons name="star" size={40} color="gold" style={styles.icon} /> */}
         <View style={styles.textContainer}>
           <CustomText style={styles.instructionTitle}>
             Favorite Sections
           </CustomText>
           <CustomText style={styles.instructionText}>
-            Click the star icon to add a section to your Favorites. Return to
-            the favorites screen to view your newly added favorited sections.
+            Click the star icon to add a section to your favorites.
           </CustomText>
         </View>
       </View>
 
       <View style={styles.instructionContainer}>
-        {/* <MaterialIcons
-          name="edit"
-          size={40}
-          color={Colors.uiucOrange}
-          style={styles.icon}
-        /> */}
         <View style={styles.textContainer}>
           <CustomText style={styles.instructionTitle}>
             Edit Favorites
           </CustomText>
           <CustomText style={styles.instructionText}>
-            After adding favorites, you can rename and reorder them using the
-            pencil icon in the header.
+          Rename or reorder favorites via the pencil icon.
           </CustomText>
         </View>
       </View>
       <View style={styles.instructionContainer}>
-        {/* <MaterialIcons
-          name="image"
-          size={40}
-          color={"white"}
-          style={styles.icon}
-        /> */}
         <View style={styles.textContainer}>
           <CustomText style={styles.instructionTitle}>
-            View Section Details
+            Locate Section in Gym
           </CustomText>
           <CustomText style={styles.instructionText}>
-            Click on the image icon to toggle between the section location and an image of the section.
+            Tap the image icon to view a section's location.
           </CustomText>
         </View>
       </View>
-
-      {/* ... other items ... */}
     </Animated.ScrollView>
   );
 };

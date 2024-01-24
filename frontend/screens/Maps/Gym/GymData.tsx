@@ -150,6 +150,7 @@ export const GymData: React.FC<GymDataProps> = ({ route }) => {
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.contentContainer}
+        indicatorStyle="white" // Apply the indicatorStyle prop here for iOS
         refreshControl={
           <RefreshControl
             refreshing={refreshing}

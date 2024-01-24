@@ -8,7 +8,7 @@ import { GymInfo } from "./Gym/GymInfo";
 import { GymData } from "./Gym/GymData";
 import { MapsSettings } from "../Settings/SettingsScreens/MapsSettings";
 import DisplayLargeMap from "../Reusables/DisplayLargeMap";
-import { MapsInfo } from "../Info/InfoScreens/MapsInfo";
+import Information from "../Info/Information";
 export type MapsStackParamList = {
   MapsHome: undefined;
   MapsSettings: undefined;
@@ -70,7 +70,7 @@ export const MapsNav = () => {
       />
       <MapsStack.Screen
         name="MapsInfo"
-        component={MapsInfo}
+        component={Information}
         options={() => ({
           headerTitle: "Information",
           headerTitleStyle: {

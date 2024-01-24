@@ -13,12 +13,12 @@ const InfoInstructions: React.FC = () => {
   return (
     <Animated.ScrollView style={styles.container}>
       <View style={styles.instructionContainer}>
-        <MaterialIcons
+        {/* <MaterialIcons
           name="map"
           size={40}
           color={Colors.white}
           style={styles.icon}
-        />
+        /> */}
         <View style={styles.textContainer}>
           <CustomText style={styles.instructionTitle}>Discover Gyms</CustomText>
           <CustomText style={styles.instructionText}>
@@ -30,12 +30,12 @@ const InfoInstructions: React.FC = () => {
 
       {/* Using MaterialCommunityIcons for this item */}
       <View style={styles.instructionContainer}>
-        <MaterialCommunityIcons
+        {/* <MaterialCommunityIcons
           name="map-marker-radius"
           size={40}
           color={Colors.uiucOrange}
           style={styles.icon}
-        />
+        /> */}
         <View style={styles.textContainer}>
           <CustomText style={styles.instructionTitle}>
             Select Your Gym
@@ -48,7 +48,7 @@ const InfoInstructions: React.FC = () => {
       </View>
 
       <View style={styles.instructionContainer}>
-        <MaterialIcons name="star" size={40} color="gold" style={styles.icon} />
+        {/* <MaterialIcons name="star" size={40} color="gold" style={styles.icon} /> */}
         <View style={styles.textContainer}>
           <CustomText style={styles.instructionTitle}>
             Favorite Sections
@@ -61,12 +61,12 @@ const InfoInstructions: React.FC = () => {
       </View>
 
       <View style={styles.instructionContainer}>
-        <MaterialIcons
+        {/* <MaterialIcons
           name="edit"
           size={40}
           color={Colors.uiucOrange}
           style={styles.icon}
-        />
+        /> */}
         <View style={styles.textContainer}>
           <CustomText style={styles.instructionTitle}>
             Edit Favorites
@@ -78,12 +78,12 @@ const InfoInstructions: React.FC = () => {
         </View>
       </View>
       <View style={styles.instructionContainer}>
-        <MaterialIcons
+        {/* <MaterialIcons
           name="image"
           size={40}
           color={"white"}
           style={styles.icon}
-        />
+        /> */}
         <View style={styles.textContainer}>
           <CustomText style={styles.instructionTitle}>
             View Section Details
@@ -101,17 +101,22 @@ const InfoInstructions: React.FC = () => {
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 20,
+    // paddingTop: 20,
     paddingHorizontal: 10,
     backgroundColor: Colors.midnightBlue, // Assuming this is your dark blue color
   },
   instructionContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: Colors.subtleWhite, // Slightly lighter than the background
-    padding: 15,
+    // backgroundColor: Colors.subtleWhite, // Slightly lighter than the background
+    padding: 20,
     borderRadius: 8,
-    marginBottom: 20,
+    marginTop: 0,
+    marginBottom: 0,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.gray,
+    // borderWidth: 1,
+    // borderColor: Colors.uiucOrange,
   },
   instructionText: {
     fontSize: 18,

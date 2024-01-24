@@ -109,7 +109,7 @@ const FavoriteModal: React.FC<FavoriteModalProps> = ({
       ) : (
         // Regular Display UI
         <View style={modalStyles.row}>
-          <VisibilityIcon isOpen={section.isOpen} />
+          {/* <VisibilityIcon isOpen={section.isOpen} /> */}
           <CustomText style={modalStyles.sectionName}>
             {localNickname}
           </CustomText>

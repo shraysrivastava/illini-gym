@@ -12,7 +12,7 @@ const FavoriteInstructions: React.FC = () => {
       <Text style={styles.normalText}>⭐ Add to Favorites ⭐</Text>
       <View style={styles.helpTextWrapper}>
         <MaterialIcons name="info-outline" size={24} color={Colors.uiucOrange} />
-        <Text style={styles.helpText}> Need Help? Tap Info </Text>
+        <Text style={styles.helpText}>Need Help? Tap Info  </Text>
         <MaterialIcons name="info-outline" size={24} color={Colors.uiucOrange} />
       </View>
     </View>
@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-start',
     alignItems: 'center',
-    paddingTop: 50,
+    paddingTop: 20,
     paddingHorizontal: 25,
     backgroundColor: Colors.midnightBlue,
   },

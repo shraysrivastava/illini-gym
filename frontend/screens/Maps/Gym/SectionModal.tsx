@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Modal, TouchableOpacity, Text, StyleSheet } from "react-native";
+import { View, Modal, TouchableOpacity, Text, StyleSheet, Image } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { DocumentData } from "firebase/firestore";
 import CustomText from "../../Reusables/CustomText";
@@ -9,6 +9,31 @@ import ProgressBar from "../../Reusables/ProgressBar";
 import { ToastProps } from "../../Reusables/Toast";
 import fetchImageFromFirebase from "../../../firebase/images";
 import ImageViewer from "react-native-image-zoom-viewer";
+
+const Maps = {
+  "arc=gym-1.png": require("../../../assets/maps/arc=gym-1.png"),
+  "arc=gym-2.png": require("../../../assets/maps/arc=gym-2.png"),
+  "arc=gym-3.png": require("../../../assets/maps/arc=gym-3.png"),
+  "arc=combat-room.png": require("../../../assets/maps/arc=combat-room.png"),
+  "arc=entrance-level-fitness-area.png": require("../../../assets/maps/arc=entrance-level-fitness-area.png"),
+  "arc=indoor-pool.png": require("../../../assets/maps/arc=indoor-pool.png"),
+  "arc=lower-level.png": require("../../../assets/maps/arc=lower-level.png"),
+  "arc=mp-room-1.png": require("../../../assets/maps/arc=mp-room-1.png"),
+  "arc=mp-room-2.png": require("../../../assets/maps/arc=mp-room-2.png"),
+  "arc=mp-room-3.png": require("../../../assets/maps/arc=mp-room-3.png"),
+  "arc=mp-room-4.png": require("../../../assets/maps/arc=mp-room-4.png"),
+  "arc=mp-room-5.png": require("../../../assets/maps/arc=mp-room-5.png"),
+  "arc=mp-room-6.png": require("../../../assets/maps/arc=mp-room-6.png"),
+  "arc=mp-room-7.png": require("../../../assets/maps/arc=mp-room-7.png"),
+  "arc=olympic-pod.png": require("../../../assets/maps/arc=olympic-pod.png"),
+  "arc=power-pod.png": require("../../../assets/maps/arc=power-pod.png"),
+  "arc=hiit-pod.png": require("../../../assets/maps/arc=hiit-pod.png"),
+  "arc=raquetball-courts.png": require("../../../assets/maps/arc=raquetball-courts.png"),
+  "arc=rock-wall.png": require("../../../assets/maps/arc=rock-wall.png"),
+  "arc=squash-courts.png": require("../../../assets/maps/arc=squash-courts.png"),
+  "arc=upper-level.png": require("../../../assets/maps/arc=upper-level.png"),
+  "arc=strength-and-conditioning-zone.png": require("../../../assets/maps/arc=strength-and-conditioning-zone.png"),
+};
 
 interface SectionProps {
   section: DocumentData;
@@ -69,8 +94,8 @@ const Section: React.FC<SectionProps> = React.memo(
 
     const handleMapIconClick = async () => {
       try {
-        const imagePath = `images/${section.gym}=${section.key}.png`;
-        const url = await fetchImageFromFirebase(imagePath);
+        const imagePath = `${section.gym}=${section.key}.png`;
+        const url = Maps[imagePath];
         if (url) {
           setImageURL(url);
           setImagePopupVisible(true);
@@ -142,7 +167,9 @@ const Section: React.FC<SectionProps> = React.memo(
 
               {imageURL && (
                 <ImageViewer
-                  imageUrls={[{ url: imageURL }]}
+                imageUrls={[
+                  { url: Image.resolveAssetSource(imageURL).uri },
+                ]}
                   backgroundColor="transparent"
                   enableSwipeDown={true}
                   onSwipeDown={closeImagePopup}

@@ -21,7 +21,7 @@ const FavoriteInstructions: React.FC<FavoriteInstructionsProps> = ({ onPressFav,
         <Text style={styles.headerText}>Gym</Text>
       </View>
       <View style={styles.content}>
-        <Text style={styles.mainText}>No favorites added</Text>
+        <Text style={styles.mainText}>No Favorites Added</Text>
 
         <TouchableOpacity onPress={onPressFav} style={styles.favoritesButton}>
           <MaterialIcons name="star-border" size={28} color="white" />
@@ -59,11 +59,22 @@ const styles = StyleSheet.create({
     // resizeMode: 'contain', // Ensure the logo scales correctly
   },
   headerText: {
-    fontSize: 36, // Match the text size with your logo size
+    fontSize: 36,
     fontWeight: 'bold',
     color: "white",
     textAlign: 'center',
+    // Shadow properties for iOS
+    shadowColor: "#BBBBBB", // Light gray shadow for subtle contrast
+    shadowOffset: { width: 1, height: 2 }, // Slightly offset for depth
+    shadowOpacity: 0.8, // Higher opacity for better visibility
+    shadowRadius: 2, // A smaller radius for a more defined shadow
+    // Text shadow for Android
+    textShadowColor: 'rgba(187, 187, 187, 0.8)', // Light gray with opacity
+    textShadowOffset: { width: 1, height: 2 },
+    textShadowRadius: 2,
   },
+  
+  
   content: {
     alignItems: 'center',
     marginBottom: 80,
@@ -75,6 +86,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
+    borderWidth: .5,
+    borderColor: Colors.uiucOrange,
   },
   subText: {
     fontSize: 18, // Slightly smaller font size for subtlety

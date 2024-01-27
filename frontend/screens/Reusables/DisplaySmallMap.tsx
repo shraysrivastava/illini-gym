@@ -1,12 +1,19 @@
-import React, { useState } from "react";
-import { View, Modal, TouchableOpacity, Text, StyleSheet, Image } from "react-native";
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Modal,
+  TouchableOpacity,
+  Text,
+  StyleSheet,
+  Image,
+} from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import ImageViewer from "react-native-image-zoom-viewer";
 import { modalStyles } from "../Maps/Gym/SectionModal";
 import Colors from "../../constants/Colors";
 import { ToastProps } from "../Reusables/Toast";
-import fetchImageFromFirebase from "../../firebase/images";
 import { SectionDetails } from "../Favorites/useFavorites";
+import Feather from "react-native-vector-icons/Feather";
 
 interface MapIconWithModalProps {
   section: SectionDetails;
@@ -38,6 +45,11 @@ const Maps = {
   "arc=strength-and-conditioning-zone.png": require("../../assets/maps/arc=strength-and-conditioning-zone.png"),
 };
 
+const Pics = {
+  "arc=combat-room.png": require("../../assets/illini-dumbbell.png"),
+  "arc=strength-and-conditioning-zone.png": require("../../assets/images/arc=strength-and-conditioning-zone.png"),
+};
+
 const MapIconWithModal: React.FC<MapIconWithModalProps> = ({
   section,
   setToast,
@@ -45,31 +57,41 @@ const MapIconWithModal: React.FC<MapIconWithModalProps> = ({
 }) => {
   const [imageURL, setImageURL] = useState<number | null>(null);
   const [isImagePopupVisible, setImagePopupVisible] = useState(false);
+  const [isMapView, setIsMapView] = useState(true);
+  const [canToggle, setCanToggle] = useState(true); // New state variable
 
-  const handleMapIconClick = async () => {
-    try {
-      const imagePath = `${section.gym}=${section.key}.png`;
-      const url = Maps[imagePath];
-      if (url) {
-        setImageURL(url);
-        setImagePopupVisible(true);
-      } else {
-        setToast({
-          message: localNickname + " image not available",
-          color: "red",
-        });
-      }
-    } catch (error) {
-      setTimeout(
-        () => setToast({ message: "Error loading map", color: "red" }),
-        0
-      );
+
+  const toggleView = () => {
+    if (canToggle) {
+      setIsMapView(!isMapView);
+      setCanToggle(false); // Disable toggling
+      setTimeout(() => {
+        setCanToggle(true); // Enable toggling after 1 second
+      }, 1000);
+    }
+  };
+  useEffect(() => {
+    const imagePath = `${section.gym}=${section.key}.png`;
+    const url = isMapView ? Maps[imagePath] : Pics[imagePath];
+    setImageURL(url);
+  }, [isMapView, section.gym, section.key]);
+
+  const handleMapIconClick = () => {
+    if (imageURL) {
+      setImagePopupVisible(true);
+    } else {
+      setToast({
+        message: localNickname + " image not available",
+        color: "red",
+      });
     }
   };
 
   const closeImagePopup = () => {
     setImagePopupVisible(false);
+    setIsMapView(true); 
   };
+  
 
   return (
     <>
@@ -88,22 +110,34 @@ const MapIconWithModal: React.FC<MapIconWithModalProps> = ({
         <View style={styles.fullScreenOverlay}>
           <View style={styles.modalContent}>
             <View style={styles.modalHeader}>
-              <Text style={styles.imageHeader}>
-                {`${section.gym.toUpperCase()}: ${section.name}`}
-              </Text>
-              <TouchableOpacity
-                style={styles.closeButton}
-                onPress={closeImagePopup}
-              >
-                <MaterialIcons name="close" size={30} color="red" />
-              </TouchableOpacity>
-            </View>
+              <View style={styles.toggleButtonContainer}>
+                <TouchableOpacity
+                  onPress={toggleView}
+                  style={styles.toggleButton}
+                >
+                  {isMapView ? (
+                    <Feather name="toggle-left" size={30} color={Colors.uiucOrange} />
+                  ) : (
+                    <Feather name="toggle-right" size={30} color={Colors.uiucOrange}/>
+                  )}
+                </TouchableOpacity>
+              </View>
+              <View style={styles.titleContainer}>
+                <Text style={styles.imageHeader}>{section.level} Level</Text>
+              </View>
 
+              <View style={styles.closeButtonContainer}>
+                <TouchableOpacity
+                  onPress={closeImagePopup}
+                  style={styles.closeButton}
+                >
+                  <MaterialIcons name="close" size={30} color={Colors.midnightBlue} />
+                </TouchableOpacity>
+              </View>
+            </View>
             {imageURL && (
               <ImageViewer
-                imageUrls={[
-                  { url: Image.resolveAssetSource(imageURL).uri },
-                ]}
+                imageUrls={[{ url: Image.resolveAssetSource(imageURL).uri }]}
                 backgroundColor="transparent"
                 enableSwipeDown={true}
                 onSwipeDown={closeImagePopup}
@@ -111,7 +145,9 @@ const MapIconWithModal: React.FC<MapIconWithModalProps> = ({
                 renderIndicator={() => <></>}
               />
             )}
-            <Text style={styles.imageFooter}>{section.level} Level</Text>
+            <Text style={styles.imageFooter}>
+              {`${section.gym.toUpperCase()}: ${section.name}`}
+            </Text>
           </View>
         </View>
       </Modal>
@@ -141,20 +177,41 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   modalHeader: {
+    flexDirection: "row",
     alignItems: "center",
-    alignSelf: "stretch",
+    justifyContent: "space-between",
+    width: "100%", // Ensure full width
+    paddingHorizontal: 10,
+  },
+  toggleButtonContainer: {
+    flex: 1,
+    justifyContent: "flex-start", // Align toggle button to the start
+  },
+  toggleButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  toggleButtonText: {
+    color: "white", // Text color contrasting the button color
+    fontSize: 16,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  titleContainer: {
+    flex: 2, // Give more space for the title to ensure it stays centered
+    alignItems: "center", // Center the title
   },
   imageHeader: {
-    color: Colors.uiucOrange,
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: "bold",
-    maxWidth: "80%", // Adjust the percentage as needed
-    textAlign: "center", // Align text in the center
+    color: Colors.midnightBlue,
+  },
+  closeButtonContainer: {
+    flex: 1,
+    alignItems: "flex-end", // Align close button to the end
   },
   closeButton: {
-    position: "absolute",
-    top: 0,
-    right: 0,
+    position: "relative",
     zIndex: 1,
   },
   imageFooter: {
@@ -165,3 +222,4 @@ const styles = StyleSheet.create({
 });
 
 export default MapIconWithModal;
+

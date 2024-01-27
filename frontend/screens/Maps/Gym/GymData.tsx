@@ -41,9 +41,8 @@ export const GymData: React.FC<GymDataProps> = ({ route }) => {
     Record<string, boolean>
   >({});
   const currentUserId = auth.currentUser?.uid;
-  const popularSectionsOpen = gymData.filter((section) => section.isPopular && section.isOpen);
-  const normalSectionsOpen = gymData.filter((section) => section.isOpen && !section.isPopular);
-  const closedSectionsAll = gymData.filter((section) => !section.isOpen);
+  const popularSections = gymData.filter((section) => section.isPopular);
+  const normalSections = gymData.filter((section) => !section.isPopular);
   const [toast, setToast] = useState<ToastProps>({ message: "", color: "" });
   const toastTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -162,19 +161,13 @@ export const GymData: React.FC<GymDataProps> = ({ route }) => {
         }
       >
         <SectionModals
-          sections={popularSectionsOpen}
+          sections={popularSections}
           pressedSections={pressedSections}
           handleFavoritePress={handleFavoritePress}
           setToast={setToast}
         />
         <SectionModals
-          sections={normalSectionsOpen}
-          pressedSections={pressedSections}
-          handleFavoritePress={handleFavoritePress}
-          setToast={setToast}
-        />
-        <SectionModals
-          sections={closedSectionsAll}
+          sections={normalSections}
           pressedSections={pressedSections}
           handleFavoritePress={handleFavoritePress}
           setToast={setToast}

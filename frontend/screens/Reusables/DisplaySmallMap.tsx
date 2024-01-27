@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, memo } from "react";
 import {
   View,
   Modal,
@@ -6,6 +6,7 @@ import {
   Text,
   StyleSheet,
   Image,
+  ActivityIndicator
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import ImageViewer from "react-native-image-zoom-viewer";
@@ -17,6 +18,10 @@ import Feather from "react-native-vector-icons/Feather";
 
 interface MapIconWithModalProps {
   section: SectionDetails;
+  sectionKey: string;
+  sectionGym: string;
+  sectionLevel: string;
+  sectionName: string;
   setToast: (toast: ToastProps) => void;
   localNickname: string;
 }
@@ -46,9 +51,60 @@ const Maps = {
 };
 
 const Pics = {
-  "arc=combat-room.png": require("../../assets/illini-dumbbell.png"),
+  "arc=gym-1.png": require("../../assets/images/arc=gym-1.png"),
+  "arc=gym-2.png": require("../../assets/images/arc=gym-2.png"),
+  "arc=gym-3.png": require("../../assets/images/arc=gym-3.png"),
+  "arc=combat-room.png": require("../../assets/images/arc=combat-room.png"),
+  "arc=entrance-level-fitness-area.png": require("../../assets/images/arc=entrance-level-fitness-area.png"),
+  "arc=indoor-pool.png": require("../../assets/images/arc=indoor-pool.png"),
+  "arc=lower-level.png": require("../../assets/images/arc=lower-level.png"),
+  "arc=mp-room-1.png": require("../../assets/images/arc=mp-room-1.png"),
+  "arc=mp-room-2.png": require("../../assets/images/arc=mp-room-2.png"),
+  "arc=mp-room-3.png": require("../../assets/images/arc=mp-room-3.png"),
+  "arc=mp-room-4.png": require("../../assets/images/arc=mp-room-4.png"),
+  "arc=mp-room-5.png": require("../../assets/images/arc=mp-room-5.png"),
+  "arc=mp-room-6.png": require("../../assets/images/arc=mp-room-6.png"),
+  "arc=mp-room-7.png": require("../../assets/images/arc=mp-room-7.png"),
+  "arc=olympic-pod.png": require("../../assets/images/arc=olympic-pod.png"),
+  "arc=power-pod.png": require("../../assets/images/arc=power-pod.png"),
+  "arc=hiit-pod.png": require("../../assets/images/arc=hiit-pod.png"),
+  "arc=raquetball-courts.png": require("../../assets/images/arc=raquetball-courts.png"),
+  "arc=rock-wall.png": require("../../assets/images/arc=rock-wall.png"),
+  "arc=squash-courts.png": require("../../assets/images/arc=squash-courts.png"),
+  "arc=upper-level.png": require("../../assets/images/arc=upper-level.png"),
   "arc=strength-and-conditioning-zone.png": require("../../assets/images/arc=strength-and-conditioning-zone.png"),
 };
+
+interface ImageViewerMemoProps {
+  imageURL: number | null;
+  closeImagePopup: () => void;
+}
+
+const ImageViewerMemo = memo<ImageViewerMemoProps>(
+  ({ imageURL, closeImagePopup }) => {
+    return (
+      imageURL && (
+        <ImageViewer
+          imageUrls={[{ url: Image.resolveAssetSource(imageURL).uri }]}
+          backgroundColor="transparent"
+          enableSwipeDown={true}
+          onSwipeDown={closeImagePopup}
+          style={styles.imageViewerContainer}
+          renderIndicator={() => <></>}
+        />
+      )
+    );
+  },
+  areEqual
+);
+
+function areEqual(
+  prevProps: ImageViewerMemoProps,
+  nextProps: ImageViewerMemoProps
+) {
+  // Customize the comparison to check if props are equal
+  return prevProps.imageURL === nextProps.imageURL;
+}
 
 const MapIconWithModal: React.FC<MapIconWithModalProps> = ({
   section,
@@ -57,9 +113,8 @@ const MapIconWithModal: React.FC<MapIconWithModalProps> = ({
 }) => {
   const [imageURL, setImageURL] = useState<number | null>(null);
   const [isImagePopupVisible, setImagePopupVisible] = useState(false);
-  const [isMapView, setIsMapView] = useState(true);
-  const [canToggle, setCanToggle] = useState(true); // New state variable
-
+  const [isMapView, setIsMapView] = useState(false);
+  const [canToggle, setCanToggle] = useState(true);
 
   const toggleView = () => {
     if (canToggle) {
@@ -67,7 +122,7 @@ const MapIconWithModal: React.FC<MapIconWithModalProps> = ({
       setCanToggle(false); // Disable toggling
       setTimeout(() => {
         setCanToggle(true); // Enable toggling after 1 second
-      }, 1000);
+      }, 500);
     }
   };
   useEffect(() => {
@@ -89,9 +144,8 @@ const MapIconWithModal: React.FC<MapIconWithModalProps> = ({
 
   const closeImagePopup = () => {
     setImagePopupVisible(false);
-    setIsMapView(true); 
+    setIsMapView(true);
   };
-  
 
   return (
     <>
@@ -116,35 +170,41 @@ const MapIconWithModal: React.FC<MapIconWithModalProps> = ({
                   style={styles.toggleButton}
                 >
                   {isMapView ? (
-                    <Feather name="toggle-left" size={30} color={Colors.uiucOrange} />
+                    <Feather
+                      name="toggle-left"
+                      size={30}
+                      color={Colors.uiucOrange}
+                    />
                   ) : (
-                    <Feather name="toggle-right" size={30} color={Colors.uiucOrange}/>
+                    <Feather
+                      name="toggle-right"
+                      size={30}
+                      color={Colors.uiucOrange}
+                    />
                   )}
                 </TouchableOpacity>
               </View>
               <View style={styles.titleContainer}>
                 <Text style={styles.imageHeader}>{section.level} Level</Text>
               </View>
-
               <View style={styles.closeButtonContainer}>
                 <TouchableOpacity
                   onPress={closeImagePopup}
                   style={styles.closeButton}
                 >
-                  <MaterialIcons name="close" size={30} color={Colors.midnightBlue} />
+                  <MaterialIcons
+                    name="close"
+                    size={30}
+                    color={Colors.midnightBlue}
+                  />
                 </TouchableOpacity>
               </View>
             </View>
-            {imageURL && (
-              <ImageViewer
-                imageUrls={[{ url: Image.resolveAssetSource(imageURL).uri }]}
-                backgroundColor="transparent"
-                enableSwipeDown={true}
-                onSwipeDown={closeImagePopup}
-                style={styles.imageViewerContainer}
-                renderIndicator={() => <></>}
-              />
-            )}
+            <ImageViewerMemo
+              imageURL={imageURL}
+              closeImagePopup={closeImagePopup}
+            />
+              
             <Text style={styles.imageFooter}>
               {`${section.gym.toUpperCase()}: ${section.name}`}
             </Text>
@@ -188,8 +248,8 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start", // Align toggle button to the start
   },
   toggleButton: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   toggleButtonText: {
     color: "white", // Text color contrasting the button color
@@ -219,7 +279,12 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
   },
+  loadingContainer: {
+    // flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: -1000, 
+  },
 });
 
 export default MapIconWithModal;
-

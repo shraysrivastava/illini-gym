@@ -33,6 +33,8 @@ export const FavoritesNav = () => {
     useRoute<RouteProp<FavoriteStackParamList, "FavoritesScreen">>();
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const [title, setTitle] = useState<string>("Favorites");
+  const [hasFavorites, setHasFavorites] = useState<boolean>(false);
+
 
   useEffect(() => {
     if (isEditMode) {

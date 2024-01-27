@@ -2,10 +2,10 @@
 const Colors = {
     // Official Colors
     uiucBlue: '#003C7D', 
-    uiucOrange: '#FF6300', 
+    uiucOrange: '#FF4900', 
 
     // Variations of Blue
-    midnightBlue: '#001F3F',
+    midnightBlue: '#000F2E',
     darkBlue: '#002855',
     lighterBlue: '#0054A4',
     lightBlue: '#6699CC',

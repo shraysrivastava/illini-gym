@@ -1,28 +1,38 @@
 import React from "react";
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet, Text, TouchableOpacity, Image } from "react-native";
 import Colors from "../../constants/Colors";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import { TouchableOpacity } from "react-native-gesture-handler";
-
 
 type FavoriteInstructionsProps = {
-  onPress: () => void;
+  onPressFav: () => void;
+  onPressHelp: () => void;
 };
 
-const FavoriteInstructions: React.FC<FavoriteInstructionsProps> = ({ onPress }) => {
+const FavoriteInstructions: React.FC<FavoriteInstructionsProps> = ({ onPressFav, onPressHelp }) => {
   return (
     <View style={styles.container}>
-      <View>
-      <Text style={styles.mainText}>Welcome to Illini Gym</Text>
-      <Text style={styles.subText}>Know Before You Go</Text>
-      
-      <Text style={styles.normalText}>📍 Explore the Map 📍</Text>
-      <Text style={styles.normalText}>🔍 View Sections 🔍</Text>
-      <Text style={styles.normalText}>⭐ Add to Favorites ⭐</Text>
+      <View style={styles.header}>
+        
+        <Text style={styles.headerText}>Illini</Text>
+        <Image 
+          source={require('../../assets/illini-dumbbell.png')} 
+          style={styles.logo} 
+        />
+        <Text style={styles.headerText}>Gym</Text>
       </View>
-      
-      <TouchableOpacity style={styles.helpTextWrapper} onPress={onPress}>
-        <Text style={styles.helpText}>Need Help?  </Text>
+      <View style={styles.content}>
+        <Text style={styles.mainText}>No favorites added</Text>
+
+        <TouchableOpacity onPress={onPressFav} style={styles.favoritesButton}>
+          <MaterialIcons name="star-border" size={28} color="white" />
+          <Text style={styles.favoritesText}>Add to Favorites</Text>
+        </TouchableOpacity>
+        <Text style={styles.subText}>Favorited sections will appear here for quick access</Text>
+      </View>
+
+      <TouchableOpacity style={styles.helpTextWrapper} onPress={onPressHelp}>
+        <MaterialIcons name="help-outline" size={28} color="white" />
+        <Text style={styles.helpText}>Need Help?</Text>
       </TouchableOpacity>
     </View>
   );
@@ -31,52 +41,98 @@ const FavoriteInstructions: React.FC<FavoriteInstructionsProps> = ({ onPress }) 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'space-between',
+    justifyContent: 'space-between', // Updated to space-between
     alignItems: 'center',
-    paddingTop: 20,
+    paddingTop: 0,
+    paddingBottom: 20, // Added padding to bottom
     paddingHorizontal: 20,
     backgroundColor: Colors.midnightBlue,
   },
-  mainText: {
-    fontSize: 32,
-    fontWeight: '600',
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  logo: {
+    width: 100, // Adjust size as needed
+    height: 150, // Adjust size as needed
+    // resizeMode: 'contain', // Ensure the logo scales correctly
+  },
+  headerText: {
+    fontSize: 36, // Match the text size with your logo size
+    fontWeight: 'bold',
     color: "white",
     textAlign: 'center',
-    marginBottom: 20,
+  },
+  content: {
+    alignItems: 'center',
+    marginBottom: 80,
+    backgroundColor: Colors.subtleWhite, // Changed to white for contrast
+    padding: 20, // Added padding
+    borderRadius: 15, // Rounded corners
+    shadowColor: "#000", // Shadow for depth
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   subText: {
-    fontSize: 20,
-    color: Colors.uiucOrange,
-    
+    fontSize: 18, // Slightly smaller font size for subtlety
+    color: Colors.gray,
     fontStyle: 'italic',
     textAlign: 'center',
-    marginBottom: 45,
-    fontWeight: 'bold',
+    fontWeight: 'normal', // Changed to normal for a lighter appearance
+    marginTop: 15, // Added space above the subText
   },
-
-  normalText: {
+  mainText: {
+    fontSize: 24, // Adjusted for better proportion
+    fontWeight: 'bold',
+    color: "white",
+    textAlign: 'center',
+    marginBottom: 30, // Increased spacing
+  },
+  favoritesButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: Colors.uiucOrange,
+    paddingVertical: 12, // Slightly increased padding
+    paddingHorizontal: 25, // Increased for better touch area
+    borderRadius: 20, // More rounded corners
+    shadowColor: "#000", // Adding shadow
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 3.84,
+    elevation: 5,
+    marginBottom: 20,
+  },
+  favoritesText: {
     fontSize: 20,
     color: "white",
     textAlign: 'center',
-    marginBottom: 20,
+    marginLeft: 10,
+    fontWeight: '500', // Slightly bolder
   },
   helpTextWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 20,
-    marginTop: 20,
     backgroundColor: Colors.uiucBlue,
     paddingVertical: 15,
     paddingHorizontal: 20,
-    borderRadius: 15,
-    
+    borderRadius: 20, // More rounded corners
+    shadowColor: "#000", // Adding shadow
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 3.84,
+    elevation: 5,
+    marginBottom: 10,
   },
+  
   helpText: {
     fontSize: 20,
     color: "white",
     textAlign: 'center',
-    lineHeight: 24, // Adjust line height to align with the icon size
-    paddingHorizontal: 0, // Optional: Add some horizontal padding if needed
+    marginLeft: 10,
+    fontWeight: '500', // Slightly bolder
   },
 });
 

@@ -202,8 +202,8 @@ export const modalStyles = StyleSheet.create({
     paddingVertical: 10,
     backgroundColor: Colors.subtleWhite,
     borderRadius: 8,
-    borderWidth: 2,
-    borderColor: Colors.subtleWhite,
+    borderWidth: .5,
+    borderColor: Colors.lighterBlue,
     position: "relative",
   },
   row: {

@@ -267,7 +267,10 @@ export const FavoritesScreen: React.FC = () => {
         </View>
       ) : favorites.length === 0 ? (
         <View style={styles.noFavoritesContent}>
-          <FavoriteInstructions onPress={() => navigation.navigate("FavoritesInfo")} />
+          <FavoriteInstructions 
+          onPressFav={() =>navigation.navigate("GymData", {gym: "arc",gymName:"ARC"})}
+          onPressHelp={() => navigation.navigate("Information")} 
+          />
         </View>
       ) : (
         <View>

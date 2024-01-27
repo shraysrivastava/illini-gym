@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
     // borderColor: Colors.uiucOrange,
   },
   instructionText: {
-    fontSize: 18,
+    fontSize: 20,
     color: "white", // Ensuring readability
     marginLeft: 10,
   },

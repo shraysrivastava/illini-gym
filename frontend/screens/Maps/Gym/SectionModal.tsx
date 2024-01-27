@@ -4,11 +4,12 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { DocumentData } from "firebase/firestore";
 import CustomText from "../../Reusables/CustomText";
 import Colors from "../../../constants/Colors";
-import { getTimeDifference } from "../../Reusables/Utilities";
+import { getTimeDifference, isGymClosed } from "../../Reusables/Utilities";
 import ProgressBar from "../../Reusables/ProgressBar";
 import { ToastProps } from "../../Reusables/Toast";
 import fetchImageFromFirebase from "../../../firebase/images";
 import ImageViewer from "react-native-image-zoom-viewer";
+import moment from 'moment';
 
 const Maps = {
   "arc=gym-1.png": require("../../../assets/maps/arc=gym-1.png"),
@@ -80,7 +81,8 @@ export const VisibilityIcon: React.FC<{ isOpen: boolean }> = React.memo(
 export const SectionInfo: React.FC<{ section: DocumentData }> = ({
   section,
 }) => {
-  return section.isOpen ? (
+  const gymClosed = isGymClosed(moment());
+  return section.isOpen && !gymClosed ? (
     <ProgressBar count={section.count} capacity={section.capacity} />
   ) : (
     <CustomText style={modalStyles.closedText}>Section Closed</CustomText>
@@ -131,7 +133,7 @@ const Section: React.FC<SectionProps> = React.memo(
         </View>
         {/* Middle Row: Last Updated */}
         <CustomText style={modalStyles.lastUpdated}>
-          Last Updated: {timeDiff}
+          {timeDiff}
         </CustomText>
 
         {/* Bottom Row: Either Progress Bar or 'Section Closed' Text */}

@@ -120,7 +120,7 @@ const FavoriteModal: React.FC<FavoriteModalProps> = ({
         </View>
       ) : (
         <CustomText style={modalStyles.lastUpdated}>
-          Last Updated: {timeDiff}
+          {timeDiff}
         </CustomText>
       )}
 

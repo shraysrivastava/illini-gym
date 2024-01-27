@@ -29,6 +29,8 @@ const Maps = {
   "arc=mp-room-6.png": require("../../assets/maps/arc=mp-room-6.png"),
   "arc=mp-room-7.png": require("../../assets/maps/arc=mp-room-7.png"),
   "arc=olympic-pod.png": require("../../assets/maps/arc=olympic-pod.png"),
+  "arc=power-pod.png": require("../../assets/maps/arc=power-pod.png"),
+  "arc=hiit-pod.png": require("../../assets/maps/arc=hiit-pod.png"),
   "arc=raquetball-courts.png": require("../../assets/maps/arc=raquetball-courts.png"),
   "arc=rock-wall.png": require("../../assets/maps/arc=rock-wall.png"),
   "arc=squash-courts.png": require("../../assets/maps/arc=squash-courts.png"),

@@ -34,7 +34,7 @@ EDIT_CAPACITY = {
     "lower-level": 120,
     "upper-level": 160,
 }
-KEYS_TO_REMOVE = set(["meeting-room-1", "meeting-room-2", "meeting-room-3", "instructional-kitchen"])
+KEYS_TO_REMOVE = set(["meeting-room-1", "meeting-room-2", "meeting-room-3", "instructional-kitchen", "winter-garden"])
 # Initialize Firebase Admin
 cred = credentials.Certificate("./firebase.json")
 firebase_admin.initialize_app(cred)

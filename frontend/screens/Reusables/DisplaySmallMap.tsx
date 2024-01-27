@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Modal, TouchableOpacity, Text, StyleSheet } from "react-native";
+import { View, Modal, TouchableOpacity, Text, StyleSheet, Image } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import ImageViewer from "react-native-image-zoom-viewer";
 import { modalStyles } from "../Maps/Gym/SectionModal";
@@ -13,24 +13,49 @@ interface MapIconWithModalProps {
   setToast: (toast: ToastProps) => void;
   localNickname: string;
 }
+const Maps = {
+  "arc=gym-1.png": require("../../assets/maps/arc=gym-1.png"),
+  "arc=gym-2.png": require("../../assets/maps/arc=gym-2.png"),
+  "arc=gym-3.png": require("../../assets/maps/arc=gym-3.png"),
+  "arc=combat-room.png": require("../../assets/maps/arc=combat-room.png"),
+  "arc=entrance-level-fitness-area.png": require("../../assets/maps/arc=entrance-level-fitness-area.png"),
+  "arc=indoor-pool.png": require("../../assets/maps/arc=indoor-pool.png"),
+  "arc=lower-level.png": require("../../assets/maps/arc=lower-level.png"),
+  "arc=mp-room-1.png": require("../../assets/maps/arc=mp-room-1.png"),
+  "arc=mp-room-2.png": require("../../assets/maps/arc=mp-room-2.png"),
+  "arc=mp-room-3.png": require("../../assets/maps/arc=mp-room-3.png"),
+  "arc=mp-room-4.png": require("../../assets/maps/arc=mp-room-4.png"),
+  "arc=mp-room-5.png": require("../../assets/maps/arc=mp-room-5.png"),
+  "arc=mp-room-6.png": require("../../assets/maps/arc=mp-room-6.png"),
+  "arc=mp-room-7.png": require("../../assets/maps/arc=mp-room-7.png"),
+  "arc=olympic-pod.png": require("../../assets/maps/arc=olympic-pod.png"),
+  "arc=raquetball-courts.png": require("../../assets/maps/arc=raquetball-courts.png"),
+  "arc=rock-wall.png": require("../../assets/maps/arc=rock-wall.png"),
+  "arc=squash-courts.png": require("../../assets/maps/arc=squash-courts.png"),
+  "arc=upper-level.png": require("../../assets/maps/arc=upper-level.png"),
+  "arc=strength-and-conditioning-zone.png": require("../../assets/maps/arc=strength-and-conditioning-zone.png"),
+};
 
 const MapIconWithModal: React.FC<MapIconWithModalProps> = ({
   section,
   setToast,
   localNickname,
 }) => {
-  const [imageURL, setImageURL] = useState<string | null>(null);
+  const [imageURL, setImageURL] = useState<number | null>(null);
   const [isImagePopupVisible, setImagePopupVisible] = useState(false);
 
   const handleMapIconClick = async () => {
     try {
-      const imagePath = `images/${section.gym}=${section.key}.png`;
-      const url = await fetchImageFromFirebase(imagePath);
+      const imagePath = `${section.gym}=${section.key}.png`;
+      const url = Maps[imagePath];
       if (url) {
         setImageURL(url);
         setImagePopupVisible(true);
       } else {
-        setToast({ message: localNickname + " image not available", color: "red" });
+        setToast({
+          message: localNickname + " image not available",
+          color: "red",
+        });
       }
     } catch (error) {
       setTimeout(
@@ -62,7 +87,7 @@ const MapIconWithModal: React.FC<MapIconWithModalProps> = ({
           <View style={styles.modalContent}>
             <View style={styles.modalHeader}>
               <Text style={styles.imageHeader}>
-              {`${section.gym.toUpperCase()}: ${section.name}`}
+                {`${section.gym.toUpperCase()}: ${section.name}`}
               </Text>
               <TouchableOpacity
                 style={styles.closeButton}
@@ -74,7 +99,9 @@ const MapIconWithModal: React.FC<MapIconWithModalProps> = ({
 
             {imageURL && (
               <ImageViewer
-                imageUrls={[{ url: imageURL }]}
+                imageUrls={[
+                  { url: Image.resolveAssetSource(imageURL).uri },
+                ]}
                 backgroundColor="transparent"
                 enableSwipeDown={true}
                 onSwipeDown={closeImagePopup}

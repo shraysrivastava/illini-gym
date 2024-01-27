@@ -243,10 +243,12 @@ export const FavoritesScreen: React.FC = () => {
   }
 
   return (
+    <View style={styles.container}>
     <KeyboardAwareScrollView
       style={styles.scrollView}
+
       contentContainerStyle={styles.contentContainer}
-      resetScrollToCoords={{ x: 0, y: 0 }}
+      // resetScrollToCoords={{ x: 100, y: -10 }}
       scrollEnabled={true}
       indicatorStyle="white"
       refreshControl={
@@ -273,9 +275,11 @@ export const FavoritesScreen: React.FC = () => {
         </View>
       )}
 
-        <CustomToast message={toast.message} color={toast.color} />
       
     </KeyboardAwareScrollView>
+
+    <CustomToast message={toast.message} color={toast.color} />
+  </View>
   );
 };
 

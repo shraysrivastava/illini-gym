@@ -76,22 +76,32 @@ const Pics = {
 
 interface ImageViewerMemoProps {
   imageURL: number | null;
-  closeImagePopup: () => void;
+  onLoad: () => void;
+  isMapView: boolean;
 }
 
 const ImageViewerMemo = memo<ImageViewerMemoProps>(
-  ({ imageURL, closeImagePopup }) => {
+  ({ imageURL, onLoad, isMapView }) => {
+    if (!imageURL) {
+      return null;
+    }
     return (
-      imageURL && (
-        <ImageViewer
-          imageUrls={[{ url: Image.resolveAssetSource(imageURL).uri }]}
-          backgroundColor="transparent"
-          enableSwipeDown={true}
-          onSwipeDown={closeImagePopup}
-          style={styles.imageViewerContainer}
-          renderIndicator={() => <></>}
+      <>
+      {isMapView ? (
+        <Image
+          source={imageURL}
+          style={styles.mapViewerContainer}
+          onLoad={onLoad}
         />
-      )
+      ) : (
+        <Image
+          source={imageURL}
+          style={styles.imageViewerContainer}
+          onLoad={onLoad}
+        />
+    )}
+        
+        </>
     );
   },
   areEqual
@@ -117,25 +127,43 @@ const MapIconWithModal: React.FC<MapIconWithModalProps> = ({
   const [isImagePopupVisible, setImagePopupVisible] = useState(false);
   const [isMapView, setIsMapView] = useState(false);
   const [canToggle, setCanToggle] = useState(true);
+  const [isImageLoading, setIsImageLoading] = useState(true);
+  const [showImage, setShowImage] = useState(false);
 
   const toggleView = () => {
     if (canToggle) {
-      setIsMapView(!isMapView);
-      setCanToggle(false); // Disable toggling
+      setIsImageLoading(true); // Start loading
+      setShowImage(false); // Hide current image immediately
+      setCanToggle(false);
       setTimeout(() => {
-        setCanToggle(true); // Enable toggling after 1 second
+        // Toggle the view after a delay
+        setIsMapView(!isMapView);
+        setCanToggle(true);
       }, 500);
     }
   };
+
+
+
   useEffect(() => {
     const imagePath = `${sectionGym}=${sectionKey}.png`;
     const url = isMapView ? Maps[imagePath] : Pics[imagePath];
     setImageURL(url);
-  }, [isMapView, sectionGym, sectionKey]);
+    if (imageURL) {
+      setShowImage(false); // Hide image when URL changes
+      setIsImageLoading(true); // Start loading new image
+      // Simulate a delay for image loading (adjust this as needed)
+      setTimeout(() => {
+        setShowImage(true); // Show image after loading
+        setIsImageLoading(false); // Stop loading
+      }, 1000);
+    }
+  }, [imageURL, isMapView, sectionGym, sectionKey]);
 
   const handleMapIconClick = () => {
     if (imageURL) {
       setImagePopupVisible(true);
+      setIsImageLoading(true);
     } else {
       setToast({
         message: localNickname + " image not available",
@@ -146,7 +174,7 @@ const MapIconWithModal: React.FC<MapIconWithModalProps> = ({
 
   const closeImagePopup = () => {
     setImagePopupVisible(false);
-    setIsMapView(true);
+    setIsMapView(false);
   };
 
   return (
@@ -166,50 +194,63 @@ const MapIconWithModal: React.FC<MapIconWithModalProps> = ({
         <View style={styles.fullScreenOverlay}>
           <View style={styles.modalContent}>
             <View style={styles.modalHeader}>
-              <View style={styles.toggleButtonContainer}>
+              
                 <TouchableOpacity
                   onPress={toggleView}
                   style={styles.toggleButton}
                 >
                   {isMapView ? (
                     <Feather
-                      name="toggle-left"
-                      size={30}
+                      name="toggle-right"
+                      size={34}
                       color={Colors.uiucOrange}
                     />
                   ) : (
                     <Feather
-                      name="toggle-right"
-                      size={30}
+                      name="toggle-left"
+                      size={34}
                       color={Colors.uiucOrange}
                     />
                   )}
                 </TouchableOpacity>
-              </View>
-              <View style={styles.titleContainer}>
+              
+              
                 <Text style={styles.imageHeader}>{sectionLevel} Level</Text>
-              </View>
-              <View style={styles.closeButtonContainer}>
+              
+              
                 <TouchableOpacity
                   onPress={closeImagePopup}
                   style={styles.closeButton}
                 >
                   <MaterialIcons
                     name="close"
-                    size={30}
-                    color={Colors.midnightBlue}
+                    size={34}
+                    color={Colors.uiucOrange}
                   />
                 </TouchableOpacity>
-              </View>
-            </View>
-            <ImageViewerMemo
-              imageURL={imageURL}
-              closeImagePopup={closeImagePopup}
-            />
               
+            </View>
+            {isImageLoading && (
+              <View style={styles.loadingContainer}>
+                <ActivityIndicator size="large" color={Colors.uiucOrange} />
+              </View>
+            )}
+            {showImage && (
+              <ImageViewerMemo
+                imageURL={imageURL}
+                onLoad={() => setIsImageLoading(false)}
+                isMapView={isMapView}
+              />
+            )}
+            
+            
+              {/* <View style={styles.loadingContainer}>
+                <ActivityIndicator size="large" color={Colors.uiucOrange} />
+              </View> */}
             <Text style={styles.imageFooter}>
               {`${sectionGym.toUpperCase()}: ${sectionName}`}
             </Text>
+            
           </View>
         </View>
       </Modal>
@@ -226,8 +267,18 @@ const styles = StyleSheet.create({
     flexDirection: "column",
   },
   imageViewerContainer: {
-    width: "100%",
+    
     flex: 1,
+    width: "100%",
+    height: "100%",
+  },
+  mapViewerContainer: {
+    
+    flex: 1,
+    width: "100%",
+    height: "100%",
+    resizeMode: "contain",
+
   },
   modalContent: {
     width: "90%",
@@ -244,6 +295,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     width: "100%", // Ensure full width
     paddingHorizontal: 10,
+    marginBottom: 10,
   },
   toggleButtonContainer: {
     flex: 1,
@@ -264,29 +316,40 @@ const styles = StyleSheet.create({
     alignItems: "center", // Center the title
   },
   imageHeader: {
+    flex: 1,
     fontSize: 20,
     fontWeight: "bold",
-    color: Colors.midnightBlue,
+    color: Colors.uiucBlue,
+    textAlign: 'center',
   },
   closeButtonContainer: {
     flex: 1,
-    alignItems: "flex-end", // Align close button to the end
+    alignItems: "flex-end",
   },
   closeButton: {
     position: "relative",
     zIndex: 1,
   },
   imageFooter: {
-    color: Colors.uiucOrange,
+    color: Colors.uiucBlue,
     fontSize: 20,
     fontWeight: "bold",
+    textAlign: "center",
+    marginTop: 10,
   },
   loadingContainer: {
-    // flex: 1,
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    zIndex: -1000, 
+    
+
   },
+  footer : {
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
+    padding: 10
+  }
 });
 
 export default MapIconWithModal;

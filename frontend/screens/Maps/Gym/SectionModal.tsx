@@ -10,6 +10,7 @@ import { ToastProps } from "../../Reusables/Toast";
 import fetchImageFromFirebase from "../../../firebase/images";
 import ImageViewer from "react-native-image-zoom-viewer";
 import moment from 'moment';
+import MapIconWithModal from "../../Reusables/DisplaySmallMap";
 
 const Maps = {
   "arc=gym-1.png": require("../../../assets/maps/arc=gym-1.png"),
@@ -139,50 +140,11 @@ const Section: React.FC<SectionProps> = React.memo(
         {/* Bottom Row: Either Progress Bar or 'Section Closed' Text */}
         <View style={modalStyles.row}>
           <SectionInfo section={section} />
-          <MaterialIcons
-            name="image"
-            size={24}
-            color={Colors.uiucOrange}
-            style={modalStyles.mapIcon}
-            onPress={handleMapIconClick}
-          />
+          <MapIconWithModal sectionName={section.name} setToast={setToast}  localNickname={section.name}
+          sectionGym={section.gym} sectionKey={section.key} sectionLevel={section.level}/>
         </View>
 
-        <Modal
-          visible={isImagePopupVisible}
-          transparent={true}
-          onRequestClose={closeImagePopup}
-        >
-          <View style={modalStyles.fullScreenOverlay}>
-            <View style={modalStyles.modalContent}>
-              <View style={modalStyles.modalHeader}>
-                <Text style={modalStyles.imageHeader}>
-                  {`${section.name}`}
-                </Text>
-                <TouchableOpacity
-                  style={modalStyles.closeButton}
-                  onPress={closeImagePopup}
-                >
-                  <MaterialIcons name="close" size={30} color="red" />
-                </TouchableOpacity>
-              </View>
-
-              {imageURL && (
-                <ImageViewer
-                imageUrls={[
-                  { url: Image.resolveAssetSource(imageURL).uri },
-                ]}
-                  backgroundColor="transparent"
-                  enableSwipeDown={true}
-                  onSwipeDown={closeImagePopup}
-                  style={modalStyles.imageViewerContainer}
-                  renderIndicator={() => <></>}
-                />
-              )}
-              <Text style={modalStyles.imageFooter}>{`${section.level}`} Level</Text>
-            </View>
-          </View>
-        </Modal>
+        
       </View>
     );
   }

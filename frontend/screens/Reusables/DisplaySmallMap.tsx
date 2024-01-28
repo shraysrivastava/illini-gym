@@ -17,13 +17,12 @@ import { SectionDetails } from "../Favorites/useFavorites";
 import Feather from "react-native-vector-icons/Feather";
 
 interface MapIconWithModalProps {
-  section: SectionDetails;
   sectionKey: string;
   sectionGym: string;
   sectionLevel: string;
   sectionName: string;
-  setToast: (toast: ToastProps) => void;
   localNickname: string;
+  setToast: (toast: ToastProps) => void;
 }
 const Maps = {
   "arc=gym-1.png": require("../../assets/maps/arc=gym-1.png"),
@@ -107,7 +106,10 @@ function areEqual(
 }
 
 const MapIconWithModal: React.FC<MapIconWithModalProps> = ({
-  section,
+  sectionLevel,
+  sectionName,
+  sectionGym,
+  sectionKey,
   setToast,
   localNickname,
 }) => {
@@ -126,10 +128,10 @@ const MapIconWithModal: React.FC<MapIconWithModalProps> = ({
     }
   };
   useEffect(() => {
-    const imagePath = `${section.gym}=${section.key}.png`;
+    const imagePath = `${sectionGym}=${sectionKey}.png`;
     const url = isMapView ? Maps[imagePath] : Pics[imagePath];
     setImageURL(url);
-  }, [isMapView, section.gym, section.key]);
+  }, [isMapView, sectionGym, sectionKey]);
 
   const handleMapIconClick = () => {
     if (imageURL) {
@@ -185,7 +187,7 @@ const MapIconWithModal: React.FC<MapIconWithModalProps> = ({
                 </TouchableOpacity>
               </View>
               <View style={styles.titleContainer}>
-                <Text style={styles.imageHeader}>{section.level} Level</Text>
+                <Text style={styles.imageHeader}>{sectionLevel} Level</Text>
               </View>
               <View style={styles.closeButtonContainer}>
                 <TouchableOpacity
@@ -206,7 +208,7 @@ const MapIconWithModal: React.FC<MapIconWithModalProps> = ({
             />
               
             <Text style={styles.imageFooter}>
-              {`${section.gym.toUpperCase()}: ${section.name}`}
+              {`${sectionGym.toUpperCase()}: ${sectionName}`}
             </Text>
           </View>
         </View>

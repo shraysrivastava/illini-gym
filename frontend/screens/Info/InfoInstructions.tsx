@@ -15,14 +15,13 @@ const InfoInstructions: React.FC = () => {
       <View style={styles.instructionContainer}>
         
         <View style={styles.textContainer}>
-          <CustomText style={styles.instructionTitle}>Discover Gyms</CustomText>
+          <CustomText style={styles.instructionTitle}>Find Gyms</CustomText>
           <CustomText style={styles.instructionText}>
-            Use the map icon to find nearby gyms.
+            Click on the "Find Gyms" tab to view a map of gyms.
           </CustomText>
         </View>
       </View>
 
-      
       <View style={styles.instructionContainer}>
         <View style={styles.textContainer}>
           <CustomText style={styles.instructionTitle}>
@@ -61,7 +60,7 @@ const InfoInstructions: React.FC = () => {
             Locate Section in Gym
           </CustomText>
           <CustomText style={styles.instructionText}>
-            Tap the image icon to view a section's location.
+            Tap the image icon to view the section's location in the gym.
           </CustomText>
         </View>
       </View>

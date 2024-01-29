@@ -1,6 +1,6 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { MaterialIcons } from "@expo/vector-icons";
+import { MaterialIcons, Entypo } from "@expo/vector-icons";
 import { User } from "firebase/auth";
 import React from "react";
 import Colors from "../constants/Colors";
@@ -53,12 +53,12 @@ export const BottomNav = (props: NavProps) => {
           })}
         />
         <Tab.Screen
-          name="Maps"
+          name="Find Gyms"
           component={MapsNav}
           options={({ navigation }) => ({
             // ...getCommonHeaderOptions(navigation, "Calendar"),
             tabBarIcon: ({ color, size }) => (
-              <MaterialIcons name="map" color={color} size={size} />
+              <Entypo name="location" size={size} color={color} />
             ),
           })}
         />

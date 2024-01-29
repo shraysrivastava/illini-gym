@@ -18,7 +18,7 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.shray3420.illinigymtracker",
       "googleServicesFile": "./GoogleService-Info.plist",
-      "buildNumber": "1"
+      "buildNumber": "2"
     },
     "android": {
       "adaptiveIcon": {

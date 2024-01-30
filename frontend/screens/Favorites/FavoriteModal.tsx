@@ -120,15 +120,15 @@ const FavoriteModal: React.FC<FavoriteModalProps> = ({
         </View>
       ) : (
         <CustomText style={modalStyles.lastUpdated}>
-          Last Updated: {timeDiff}
+          {timeDiff}
         </CustomText>
       )}
 
       
         <View style={modalStyles.row}>
           <SectionInfo section={section} />
-          <MapIconWithModal section={section} setToast={setToast}  localNickname={localNickname}
- />
+          <MapIconWithModal sectionName={localNickname} setToast={setToast}  localNickname={localNickname}
+          sectionGym={section.gym} sectionKey={section.key} sectionLevel={section.level}/>
         </View>
       
     </View>

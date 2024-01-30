@@ -42,16 +42,14 @@ export const CustomHeader: React.FC<CustomHeaderProps> = ({
         style={{ marginRight: 10 }}
         onPress={onInformationsPress}
       >
-        <Ionicons
-          name="information-circle-outline"
+        <MaterialIcons
+          name="help-outline"
           size={32}
           color={Colors.uiucOrange}
         />
       </TouchableOpacity>
       
-      {/* <TouchableOpacity style={{ marginRight: 10 }} onPress={onSettingsPress}>
-        <MaterialIcons name="settings" size={28} color={Colors.uiucOrange} />
-      </TouchableOpacity> */}
+      
     </View>
   );
 };

@@ -27,9 +27,14 @@ EDIT_ROOM_NAMES = {
 }
 EDIT_CAPACITY = {
     "strength-and-conditioning-zone": 250,
-    "gym-1": 400,
+    "gym-1": 250,
+    "gym-2": 200,
+    "gym-3": 200,
+    "indoor-pool": 250,
+    "lower-level": 120,
+    "upper-level": 160,
 }
-KEYS_TO_REMOVE = set(["meeting-room-1", "meeting-room-2", "meeting-room-3", "instructional-kitchen"])
+KEYS_TO_REMOVE = set(["meeting-room-1", "meeting-room-2", "meeting-room-3", "instructional-kitchen", "winter-garden"])
 # Initialize Firebase Admin
 cred = credentials.Certificate("./firebase.json")
 firebase_admin.initialize_app(cred)

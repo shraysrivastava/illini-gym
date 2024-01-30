@@ -10,9 +10,9 @@ export const gymMarkers = [
     website: 'https://campusrec.illinois.edu/facilities/arc/',
     imageUrl: 'https://campusrec.illinois.edu/sites/default/files/styles/big_button_image/public/paragraphs/big-buttons/ARC_19_ACP_Exterior-01.jpg?h=0987e825&itok=7dN7kPrS',
     hours: [
-      { day: 'Monday-Thursday:', time: '6:00 AM - 11:00 PM' },
-      { day: 'Friday:', time: '6:00 AM - 10:00 PM' },
-      { day: 'Saturday-Sunday:', time: '9:00 AM - 10:00 PM' }
+      { day: 'Mon-Thurs:', time: '6:00 AM - 11:00 PM' },
+      { day: 'Fri:', time: '6:00 AM - 10:00 PM' },
+      { day: 'Sat-Sun:', time: '9:00 AM - 10:00 PM' }
     ]
   },
   {
@@ -26,9 +26,9 @@ export const gymMarkers = [
     website: 'https://campusrec.illinois.edu/facilities/crce/',
     imageUrl: 'https://campusrec.illinois.edu/sites/default/files/styles/big_button_image/public/paragraphs/big-buttons/UI-02-200712-105.jpg?h=41557373&itok=KEN2ur0H',
     hours: [
-      { day: 'Monday-Thursday:', time: '7:00 AM - 10:00 PM' },
-      { day: 'Friday:', time: '7:00 AM - 9:00 PM' },
-      { day: 'Saturday-Sunday:', time: '11:00 AM - 3:00 PM' }
+      { day: 'Mon-Thurs:', time: '7:00 AM - 10:00 PM' },
+      { day: 'Fri:', time: '7:00 AM - 9:00 PM' },
+      { day: 'Sat-Sun:', time: '11:00 AM - 3:00 PM' }
     ]
   },
 ];

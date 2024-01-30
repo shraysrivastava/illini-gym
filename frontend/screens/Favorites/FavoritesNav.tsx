@@ -33,6 +33,8 @@ export const FavoritesNav = () => {
     useRoute<RouteProp<FavoriteStackParamList, "FavoritesScreen">>();
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const [title, setTitle] = useState<string>("Favorites");
+  const [hasFavorites, setHasFavorites] = useState<boolean>(false);
+
 
   useEffect(() => {
     if (isEditMode) {
@@ -103,7 +105,7 @@ export const FavoritesNav = () => {
           onPress={() => navigation.navigate("Information")}
           style={{ marginRight: 10 }}
         >
-          <Ionicons name="information-circle-outline" size={32} color={Colors.uiucOrange} />
+          <MaterialIcons name="help-outline" size={32} color={Colors.uiucOrange} />
         </TouchableOpacity>
       </View>
     );
@@ -161,21 +163,21 @@ export const FavoritesNav = () => {
           
         })}
       />
-      <FavoritesStack.Screen
+      {/* <FavoritesStack.Screen
         name="FavoritesInfo"
         component={InfoNav}
         options={() => ({
           headerShown: false,
           
         })}
-      />
-      {/* <FavoritesStack.Screen
+      /> */}
+      <FavoritesStack.Screen
         name="GymData"
-        component={MapsHome}
+        component={GymData}
         options={({ navigation, route }) =>
           getCommonHeaderOptions(navigation, "Maps", route.params.gymName ?? "")
         }
-      /> */}
+      />
     </FavoritesStack.Navigator>
   );
 };

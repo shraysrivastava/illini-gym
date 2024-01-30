@@ -1,14 +1,41 @@
 import React, { useState } from "react";
-import { View, Modal, TouchableOpacity, Text, StyleSheet } from "react-native";
+import { View, Modal, TouchableOpacity, Text, StyleSheet, Image } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { DocumentData } from "firebase/firestore";
 import CustomText from "../../Reusables/CustomText";
 import Colors from "../../../constants/Colors";
-import { getTimeDifference } from "../../Reusables/Utilities";
+import { getTimeDifference, isGymClosed } from "../../Reusables/Utilities";
 import ProgressBar from "../../Reusables/ProgressBar";
 import { ToastProps } from "../../Reusables/Toast";
 import fetchImageFromFirebase from "../../../firebase/images";
 import ImageViewer from "react-native-image-zoom-viewer";
+import moment from 'moment';
+import MapIconWithModal from "../../Reusables/DisplaySmallMap";
+
+const Maps = {
+  "arc=gym-1.png": require("../../../assets/maps/arc=gym-1.png"),
+  "arc=gym-2.png": require("../../../assets/maps/arc=gym-2.png"),
+  "arc=gym-3.png": require("../../../assets/maps/arc=gym-3.png"),
+  "arc=combat-room.png": require("../../../assets/maps/arc=combat-room.png"),
+  "arc=entrance-level-fitness-area.png": require("../../../assets/maps/arc=entrance-level-fitness-area.png"),
+  "arc=indoor-pool.png": require("../../../assets/maps/arc=indoor-pool.png"),
+  "arc=lower-level.png": require("../../../assets/maps/arc=lower-level.png"),
+  "arc=mp-room-1.png": require("../../../assets/maps/arc=mp-room-1.png"),
+  "arc=mp-room-2.png": require("../../../assets/maps/arc=mp-room-2.png"),
+  "arc=mp-room-3.png": require("../../../assets/maps/arc=mp-room-3.png"),
+  "arc=mp-room-4.png": require("../../../assets/maps/arc=mp-room-4.png"),
+  "arc=mp-room-5.png": require("../../../assets/maps/arc=mp-room-5.png"),
+  "arc=mp-room-6.png": require("../../../assets/maps/arc=mp-room-6.png"),
+  "arc=mp-room-7.png": require("../../../assets/maps/arc=mp-room-7.png"),
+  "arc=olympic-pod.png": require("../../../assets/maps/arc=olympic-pod.png"),
+  "arc=power-pod.png": require("../../../assets/maps/arc=power-pod.png"),
+  "arc=hiit-pod.png": require("../../../assets/maps/arc=hiit-pod.png"),
+  "arc=raquetball-courts.png": require("../../../assets/maps/arc=raquetball-courts.png"),
+  "arc=rock-wall.png": require("../../../assets/maps/arc=rock-wall.png"),
+  "arc=squash-courts.png": require("../../../assets/maps/arc=squash-courts.png"),
+  "arc=upper-level.png": require("../../../assets/maps/arc=upper-level.png"),
+  "arc=strength-and-conditioning-zone.png": require("../../../assets/maps/arc=strength-and-conditioning-zone.png"),
+};
 
 interface SectionProps {
   section: DocumentData;
@@ -55,7 +82,8 @@ export const VisibilityIcon: React.FC<{ isOpen: boolean }> = React.memo(
 export const SectionInfo: React.FC<{ section: DocumentData }> = ({
   section,
 }) => {
-  return section.isOpen ? (
+  const gymClosed = isGymClosed(moment());
+  return section.isOpen && !gymClosed ? (
     <ProgressBar count={section.count} capacity={section.capacity} />
   ) : (
     <CustomText style={modalStyles.closedText}>Section Closed</CustomText>
@@ -69,8 +97,8 @@ const Section: React.FC<SectionProps> = React.memo(
 
     const handleMapIconClick = async () => {
       try {
-        const imagePath = `images/${section.gym}=${section.key}.png`;
-        const url = await fetchImageFromFirebase(imagePath);
+        const imagePath = `${section.gym}=${section.key}.png`;
+        const url = Maps[imagePath];
         if (url) {
           setImageURL(url);
           setImagePopupVisible(true);
@@ -106,54 +134,17 @@ const Section: React.FC<SectionProps> = React.memo(
         </View>
         {/* Middle Row: Last Updated */}
         <CustomText style={modalStyles.lastUpdated}>
-          Last Updated: {timeDiff}
+          {timeDiff}
         </CustomText>
 
         {/* Bottom Row: Either Progress Bar or 'Section Closed' Text */}
         <View style={modalStyles.row}>
           <SectionInfo section={section} />
-          <MaterialIcons
-            name="image"
-            size={24}
-            color={Colors.uiucOrange}
-            style={modalStyles.mapIcon}
-            onPress={handleMapIconClick}
-          />
+          <MapIconWithModal sectionName={section.name} setToast={setToast}  localNickname={section.name}
+          sectionGym={section.gym} sectionKey={section.key} sectionLevel={section.level}/>
         </View>
 
-        <Modal
-          visible={isImagePopupVisible}
-          transparent={true}
-          onRequestClose={closeImagePopup}
-        >
-          <View style={modalStyles.fullScreenOverlay}>
-            <View style={modalStyles.modalContent}>
-              <View style={modalStyles.modalHeader}>
-                <Text style={modalStyles.imageHeader}>
-                  {`${section.name}`}
-                </Text>
-                <TouchableOpacity
-                  style={modalStyles.closeButton}
-                  onPress={closeImagePopup}
-                >
-                  <MaterialIcons name="close" size={30} color="red" />
-                </TouchableOpacity>
-              </View>
-
-              {imageURL && (
-                <ImageViewer
-                  imageUrls={[{ url: imageURL }]}
-                  backgroundColor="transparent"
-                  enableSwipeDown={true}
-                  onSwipeDown={closeImagePopup}
-                  style={modalStyles.imageViewerContainer}
-                  renderIndicator={() => <></>}
-                />
-              )}
-              <Text style={modalStyles.imageFooter}>{`${section.level}`} Level</Text>
-            </View>
-          </View>
-        </Modal>
+        
       </View>
     );
   }
@@ -175,8 +166,8 @@ export const modalStyles = StyleSheet.create({
     paddingVertical: 10,
     backgroundColor: Colors.subtleWhite,
     borderRadius: 8,
-    borderWidth: 2,
-    borderColor: Colors.subtleWhite,
+    borderWidth: .5,
+    borderColor: Colors.lighterBlue,
     position: "relative",
   },
   row: {

@@ -141,7 +141,7 @@ export const MapsHome: React.FC = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <MapView
         ref={mapRef}
         style={styles.map}
@@ -205,11 +205,7 @@ export const MapsHome: React.FC = () => {
           />
           {displayBasicInfo && selectedGym ? (
             <View style={styles.modalView}>
-              <ScrollView
-                style={{ flex: 1, width: "100%" }}
-                contentContainerStyle={{ alignItems: "stretch" }}
-                showsVerticalScrollIndicator={true}
-              >
+              <View style={styles.modalHeader}>
                 <TouchableOpacity
                   style={styles.closeButton}
                   onPress={() => {
@@ -217,9 +213,16 @@ export const MapsHome: React.FC = () => {
                     setModalVisible(true);
                   }}
                 >
-                  <MaterialIcons name="close" size={24} color="white" />
+                  <MaterialIcons name="close" size={28} color="white" />
                 </TouchableOpacity>
                 <Text style={styles.modalTitle}>{selectedGym.title}</Text>
+                <View style={{ width: 24 }}></View>
+              </View>
+              <ScrollView
+                style={{ flex: 1, width: "100%" }}
+                contentContainerStyle={{ alignItems: "stretch" }}
+                showsVerticalScrollIndicator={true}
+              >
                 <View style={styles.gymContainer}>
                   <View style={styles.headerContainer}>
                     <Text style={styles.sectionHeader}>Hours</Text>
@@ -241,26 +244,6 @@ export const MapsHome: React.FC = () => {
                   </View>
                   <View style={styles.contactSection}>
                     <View style={styles.contactSection}>
-                      <Text style={styles.infoText}>Phone:</Text>
-                      <TouchableOpacity
-                        onPress={() => makeCall(selectedGym.phone)}
-                      >
-                        <Text style={styles.callText}>{selectedGym.phone}</Text>
-                      </TouchableOpacity>
-                    </View>
-                    <View style={styles.separator} />
-                    <View style={styles.contactSection}>
-                      <Text style={styles.infoText}>Website:</Text>
-                      <TouchableOpacity
-                        onPress={() => openWebsite(selectedGym.website)}
-                      >
-                        <Text style={styles.linkText}>
-                          {selectedGym.website}
-                        </Text>
-                      </TouchableOpacity>
-                    </View>
-                    <View style={styles.separator} />
-                    <View style={styles.contactSection}>
                       <View style={styles.addressContainer}>
                         <Text style={styles.infoText}>Address:</Text>
                         <TouchableOpacity
@@ -281,6 +264,27 @@ export const MapsHome: React.FC = () => {
                           </Text>
                         </TouchableOpacity>
                       </View>
+                    </View>
+                    <View style={styles.separator} />
+
+                    <View style={styles.contactSection}>
+                      <Text style={styles.infoText}>Phone:</Text>
+                      <TouchableOpacity
+                        onPress={() => makeCall(selectedGym.phone)}
+                      >
+                        <Text style={styles.callText}>{selectedGym.phone}</Text>
+                      </TouchableOpacity>
+                    </View>
+                    <View style={styles.separator} />
+                    <View style={styles.contactSection}>
+                      <Text style={styles.infoText}>Website:</Text>
+                      <TouchableOpacity
+                        onPress={() => openWebsite(selectedGym.website)}
+                      >
+                        <Text style={styles.linkText}>
+                          {selectedGym.website}
+                        </Text>
+                      </TouchableOpacity>
                     </View>
                   </View>
                 </View>
@@ -306,7 +310,7 @@ export const MapsHome: React.FC = () => {
           )}
         </View>
       </Modal>
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -375,7 +379,7 @@ const styles = StyleSheet.create({
     padding: 15,
     alignItems: "center",
     borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,    
+    borderTopRightRadius: 20,
     elevation: 5,
     justifyContent: "center",
     flexDirection: "column",
@@ -402,6 +406,12 @@ const styles = StyleSheet.create({
     // padding: 10,
     zIndex: 1000,
   },
+  modalHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    width: "100%",
+  },
 
   modalTitle: {
     color: Colors.uiucOrange,
@@ -409,7 +419,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 10,
     textAlign: "center",
-    
+    flex: 1,
   },
 
   hoursSection: {
@@ -458,10 +468,10 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     padding: 10,
     backgroundColor: Colors.subtleWhite,
-    borderColor: Colors.subtleWhite,
+    borderColor: Colors.uiucBlue,
     borderRadius: 8,
     alignItems: "center",
-    borderWidth: 2,
+    borderWidth: 1,
     elevation: 2,
     width: "100%",
   },
@@ -495,7 +505,7 @@ const styles = StyleSheet.create({
 
   infoText: {
     fontSize: 12,
-    color: "white",
+    color: Colors.gray,
     marginBottom: 5,
   },
   linkText: {

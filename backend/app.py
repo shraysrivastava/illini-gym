@@ -49,6 +49,7 @@ if __name__ == '__main__':
                 print(f"[{current_time.strftime('%Y-%m-%d %H:%M:%S')}] Firestore successfully updated.")
             except Exception as e:
                 print(f"[{current_time.strftime('%Y-%m-%d %H:%M:%S')}] Error updating Firestore: {e}")
+                raise e
         else:
             next_check_time = current_time + timedelta(minutes=20)
             print(f"[{current_time.strftime('%Y-%m-%d %H:%M:%S')}] Gym is closed. Next check at {next_check_time.strftime('%Y-%m-%d %H:%M:%S')}.")

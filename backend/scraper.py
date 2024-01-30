@@ -37,17 +37,15 @@ db = firestore.client()
 
 def scrape_and_update(collection_id):
     chrome_options = webdriver.ChromeOptions()
-    chrome_options.add_argument("start-maximized")  # Open the browser in maximized mode
-    chrome_options.add_argument("disable-infobars")  # Disable infobars
+    chrome_options.add_argument("--start-maximized")  # Open the browser in maximized mode
+    chrome_options.add_argument("--disable-infobars")  # Disable infobars
     chrome_options.add_argument("--disable-extensions")  # Disable extensions
     chrome_options.add_argument("--disable-gpu")  # Applicable to Windows OS only
     chrome_options.add_argument("--disable-dev-shm-usage")  # Overcome limited resource problems
     chrome_options.add_argument("--no-sandbox")
-    chrome_options.add_argument('headless')  # Run Chrome in headless mode
-    driver = webdriver.Chrome(options=chrome_options)
+    chrome_options.add_argument('--headless')  # Run Chrome in headless mode
     url = 'https://apps2.campusrec.illinois.edu/checkins/live'
-    options = webdriver.ChromeOptions()
-    browser = webdriver.Chrome(options=options)
+    browser = webdriver.Chrome(options=chrome_options)
     browser.get(url)
 
     # Your XPaths go here

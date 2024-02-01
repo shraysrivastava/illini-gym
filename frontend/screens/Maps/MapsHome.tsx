@@ -5,22 +5,18 @@ import {
   View,
   TouchableOpacity,
   Text,
-  Button,
   Modal,
-  Animated,
-  Dimensions,
-  Image,
 } from "react-native";
-import MapView, { Marker, Polyline, Circle, Region } from "react-native-maps";
+import MapView, { Marker, } from "react-native-maps";
 import { gymMarkers } from "./GymMarkers";
 import { MaterialIcons } from "@expo/vector-icons";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { MapsStackParamList } from "./MapsNav";
 import Colors from "../../constants/Colors";
 import { Linking, Platform } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
+import MarkerComponent from "./MarkerComponent";
 
 const INITIAL_REGION = {
   latitude: 40.10385157161382,
@@ -71,9 +67,6 @@ const makeCall = (phoneNumber: string) => {
 export const MapsHome: React.FC = () => {
   const navigation =
     useNavigation<StackNavigationProp<MapsStackParamList, "GymInfo">>();
-  // const [currentLocation, setCurrentLocation] = useState<LocationCoords | null>(
-  //   null
-  // );
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedGym, setSelectedGym] = useState<MarkerData | null>(null);
   const mapRef = useRef<MapView>(null);
@@ -92,8 +85,6 @@ export const MapsHome: React.FC = () => {
   const navigateToGymData = () => {
     if (selectedGym) {
       if (selectedGym.key === "2") {
-        // Assuming key "2" is for CRCE
-        // Show an alert or navigate to a Coming Soon screen
         Alert.alert("Coming Soon", "This feature will be available soon.");
       } else {
         let gym;
@@ -155,25 +146,12 @@ export const MapsHome: React.FC = () => {
               latitude: marker.latitude,
               longitude: marker.longitude,
             }}
-            onPress={() => handleMarkerPress(marker)}
           >
-            <View style={styles.markerContainer}>
-              <Text
-                style={[
-                  styles.markerTitle,
-                  { bottom: marker.key === selectedMarkerKey ? 42 : 30 },
-                ]}
-              >
-                {marker.title}
-              </Text>
-              <TouchableOpacity onPress={() => handleMarkerPress(marker)}>
-                <MaterialIcons
-                  name="place"
-                  size={marker.key === selectedMarkerKey ? 45 : 32}
-                  color={Colors.uiucOrange}
-                />
-              </TouchableOpacity>
-            </View>
+            <MarkerComponent
+              marker={marker}
+              onPress={() => handleMarkerPress(marker)}
+              isSelected={marker.key === selectedMarkerKey}
+            />
           </Marker>
         ))}
       </MapView>

@@ -33,6 +33,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import CustomText from "../Reusables/CustomText";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import Disclaimer from "./Disclaimer";
 
 
 interface FavoritesProps {
@@ -59,7 +60,7 @@ export const FavoritesScreen: React.FC = () => {
   const [originalFavorites, setOriginalFavorites] = useState<string[]>([]);
   const [originalFavoriteSections, setOriginalFavoriteSections] = useState<SectionDetails[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [isUpdating, setIsUpdating] = useState(false);
+  const [isAvailable, setIsAvailable] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -234,12 +235,12 @@ export const FavoritesScreen: React.FC = () => {
     )
   );
 
-  if (isLoading) {
+  if (!isAvailable) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color={Colors.uiucOrange} />
+        <Disclaimer/>
       </View>
-    );
+    )
   }
 
   return (

@@ -74,6 +74,9 @@ const Information = () => {
           is contingent upon the updates we receive from Campus Recreation
           staff.
         </CustomText>
+        <CustomText style={styles.note}>
+          Note: This app has no affilitation with Campus Recreation 
+        </CustomText>
       </View>
     </View>
   );
@@ -137,6 +140,13 @@ const styles = StyleSheet.create({
     color: "white",
     textAlign: "center",
     fontStyle: "italic",
+  },
+  note: {
+    fontSize: 12,
+    color: Colors.uiucOrange,
+    textAlign: "center",
+    fontStyle: "italic",
+    marginTop: 10, 
   },
 });
 

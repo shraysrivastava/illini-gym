@@ -7,14 +7,14 @@ import { View, TouchableOpacity } from "react-native";
 type CustomHeaderProps = {
   onSettingsPress: () => void;
   onInformationsPress: () => void;
-  onMapsPress: () => void;
+  // onMapsPress: () => void;
   title: string;
 };
 
 export const CustomHeader: React.FC<CustomHeaderProps> = ({
   onSettingsPress,
   onInformationsPress,
-  onMapsPress,
+  // onMapsPress,
   title,
 }) => {
   return (
@@ -25,7 +25,7 @@ export const CustomHeader: React.FC<CustomHeaderProps> = ({
         paddingRight: 10,
       }}
     >
-      {title !== "Maps" && (
+      {/* {title !== "Maps" && (
         <TouchableOpacity
         style={{ marginRight: 10 }}
         onPress={onMapsPress}
@@ -36,7 +36,7 @@ export const CustomHeader: React.FC<CustomHeaderProps> = ({
           color={Colors.uiucOrange}
         />
       </TouchableOpacity>
-        )}
+        )} */}
       
         <TouchableOpacity
         style={{ marginRight: 10 }}
@@ -94,9 +94,9 @@ export const getCommonHeaderOptions = (navigation: any, stackName: string, title
           // console.log("Settings icon pressed.");
         }
       }}
-      onMapsPress={() => {
-        navigation.navigate("MapsLargeMap");}
-      }
+      // onMapsPress={() => {
+      //   // navigation.navigate("MapsLargeMap");}
+      // }
       title={title}
     />
   ),

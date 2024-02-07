@@ -25,8 +25,8 @@ const Disclaimer: React.FC<DisclaimerProps> = ({ }) => {
           We regret to inform you that our data source has recently undergone
           changes, affecting our ability to display current information. Our
           team is actively developing an alternative solution to provide you
-          with accurate and reliable data. We appreciate your patience and
-          understanding during this period. Stay tuned for updates.
+          with accurate and reliable data. We apologize for any inconvenience
+          this may cause and appreciate your patience.
         </Text>
       </View>
 

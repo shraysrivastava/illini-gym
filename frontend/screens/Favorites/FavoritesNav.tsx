@@ -20,7 +20,7 @@ import MapsHome from "../Maps/MapsHome";
 export type FavoriteStackParamList = {
   FavoritesScreen: { isEditMode: boolean; action: string };
   FavoriteSettings: undefined;
-  DisplayLargeMap: undefined;
+  // DisplayLargeMap: undefined;
   Information: undefined;
   GymData: { gym?: string; gymName?: string };
   FavoritesInfo: undefined;
@@ -95,12 +95,12 @@ export const FavoritesNav = () => {
       </TouchableOpacity>
     ) : (
       <View style={{ flexDirection: "row" }}>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           onPress={() => navigation.navigate("DisplayLargeMap")}
           style={{ marginRight: 10 }}
         >
           <MaterialIcons name="map" size={32} color={Colors.uiucOrange} />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <TouchableOpacity
           onPress={() => navigation.navigate("Information")}
           style={{ marginRight: 10 }}
@@ -145,7 +145,7 @@ export const FavoritesNav = () => {
           },
         })}
       />
-      <FavoritesStack.Screen
+      {/* <FavoritesStack.Screen
         name="DisplayLargeMap"
         component={DisplayLargeMap}
         options={() => ({
@@ -154,7 +154,7 @@ export const FavoritesNav = () => {
             fontSize: 20,
           },
         })}
-      />
+      /> */}
       <FavoritesStack.Screen
         name="Information"
         component={InfoNav}

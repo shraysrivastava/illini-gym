@@ -235,13 +235,13 @@ export const FavoritesScreen: React.FC = () => {
     )
   );
 
-  if (!isAvailable) {
-    return (
-      <View style={styles.loadingContainer}>
-        <Disclaimer/>
-      </View>
-    )
-  }
+  // if (!isAvailable) {
+  //   return (
+  //     <View style={styles.loadingContainer}>
+  //       <Disclaimer/>
+  //     </View>
+  //   )
+  // }
 
   return (
     <View style={styles.container}>
@@ -262,7 +262,8 @@ export const FavoritesScreen: React.FC = () => {
         />
       }
     >
-      {isLoading ? (
+      {/* {
+      isLoading ? (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={Colors.uiucOrange} />
         </View>
@@ -277,9 +278,17 @@ export const FavoritesScreen: React.FC = () => {
         <View>
           <Favorites sections={favoriteSections} />
         </View>
+      )} */}
+      { isLoading ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color={Colors.uiucOrange} />
+        </View>
+      ) : (
+      <Disclaimer
+      onPressHelp={() => navigation.navigate("Information")}
+      />
       )}
 
-      
     </KeyboardAwareScrollView>
 
     <CustomToast message={toast.message} color={toast.color} />

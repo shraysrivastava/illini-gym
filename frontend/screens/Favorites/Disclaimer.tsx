@@ -4,9 +4,10 @@ import Colors from "../../constants/Colors";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 
 type DisclaimerProps = {
+    onPressHelp: () => void;
 };
 
-const Disclaimer: React.FC<DisclaimerProps> = ({ }) => {
+const Disclaimer: React.FC<DisclaimerProps> = ({ onPressHelp}) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -30,7 +31,7 @@ const Disclaimer: React.FC<DisclaimerProps> = ({ }) => {
         </Text>
       </View>
 
-      <TouchableOpacity style={styles.helpTextWrapper}>
+      <TouchableOpacity onPress={onPressHelp} style={styles.helpTextWrapper}>
         <MaterialIcons name="help-outline" size={28} color="white" />
         <Text style={styles.helpText}>Need Help?</Text>
       </TouchableOpacity>
